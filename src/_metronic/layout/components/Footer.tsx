@@ -13,8 +13,8 @@ const Footer: FC = () => {
         {/* begin::Copyright */}
         <div className='text-dark order-2 order-md-1'>
           <span className='text-muted fw-bold me-2'>{new Date().getFullYear()} &copy;</span>
-          <a href='#' className='text-gray-800 text-hover-primary'>
-            Keenthemes
+          <a href='https://pass4autism-project.eu/' target={'_blank'} className='text-gray-800 text-hover-primary'>
+            PASS4Autism Project
           </a>
         </div>
         {/* end::Copyright */}
@@ -22,18 +22,18 @@ const Footer: FC = () => {
         {/* begin::Nav */}
         <ul className='menu menu-gray-600 menu-hover-primary fw-bold order-1'>
           <li className='menu-item'>
-            <a href='#' className='menu-link ps-0 pe-2'>
-              About
+            <a href='https://pass4autism-project.eu/' target='_blank' className='menu-link ps-0 pe-2'>
+              Visit Website
             </a>
           </li>
           <li className='menu-item'>
             <a href='#' className='menu-link pe-0 pe-2'>
-              Contact
+              Contact us
             </a>
           </li>
           <li className='menu-item'>
             <a href='#' className='menu-link pe-0'>
-              Purchase
+              PASS4Autism Forum
             </a>
           </li>
         </ul>
