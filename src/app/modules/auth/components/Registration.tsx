@@ -1,13 +1,15 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState, useEffect} from 'react'
-import {useFormik} from 'formik'
-import * as Yup from 'yup'
-import clsx from 'clsx'
-import {getUserByToken, register} from '../core/_requests'
-import {Link} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
-import {useAuth} from '../core/Auth'
+import { useState, useEffect } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import clsx from 'clsx';
+import axios from 'axios'; // Import axios for making API requests
+import { Link } from 'react-router-dom';
+import { toAbsoluteUrl } from '../../../../_metronic/helpers';
+import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/components';
+import { useAuth } from '../core/Auth';
+import { getUserByToken } from '../core/_requests';
+
+const API_BASE_URL = 'http://localhost:8088/api/v1';
 
 const initialValues = {
   firstname: '',
@@ -16,7 +18,7 @@ const initialValues = {
   password: '',
   changepassword: '',
   acceptTerms: false,
-}
+};
 
 const registrationSchema = Yup.object().shape({
   firstname: Yup.string()
@@ -33,7 +35,7 @@ const registrationSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Last name is required'),
   password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
+    .min(8, 'Minimum 8 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
   changepassword: Yup.string()
@@ -43,40 +45,57 @@ const registrationSchema = Yup.object().shape({
       then: Yup.string().oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
     }),
   acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
-})
+});
+
+export const register = async (email: string, firstname: string, lastname: string, password: string) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+      email,
+      firstname,
+      lastname,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error during registration:', error);
+    throw error;
+  }
+};
 
 export function Registration() {
-  const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const [loading, setLoading] = useState(false);
+  const { saveAuth, setCurrentUser } = useAuth();
+
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
-    onSubmit: async (values, {setStatus, setSubmitting}) => {
-      setLoading(true)
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      setLoading(true);
       try {
-        const {data: auth} = await register(
+        const auth = await register(
           values.email,
           values.firstname,
           values.lastname,
-          values.password,
-          values.changepassword
-        )
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+          values.password
+        );
+        saveAuth(auth);
+        const user = await getUserByToken(auth.api_token);
+        // @ts-ignore
+        setCurrentUser(user);
       } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The registration details is incorrect')
-        setSubmitting(false)
-        setLoading(false)
+        console.error(error);
+        saveAuth(undefined);
+        setStatus('The registration details are incorrect');
+      } finally {
+        setSubmitting(false);
+        setLoading(false);
       }
     },
-  })
+  });
 
   useEffect(() => {
-    PasswordMeterComponent.bootstrap()
-  }, [])
+    PasswordMeterComponent.bootstrap();
+  }, []);
 
   return (
     <form
@@ -342,5 +361,5 @@ export function Registration() {
       </div>
       {/* end::Form group */}
     </form>
-  )
+  );
 }
