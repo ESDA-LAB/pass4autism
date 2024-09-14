@@ -83,68 +83,7 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
           data-kt-scroll-wrappers='#kt_modal_add_user_scroll'
           data-kt-scroll-offset='300px'
         >
-          {/* begin::Input group */}
-          <div className='fv-row mb-7'>
-            {/* begin::Label */}
-            <label className='d-block fw-bold fs-6 mb-5'>Avatar</label>
-            {/* end::Label */}
 
-            {/* begin::Image input */}
-            <div
-              className='image-input image-input-outline'
-              data-kt-image-input='true'
-              style={{backgroundImage: `url('${blankImg}')`}}
-            >
-              {/* begin::Preview existing avatar */}
-              <div
-                className='image-input-wrapper w-125px h-125px'
-                style={{backgroundImage: `url('${userAvatarImg}')`}}
-              ></div>
-              {/* end::Preview existing avatar */}
-
-              {/* begin::Label */}
-              {/* <label
-              className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
-              data-kt-image-input-action='change'
-              data-bs-toggle='tooltip'
-              title='Change avatar'
-            >
-              <i className='bi bi-pencil-fill fs-7'></i>
-
-              <input type='file' name='avatar' accept='.png, .jpg, .jpeg' />
-              <input type='hidden' name='avatar_remove' />
-            </label> */}
-              {/* end::Label */}
-
-              {/* begin::Cancel */}
-              {/* <span
-              className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
-              data-kt-image-input-action='cancel'
-              data-bs-toggle='tooltip'
-              title='Cancel avatar'
-            >
-              <i className='bi bi-x fs-2'></i>
-            </span> */}
-              {/* end::Cancel */}
-
-              {/* begin::Remove */}
-              {/* <span
-              className='btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow'
-              data-kt-image-input-action='remove'
-              data-bs-toggle='tooltip'
-              title='Remove avatar'
-            >
-              <i className='bi bi-x fs-2'></i>
-            </span> */}
-              {/* end::Remove */}
-            </div>
-            {/* end::Image input */}
-
-            {/* begin::Hint */}
-            {/* <div className='form-text'>Allowed file types: png, jpg, jpeg.</div> */}
-            {/* end::Hint */}
-          </div>
-          {/* end::Input group */}
 
           {/* begin::Input group */}
           <div className='fv-row mb-7'>
@@ -237,7 +176,7 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
                 <label className='form-check-label' htmlFor='kt_modal_update_role_option_0'>
                   <div className='fw-bolder text-gray-800'>Administrator</div>
                   <div className='text-gray-600'>
-                    Best for business owners and company administrators
+                    Admins of the Application
                   </div>
                 </label>
                 {/* end::Label */}
@@ -264,9 +203,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
                 {/* end::Input */}
                 {/* begin::Label */}
                 <label className='form-check-label' htmlFor='kt_modal_update_role_option_1'>
-                  <div className='fw-bolder text-gray-800'>Developer</div>
+                  <div className='fw-bolder text-gray-800'>Therapist</div>
                   <div className='text-gray-600'>
-                    Best for developers or people primarily using the API
+                    Best for therapists that control the visual stories
                   </div>
                 </label>
                 {/* end::Label */}
@@ -294,10 +233,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
                 {/* end::Input */}
                 {/* begin::Label */}
                 <label className='form-check-label' htmlFor='kt_modal_update_role_option_2'>
-                  <div className='fw-bolder text-gray-800'>Analyst</div>
+                  <div className='fw-bolder text-gray-800'>Simple User</div>
                   <div className='text-gray-600'>
-                    Best for people who need full access to analytics data, but don't need to update
-                    business settings
+                    Best for parents and simple users
                   </div>
                 </label>
                 {/* end::Label */}
@@ -307,62 +245,8 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
             {/* end::Input row */}
             <div className='separator separator-dashed my-5'></div>
             {/* begin::Input row */}
-            <div className='d-flex fv-row'>
-              {/* begin::Radio */}
-              <div className='form-check form-check-custom form-check-solid'>
-                {/* begin::Input */}
-                <input
-                  className='form-check-input me-3'
-                  {...formik.getFieldProps('role')}
-                  name='role'
-                  type='radio'
-                  value='Support'
-                  id='kt_modal_update_role_option_3'
-                  checked={formik.values.role === 'Support'}
-                  disabled={formik.isSubmitting || isUserLoading}
-                />
-                {/* end::Input */}
-                {/* begin::Label */}
-                <label className='form-check-label' htmlFor='kt_modal_update_role_option_3'>
-                  <div className='fw-bolder text-gray-800'>Support</div>
-                  <div className='text-gray-600'>
-                    Best for employees who regularly refund payments and respond to disputes
-                  </div>
-                </label>
-                {/* end::Label */}
-              </div>
-              {/* end::Radio */}
-            </div>
             {/* end::Input row */}
             <div className='separator separator-dashed my-5'></div>
-            {/* begin::Input row */}
-            <div className='d-flex fv-row'>
-              {/* begin::Radio */}
-              <div className='form-check form-check-custom form-check-solid'>
-                {/* begin::Input */}
-                <input
-                  className='form-check-input me-3'
-                  {...formik.getFieldProps('role')}
-                  name='role'
-                  type='radio'
-                  id='kt_modal_update_role_option_4'
-                  value='Trial'
-                  checked={formik.values.role === 'Trial'}
-                  disabled={formik.isSubmitting || isUserLoading}
-                />
-                {/* end::Input */}
-                {/* begin::Label */}
-                <label className='form-check-label' htmlFor='kt_modal_update_role_option_4'>
-                  <div className='fw-bolder text-gray-800'>Trial</div>
-                  <div className='text-gray-600'>
-                    Best for people who need to preview content data, but don't need to make any
-                    updates
-                  </div>
-                </label>
-                {/* end::Label */}
-              </div>
-              {/* end::Radio */}
-            </div>
             {/* end::Input row */}
             {/* end::Roles */}
           </div>
