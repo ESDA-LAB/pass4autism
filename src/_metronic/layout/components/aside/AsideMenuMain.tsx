@@ -23,6 +23,10 @@ export function AsideMenuMain() {
         to="/createStory"
         title="Create Story"
         icon='/media/icons/duotune/files/fil005.svg'/>
+      <AsideMenuItem
+        to="/ViewStory"
+        title="View Stories"
+        icon='/media/icons/duotune/general/gen004.svg'/>
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
@@ -84,18 +88,9 @@ export function AsideMenuMain() {
       </AsideMenuItemWithSub>
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Apps</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Admin</span>
         </div>
       </div>
-      <AsideMenuItemWithSub
-        to='/apps/chat'
-        title='Chat'
-        icon='/media/icons/duotune/communication/com012.svg'
-      >
-        <AsideMenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
-        <AsideMenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
-        <AsideMenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
-      </AsideMenuItemWithSub>
       <AsideMenuItem
         to='/apps/user-management/users'
         icon='/media/icons/duotune/general/gen051.svg'
@@ -105,18 +100,6 @@ export function AsideMenuMain() {
         <div className='menu-content'>
           <div className='separator mx-1 my-4'></div>
         </div>
-      </div>
-      <div className='menu-item'>
-        <a
-          target='_blank'
-          className='menu-link'
-          href={process.env.REACT_APP_PREVIEW_DOCS_URL + '/docs/changelog'}
-        >
-          <span className='menu-icon'>
-            <KTSVG path='/media/icons/duotune/general/gen005.svg' className='svg-icon-2' />
-          </span>
-          <span className='menu-title'>Changelog {process.env.REACT_APP_VERSION}</span>
-        </a>
       </div>
     </>
   )

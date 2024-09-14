@@ -8,6 +8,7 @@ import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import {CreateStory} from '../pages/Stories/CreateStory'
+import {ViewStory} from '../pages/Stories/ViewStory'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -25,6 +26,7 @@ const PrivateRoutes = () => {
         {/* Pages */}
         <Route path='dashboard' element={<DashboardWrapper />} />
         <Route path="/createStory" element={<CreateStory />} />
+        <Route path="/ViewStory" element={<ViewStory />} />
         <Route
           path='builder'
           element={
