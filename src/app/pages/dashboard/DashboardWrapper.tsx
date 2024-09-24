@@ -20,7 +20,7 @@ const DashboardPage = () => (
     {/* begin::Row */}
     <div className='row g-5 g-xl-8'>
       <div className="col-xl-4">
-        <button onClick={() => window.open('https://pass4autism-project.eu/', '_blank')}
+        <button onClick={() => window.open('http://localhost:3011/metronic8/react/demo8/createStory', '_blank')}
                 style={{background: 'none', border: 'none', padding: '0', cursor: 'pointer'}}>
           <StatisticsWidget5
             className="card-xl-stretch mb-xl-8"
@@ -55,7 +55,7 @@ const DashboardPage = () => (
         <button onClick={() => window.open('https://pass4autism-project.eu/', '_blank')}
                 style={{background: 'none', border: 'none', padding: '0', cursor: 'pointer'}}>
           <StatisticsWidget5
-            className="card-xl-stretch mb-xl-9"
+            className="card-xl-stretch mb-xl-10"
             svgIcon="/media/icons/duotune/electronics/elc001.svg"
             color="body-white"
             iconColor="primary"
