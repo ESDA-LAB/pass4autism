@@ -16,27 +16,27 @@ export function ActivationPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const apiUrl = `http://localhost:8088/api/v1/auth/activate-account?token=${code}`;
+
     try {
-      const response = await fetch("http://localhost:8088/api/v1/auth/authenticate", {
-        method: "POST",
+      const response = await fetch(apiUrl, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          activationCode: code, // Send the code in the request body
-        }),
       });
 
       if (response.ok) {
-        // Handle success
         const data = await response.json();
         setSuccess(true);
+        setError(null);
         console.log("Activation successful:", data);
       } else {
-        // Handle error
+        // Handle the case where the API returns an error
         const errorData = await response.json();
         setError(errorData.message || "Activation failed");
         setSuccess(false);
+        console.error("Error response:", errorData);
       }
     } catch (error) {
       console.error("Error during activation:", error);
