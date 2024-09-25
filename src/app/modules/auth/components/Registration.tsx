@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import clsx from 'clsx';
 import axios from 'axios'; // Import axios for making API requests
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toAbsoluteUrl } from '../../../../_metronic/helpers';
 import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/components';
 import { useAuth } from '../core/Auth';
@@ -65,6 +65,7 @@ export const register = async (email: string, firstname: string, lastname: strin
 export function Registration() {
   const [loading, setLoading] = useState(false);
   const { saveAuth, setCurrentUser } = useAuth();
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const formik = useFormik({
     initialValues,
@@ -72,20 +73,38 @@ export function Registration() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
+        console.log('Registering with:', values);
         const auth = await register(
           values.email,
           values.firstname,
           values.lastname,
           values.password
         );
+        console.log('Registration Successful:', auth);
         saveAuth(auth);
-        const user = await getUserByToken(auth.api_token);
-        // @ts-ignore
-        setCurrentUser(user);
-      } catch (error) {
-        console.error(error);
-        saveAuth(undefined);
-        setStatus('The registration details are incorrect');
+        // Optional: Check if the token exists before fetching the user
+        if (auth.api_token) {
+          const user = await getUserByToken(auth.api_token);
+          // @ts-ignore
+          setCurrentUser(user);
+        }
+        navigate('/auth/activation-page');  // Redirect to activation page after successful registration
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error('Axios Error:', {
+            message: error.message,
+            response: error.response ? error.response.data : null,
+          });
+          // Log the response for debugging
+          console.log('Response data:', error.response?.data);
+          setStatus(error.response?.data?.message || 'The registration details are incorrect');
+        } else if (error instanceof Error) {
+          console.error('General Error:', error.message);
+          setStatus(error.message);
+        } else {
+          console.error('Unknown Error:', error);
+          setStatus('The registration details are incorrect');
+        }
       } finally {
         setSubmitting(false);
         setLoading(false);
