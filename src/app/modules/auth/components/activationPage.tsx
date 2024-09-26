@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 export function ActivationPage() {
   const [code, setCode] = useState<string>("");
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -21,26 +23,45 @@ export function ActivationPage() {
     try {
       const response = await fetch(apiUrl, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setSuccess(true);
-        setError(null);
-        console.log("Activation successful:", data);
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          setSuccess(true);
+          setError(null);
+          console.log("Activation successful:", data);
+
+          // Redirect to login page after successful activation
+          setTimeout(() => {
+            navigate("/auth/login");
+          }, 1500); // Delay of 1.5 seconds before redirecting
+        } else {
+          // Handle case where there is no JSON response (e.g., 204 No Content)
+          setSuccess(true);
+          setError(null);
+          console.log("Activation successful with no response body.");
+
+          // Redirect to login page after successful activation
+          setTimeout(() => {
+            navigate("/login");
+          }, 1500);
+        }
       } else {
-        // Handle the case where the API returns an error
         const errorData = await response.json();
         setError(errorData.message || "Activation failed");
         setSuccess(false);
         console.error("Error response:", errorData);
       }
-    } catch (error) {
-      console.error("Error during activation:", error);
-      setError("Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Error during activation:", err.message);
+        setError("Something went wrong: " + err.message);
+      } else {
+        console.error("Unknown error during activation:", err);
+        setError("Something went wrong. Please try again.");
+      }
       setSuccess(false);
     }
   };
@@ -62,7 +83,7 @@ export function ActivationPage() {
           type="submit"
           style={{
             ...styles.button,
-            backgroundColor: isHovered ? '#0056b3' : '#007bff',
+            backgroundColor: isHovered ? "#0056b3" : "#007bff",
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -71,56 +92,56 @@ export function ActivationPage() {
         </button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>Activation successful!</p>}
+      {success && <p style={{ color: "green" }}>Activation successful! Redirecting...</p>}
     </div>
   );
 }
 
 const styles: { [key: string]: React.CSSProperties } = {
   card: {
-    backgroundColor: '#fff',
-    padding: '40px',
-    borderRadius: '10px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-    textAlign: 'center',
-    maxWidth: '400px',
-    margin: 'auto',
-    display: 'block',
+    backgroundColor: "#fff",
+    padding: "40px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    maxWidth: "400px",
+    margin: "auto",
+    display: "block",
   },
   title: {
-    fontSize: '28px',
-    color: '#333',
-    marginBottom: '10px',
+    fontSize: "28px",
+    color: "#333",
+    marginBottom: "10px",
   },
   subtitle: {
-    fontSize: '16px',
-    color: '#777',
-    marginBottom: '30px',
+    fontSize: "16px",
+    color: "#777",
+    marginBottom: "30px",
   },
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   input: {
-    padding: '15px',
-    fontSize: '24px',
-    textAlign: 'center',
-    letterSpacing: '8px',
-    width: '200px',
-    marginBottom: '20px',
-    borderRadius: '8px',
-    border: '1px solid #ccc',
-    backgroundColor: '#fafafa',
+    padding: "15px",
+    fontSize: "24px",
+    textAlign: "center",
+    letterSpacing: "8px",
+    width: "200px",
+    marginBottom: "20px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    backgroundColor: "#fafafa",
   },
   button: {
-    padding: '12px 20px',
-    fontSize: '18px',
-    color: '#fff',
-    backgroundColor: '#007bff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
+    padding: "12px 20px",
+    fontSize: "18px",
+    color: "#fff",
+    backgroundColor: "#007bff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
   },
 };
