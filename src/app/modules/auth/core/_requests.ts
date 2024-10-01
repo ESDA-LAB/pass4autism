@@ -1,10 +1,10 @@
 import axios from 'axios'
-import {AuthModel, UserModel} from './_models'
+import { AuthModel, UserModel } from './_models'
 
 const API_URL = process.env.REACT_APP_API_URL
 
-export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`
-export const LOGIN_URL = `${API_URL}/login`
+export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/auth/activate-account`
+export const LOGIN_URL = `${API_URL}/auth/authenticate` // Update the login URL
 export const REGISTER_URL = `${API_URL}/register`
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`
 
@@ -35,13 +35,19 @@ export function register(
 
 // Server should return object => { result: boolean } (Is Email in DB)
 export function requestPassword(email: string) {
-  return axios.post<{result: boolean}>(REQUEST_PASSWORD_URL, {
+  return axios.post<{ result: boolean }>(REQUEST_PASSWORD_URL, {
     email,
   })
 }
 
+// Pass the token in the headers for the API call
 export function getUserByToken(token: string) {
   return axios.post<UserModel>(GET_USER_BY_ACCESSTOKEN_URL, {
-    api_token: token,
+    // You might not need to pass the token in the body,
+    // but only in headers based on your API design.
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+    }
   })
 }

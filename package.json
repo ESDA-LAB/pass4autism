@@ -1,6 +1,7 @@
 {
   "name": "demo8",
   "version": "8.1.7",
+  "proxy": "http://localhost:8088",
   "private": true,
   "homepage": "/metronic8/react/demo8",
   "dependencies": {

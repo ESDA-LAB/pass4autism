@@ -1,12 +1,73 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState} from 'react'
-import * as Yup from 'yup'
-import clsx from 'clsx'
-import {Link} from 'react-router-dom'
-import {useFormik} from 'formik'
-import {getUserByToken, login} from '../core/_requests'
+import { useState } from 'react';
+import * as Yup from 'yup';
+import clsx from 'clsx';
+import { Link } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { useAuth } from '../core/Auth';
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {useAuth} from '../core/Auth'
+
+// Define types for the auth response and user
+interface AuthResponse {
+  api_token: string;
+}
+
+interface UserResponse {
+  id: number;
+  name: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface UserModel {
+  id: number;
+  username: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
+// Mock functions for testing purposes
+const mockLogin = (email: string, password: string): Promise<{ data: AuthResponse }> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: {
+          api_token: 'mock-token-123456',
+        },
+      });
+    }, 500); // Simulating a delay for async call
+  });
+};
+
+const mockGetUserByToken = (token: string): Promise<{ data: UserResponse }> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: {
+          id: 1,
+          name: 'Test User',
+          email: 'testuser@email.com',
+          first_name: 'Test',
+          last_name: 'User',
+        },
+      });
+    }, 500);
+  });
+};
+
+// Define the mapping function to convert UserResponse to UserModel
+const handleUserMapping = (userResponse: UserResponse): UserModel => {
+  return {
+    id: userResponse.id, // Mapping 'id' from response
+    username: userResponse.name, // Mapping 'name' from response to 'username'
+    password: 'defaultPassword', // Set a default or derived password
+    first_name: userResponse.first_name,
+    last_name: userResponse.last_name,
+    email: userResponse.email,
+  };
+};
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -18,42 +79,48 @@ const loginSchema = Yup.object().shape({
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
-})
+});
 
 const initialValues = {
-  email: 'admin@demo.com',
+  email: 'someone@email.com',
   password: 'demo',
-}
-
-/*
-  Formik+YUP+Typescript:
-  https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
-  https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
-*/
+};
 
 export function Login() {
-  const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const [loading, setLoading] = useState(false);
+  const { saveAuth, setCurrentUser } = useAuth();
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: async (values, {setStatus, setSubmitting}) => {
-      setLoading(true)
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      setLoading(true);
+      console.log('Submitting form with values:', values); // For testing
+
       try {
-        const {data: auth} = await login(values.email, values.password)
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+        // Use the mock login function instead of the actual API call
+        const authResponse = await mockLogin(values.email, values.password);
+        const auth = authResponse.data;
+        console.log('Login successful, mock auth:', auth); // Testing mock auth response
+
+        saveAuth(auth);
+
+        // Use the mock user retrieval function instead of the actual API call
+        const userResponse = await mockGetUserByToken(auth.api_token);
+        const user = handleUserMapping(userResponse.data); // Mapping UserResponse to UserModel
+        console.log('Mapped user:', user);
+
+        setCurrentUser(user); // Setting the mapped user model
+        // No need to redirect here, PrivateRoutes will handle it
       } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The login detail is incorrect')
-        setSubmitting(false)
-        setLoading(false)
+        console.error('Login error:', error);
+        saveAuth(undefined);
+        setStatus('The login detail is incorrect');
+        setSubmitting(false);
+        setLoading(false);
       }
     },
-  })
+  });
 
   return (
     <form
@@ -62,7 +129,6 @@ export function Login() {
       noValidate
       id='kt_login_signin_form'
     >
-      {/* begin::Heading */}
       <div className='text-center mb-10'>
         <h1 className='text-dark mb-3'>Sign In</h1>
         <div className='text-gray-400 fw-bold fs-4'>
@@ -72,7 +138,6 @@ export function Login() {
           </Link>
         </div>
       </div>
-      {/* begin::Form group */}
       <div className='fv-row mb-10'>
         <label className='form-label fs-6 fw-bolder text-dark'>Email</label>
         <input
@@ -80,10 +145,8 @@ export function Login() {
           {...formik.getFieldProps('email')}
           className={clsx(
             'form-control form-control-lg form-control-solid',
-            {'is-invalid': formik.touched.email && formik.errors.email},
-            {
-              'is-valid': formik.touched.email && !formik.errors.email,
-            }
+            { 'is-invalid': formik.touched.email && formik.errors.email },
+            { 'is-valid': formik.touched.email && !formik.errors.email }
           )}
           type='email'
           name='email'
@@ -95,24 +158,14 @@ export function Login() {
           </div>
         )}
       </div>
-      {/* end::Form group */}
 
-      {/* begin::Form group */}
       <div className='fv-row mb-10'>
         <div className='d-flex justify-content-between mt-n5'>
           <div className='d-flex flex-stack mb-2'>
-            {/* begin::Label */}
             <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
-            {/* end::Label */}
-            {/* begin::Link */}
-            <Link
-              to='/auth/forgot-password'
-              className='link-primary fs-6 fw-bolder'
-              style={{marginLeft: '5px'}}
-            >
+            <Link to='/auth/forgot-password' className='link-primary fs-6 fw-bolder'>
               Forgot Password ?
             </Link>
-            {/* end::Link */}
           </div>
         </div>
         <input
@@ -121,12 +174,8 @@ export function Login() {
           {...formik.getFieldProps('password')}
           className={clsx(
             'form-control form-control-lg form-control-solid',
-            {
-              'is-invalid': formik.touched.password && formik.errors.password,
-            },
-            {
-              'is-valid': formik.touched.password && !formik.errors.password,
-            }
+            { 'is-invalid': formik.touched.password && formik.errors.password },
+            { 'is-valid': formik.touched.password && !formik.errors.password }
           )}
         />
         {formik.touched.password && formik.errors.password && (
@@ -137,9 +186,7 @@ export function Login() {
           </div>
         )}
       </div>
-      {/* end::Form group */}
 
-      {/* begin::Action */}
       <div className='text-center'>
         <button
           type='submit'
@@ -149,18 +196,15 @@ export function Login() {
         >
           {!loading && <span className='indicator-label'>Continue</span>}
           {loading && (
-            <span className='indicator-progress' style={{display: 'block'}}>
+            <span className='indicator-progress' style={{ display: 'block' }}>
               Please wait...
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
           )}
         </button>
 
-        {/* begin::Separator */}
         <div className='text-center text-muted text-uppercase fw-bolder mb-5'>or</div>
-        {/* end::Separator */}
 
-        {/* begin::Google link */}
         <a href='#' className='btn btn-flex flex-center btn-light btn-lg w-100 mb-5'>
           <img
             alt='Logo'
@@ -169,9 +213,7 @@ export function Login() {
           />
           Continue with Google
         </a>
-        {/* end::Google link */}
       </div>
-      {/* end::Action */}
     </form>
-  )
+  );
 }
