@@ -15,11 +15,6 @@ export function AsideMenuMain() {
         title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
       />
       <AsideMenuItem
-        to='/builder'
-        icon='/media/icons/duotune/general/gen019.svg'
-        title='Layout Builder'
-      />
-      <AsideMenuItem
         to="/createStory"
         title="Create Story"
         icon='/media/icons/duotune/files/fil005.svg'/>
