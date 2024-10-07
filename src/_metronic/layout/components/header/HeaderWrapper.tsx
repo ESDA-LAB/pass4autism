@@ -21,7 +21,7 @@ export function HeaderWrapper() {
         <Link to='/'>
           <img
             alt='Logo'
-            src={toAbsoluteUrl('/media/logos/pass4autism_logo.png')}
+            src={toAbsoluteUrl('/media/logos/pass4autism_logo_white_bg.png')}
             className='h-25px h-lg-50px'
           />
         </Link>
