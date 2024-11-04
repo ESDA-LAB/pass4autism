@@ -2,7 +2,6 @@ import {Tab} from 'bootstrap'
 import {useEffect, useRef} from 'react'
 import {
   MenuComponent,
-  DrawerComponent,
   ScrollComponent,
   ScrollTopComponent,
   StickyComponent,
@@ -20,7 +19,6 @@ export function MasterInit() {
     setTimeout(() => {
       ToggleComponent.bootstrap()
       ScrollTopComponent.bootstrap()
-      DrawerComponent.bootstrap()
       StickyComponent.bootstrap()
       MenuComponent.bootstrap()
       ScrollComponent.bootstrap()

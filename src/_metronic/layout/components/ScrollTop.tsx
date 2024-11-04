@@ -2,7 +2,6 @@ import React, {useEffect, useRef} from 'react'
 import {useLocation} from 'react-router-dom'
 import {
   ScrollTopComponent,
-  DrawerComponent,
   ToggleComponent,
   StickyComponent,
 } from '../../assets/ts/components'
@@ -17,7 +16,6 @@ export function ScrollTop() {
       StickyComponent.reInitialization()
       setTimeout(() => {
         ToggleComponent.reinitialization()
-        DrawerComponent.reinitialization()
       }, 70)
     }, 140)
   }

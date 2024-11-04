@@ -1,5 +1,4 @@
 export * from './_CookieComponent'
-export * from './_DrawerComponent'
 export * from './_FeedbackComponent'
 export * from './_ImageInputComponent'
 export * from './_ScrollComponent'

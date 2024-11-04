@@ -43,23 +43,6 @@ const AuthLayout = () => {
         {/* end::Wrapper */}
       </div>
       {/* end::Content */}
-      {/* begin::Footer */}
-      <div className='d-flex flex-center flex-column-auto p-10'>
-        <div className='d-flex align-items-center fw-semibold fs-6'>
-          <a href='#' className='text-muted text-hover-primary px-2'>
-            About
-          </a>
-
-          <a href='#' className='text-muted text-hover-primary px-2'>
-            Contact
-          </a>
-
-          <a href='#' className='text-muted text-hover-primary px-2'>
-            Contact Us
-          </a>
-        </div>
-      </div>
-      {/* end::Footer */}
     </div>
   )
 }

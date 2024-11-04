@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
 
+// Define the type for images, including language, level, and age
+interface Image {
+  id: number;
+  src: string;
+  alt: string;
+  title: string;
+  language: string;
+  level: string;
+  age: string; // New property for age filter
+}
+
 // Language dropdown options
 interface LanguageOption {
   code: string;
@@ -13,7 +24,13 @@ const languageOptions: LanguageOption[] = [
   { code: 'it', label: 'Italian' },
 ];
 
-// Dropdown component
+// Levels dropdown options
+const levelOptions: string[] = ['level1', 'level2', 'level3'];
+
+// Age dropdown options
+const ageOptions: string[] = ['2-5', '10-12', '13-17'];
+
+// Dropdown component for languages
 const Dropdown: React.FC<{ onLanguageChange: (lang: string) => void }> = ({ onLanguageChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('Select Language');
@@ -51,15 +68,91 @@ const Dropdown: React.FC<{ onLanguageChange: (lang: string) => void }> = ({ onLa
   );
 };
 
+// Dropdown component for levels
+const LevelsDropdown: React.FC<{ onLevelChange: (level: string) => void }> = ({ onLevelChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState<string>('Select Level');
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLevelSelect = (level: string) => {
+    setSelectedLevel(level);
+    onLevelChange(level);
+    setIsOpen(false);
+  };
+
+  return (
+    <div style={dropdownStyle.container}>
+      <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
+        {selectedLevel}
+        <span style={dropdownStyle.arrow}>▼</span>
+      </div>
+      {isOpen && (
+        <div style={dropdownStyle.menu}>
+          {levelOptions.map((option) => (
+            <div
+              key={option}
+              style={dropdownStyle.item}
+              onClick={() => handleLevelSelect(option)}
+            >
+              {option}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Dropdown component for age
+const AgeDropdown: React.FC<{ onAgeChange: (age: string) => void }> = ({ onAgeChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedAge, setSelectedAge] = useState<string>('Select Age');
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleAgeSelect = (age: string) => {
+    setSelectedAge(age);
+    onAgeChange(age);
+    setIsOpen(false);
+  };
+
+  return (
+    <div style={dropdownStyle.container}>
+      <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
+        {selectedAge}
+        <span style={dropdownStyle.arrow}>▼</span>
+      </div>
+      {isOpen && (
+        <div style={dropdownStyle.menu}>
+          {ageOptions.map((option) => (
+            <div
+              key={option}
+              style={dropdownStyle.item}
+              onClick={() => handleAgeSelect(option)}
+            >
+              {option}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Dropdown styles
 const dropdownStyle = {
   container: {
     position: 'relative',
     display: 'inline-block',
-    margin: '20px',
+    margin: '10px 20px',
   } as React.CSSProperties,
   dropdown: {
-    padding: '12px 20px',
+    padding: '10px 15px',
     backgroundColor: '#009ef7',
     color: '#fff',
     border: 'none',
@@ -70,7 +163,7 @@ const dropdownStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    fontSize: '16px',
+    fontSize: '14px',
     fontWeight: 'bold',
     outline: 'none',
   } as React.CSSProperties,
@@ -84,16 +177,16 @@ const dropdownStyle = {
     boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
     marginTop: '5px',
     animation: 'fadeIn 0.2s',
-    width: '200px', // Set a width for the dropdown menu
+    width: '200px',
   } as React.CSSProperties,
   item: {
-    padding: '12px 15px',
+    padding: '10px 15px',
     cursor: 'pointer',
     transition: 'background-color 0.3s',
     fontSize: '14px',
     '&:hover': {
       backgroundColor: '#f1f1f1',
-      fontWeight: 'bold', // Make text bold on hover
+      fontWeight: 'bold',
     },
   } as React.CSSProperties,
   arrow: {
@@ -106,17 +199,20 @@ const dropdownStyle = {
 export const ViewStory = () => {
   const [clickedImageId, setClickedImageId] = useState<number | null>(null);
   const [filteredLanguage, setFilteredLanguage] = useState<string | null>(null);
+  const [filteredLevel, setFilteredLevel] = useState<string | null>(null);
+  const [filteredAge, setFilteredAge] = useState<string | null>(null);
 
-  const initialImages = [
-    { id: 1, src: 'media/Picture7.png', alt: 'Image 1', title: 'Say NO-Limits' },
-    { id: 2, src: 'media/Picture8.jpg', alt: 'Image 2', title: 'Negotiate' },
-    { id: 3, src: 'media/Picture9.jpg', alt: 'Image 3', title: 'Gather and collect my things at home' },
+  // Define initial images with all properties
+  const initialImages: Image[] = [
+    { id: 1, src: 'media/Picture7.png', alt: 'Image 1', title: 'Say NO-Limits', language: 'en', level: 'level1', age: '2-5' },
+    { id: 2, src: 'media/Picture8.jpg', alt: 'Image 2', title: 'Negotiate', language: 'es', level: 'level2', age: '10-12' },
+    { id: 3, src: 'media/Picture9.jpg', alt: 'Image 3', title: 'Gather and collect my things at home', language: 'it', level: 'level3', age: '13-17' },
   ];
 
-  const additionalImages = [
-    { id: 4, src: 'media/Picture10.jpg', alt: 'Image 4', title: 'Story Title 4' },
-    { id: 5, src: 'media/Picture11.jpg', alt: 'Image 5', title: 'Story Title 5' },
-    { id: 6, src: 'media/Picture12.jpg', alt: 'Image 6', title: 'Story Title 6' },
+  const additionalImages: Image[] = [
+    { id: 4, src: 'media/Picture10.jpg', alt: 'Image 4', title: 'Story Title 4', language: 'el', level: 'level1', age: '2-5' },
+    { id: 5, src: 'media/Picture11.jpg', alt: 'Image 5', title: 'Story Title 5', language: 'en', level: 'level2', age: '10-12' },
+    { id: 6, src: 'media/Picture12.jpg', alt: 'Image 6', title: 'Story Title 6', language: 'es', level: 'level3', age: '13-17' },
   ];
 
   const handleImageClick = (id: number) => {
@@ -125,7 +221,23 @@ export const ViewStory = () => {
 
   const handleLanguageChange = (lang: string) => {
     setFilteredLanguage(lang);
-    // Add filtering logic here based on the selected language
+  };
+
+  const handleLevelChange = (level: string) => {
+    setFilteredLevel(level);
+  };
+
+  const handleAgeChange = (age: string) => {
+    setFilteredAge(age);
+  };
+
+  // Filtering logic based on language, level, and age
+  const filterImages = (images: Image[]) => {
+    return images.filter(image =>
+      (!filteredLanguage || image.language === filteredLanguage) &&
+      (!filteredLevel || image.level === filteredLevel) &&
+      (!filteredAge || image.age === filteredAge)
+    );
   };
 
   // Inline styles
@@ -156,28 +268,36 @@ export const ViewStory = () => {
     fontWeight: 'bold',
   };
 
-  // Header style
+  const filtersPanelStyle: React.CSSProperties = {
+    backgroundColor: '#f9f9f9',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+    marginBottom: '20px',
+    width: '100%',
+    maxWidth: '600px',
+    textAlign: 'center',
+  };
+
   const headerStyle: React.CSSProperties = {
     fontSize: '24px',
     fontWeight: 'bold',
     marginBottom: '20px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center', // Align items vertically centered
-    width: '100%',
   };
 
   return (
     <div style={containerStyle}>
-      {/* Page Header with Dropdown */}
-      <div style={headerStyle}>
-        <h1>View Storys</h1>
-        <Dropdown onLanguageChange={handleLanguageChange} /> {/* Dropdown for language selection */}
+      {/* Filters Panel */}
+      <div style={filtersPanelStyle}>
+        <h2 style={headerStyle}>Filters</h2>
+        <Dropdown onLanguageChange={handleLanguageChange} /> {/* Language Dropdown */}
+        <LevelsDropdown onLevelChange={handleLevelChange} /> {/* Level Dropdown */}
+        <AgeDropdown onAgeChange={handleAgeChange} /> {/* Age Dropdown */}
       </div>
 
       {/* Initial Image Row */}
       <div style={gridStyle}>
-        {initialImages.map((image) => (
+        {filterImages(initialImages).map((image) => (
           <div key={image.id} style={{ textAlign: 'center' }}>
             <img
               src={image.src}
@@ -208,8 +328,9 @@ export const ViewStory = () => {
               {initialImages.find((img) => img.id === clickedImageId)?.title}
             </p>
           </div>
-          {/* Then display the additional images */}
-          {additionalImages.map((image) => (
+
+          {/* Display the filtered additional images */}
+          {filterImages(additionalImages).map((image) => (
             <div key={image.id} style={{ textAlign: 'center' }}>
               <img
                 src={image.src}
