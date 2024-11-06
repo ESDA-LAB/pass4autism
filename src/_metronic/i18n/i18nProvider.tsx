@@ -17,6 +17,7 @@ import jaMessages from './messages/ja.json'
 import zhMessages from './messages/zh.json'
 import {WithChildren} from '../helpers'
 
+
 const allMessages = {
   de: deMessages,
   en: enMessages,
