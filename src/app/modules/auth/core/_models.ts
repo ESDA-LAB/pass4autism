@@ -1,5 +1,7 @@
+import { number } from "yup"
+
 export interface AuthModel {
-  api_token: string
+  token: string
   refreshToken?: string
 }
 
@@ -64,4 +66,42 @@ export interface UserModel {
   communication?: UserCommunicationModel
   address?: UserAddressModel
   socialNetworks?: UserSocialNetworksModel
+}
+
+export interface StoryDetails {
+  id: number;
+  title: string;
+  authorName: string;
+  synopsis: string;
+  owner: string | null;
+  cover: string | null;
+  rate: number;
+  archived: boolean;
+  shareable: boolean;
+  functional: string;
+  keywords: string | null;
+  text1: string | null;
+  text2: string | null;
+  text3: string | null;
+  text4: string | null;
+  text5: string | null;
+  text6: string | null;
+  text7: string | null;
+  image1: string | null;
+  image2: string | null;
+  image3: string | null;
+  image4: string | null;
+  image5: string | null;
+  image6: string | null;
+  image7: string | null;
+}
+
+export interface PaginatedStory {
+  content: Array<StoryDetails>
+  number: number
+  size: number
+  totalElements: number
+  totalPages: number
+  first: boolean
+  last: boolean
 }

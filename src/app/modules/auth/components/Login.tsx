@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useAuth } from '../core/Auth';
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import { login, getUserByToken } from '../core/_requests';
 
 // Define types for the auth response and user
 interface AuthResponse {
-  api_token: string;
+  token: string;
 }
 
 interface UserResponse {
@@ -29,19 +30,19 @@ interface UserModel {
 }
 
 // Mock functions for testing purposes
-const mockLogin = (email: string, password: string): Promise<{ data: AuthResponse }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        data: {
-          api_token: 'mock-token-123456',
-        },
-      });
-    }, 500); // Simulating a delay for async call
-  });
-};
+// const mockLogin = (email: string, password: string): Promise<{ data: AuthResponse }> => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve({
+//         data: {
+//           token: 'mock-token-123456',
+//         },
+//       });
+//     }, 500); // Simulating a delay for async call
+//   });
+// };
 
-const mockGetUserByToken = (token: string): Promise<{ data: UserResponse }> => {
+ const mockGetUserByToken = (token: string): Promise<{ data: UserResponse }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -57,7 +58,7 @@ const mockGetUserByToken = (token: string): Promise<{ data: UserResponse }> => {
   });
 };
 
-// Define the mapping function to convert UserResponse to UserModel
+//Define the mapping function to convert UserResponse to UserModel
 const handleUserMapping = (userResponse: UserResponse): UserModel => {
   return {
     id: userResponse.id, // Mapping 'id' from response
@@ -82,8 +83,8 @@ const loginSchema = Yup.object().shape({
 });
 
 const initialValues = {
-  email: 'someone@email.com',
-  password: 'demo',
+  email: 'theo13@gmail.com',
+  password: 'password012',
 };
 
 export function Login() {
@@ -96,17 +97,18 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       console.log('Submitting form with values:', values); // For testing
-
       try {
-        // Use the mock login function instead of the actual API call
-        const authResponse = await mockLogin(values.email, values.password);
+        // Perform login
+        const authResponse = await login(values.email, values.password);
         const auth = authResponse.data;
-        console.log('Login successful, mock auth:', auth); // Testing mock auth response
+        console.log('Login successful, auth:', auth); // Testing auth response
+        saveAuth(auth); // Save the token to localStorage
 
-        saveAuth(auth);
-
-        // Use the mock user retrieval function instead of the actual API call
-        const userResponse = await mockGetUserByToken(auth.api_token);
+        // Get user details using the token
+        //const userResponse = await getUserByToken(auth.token);
+        //console.log('Mapped user:', userResponse.data);
+        //setCurrentUser(userResponse.data); // Save user data to context/state
+        const userResponse = await mockGetUserByToken('mock-token-123456');
         const user = handleUserMapping(userResponse.data); // Mapping UserResponse to UserModel
         console.log('Mapped user:', user);
 
@@ -114,11 +116,36 @@ export function Login() {
         // No need to redirect here, PrivateRoutes will handle it
       } catch (error) {
         console.error('Login error:', error);
-        saveAuth(undefined);
-        setStatus('The login detail is incorrect');
+        setStatus('Invalid login details'); // Show error message to user
         setSubmitting(false);
+        saveAuth(undefined);
+      } finally {
         setLoading(false);
       }
+      // console.log('Submitting form with values:', values); // For testing
+
+      // try {
+      //   // Use the mock login function instead of the actual API call
+      //   const authResponse = await mockLogin(values.email, values.password);
+      //   const auth = authResponse.data;
+      //   console.log('Login successful, mock auth:', auth); // Testing mock auth response
+
+      //   saveAuth(auth);
+
+      //   // Use the mock user retrieval function instead of the actual API call
+      //   const userResponse = await mockGetUserByToken(auth.token);
+      //   const user = handleUserMapping(userResponse.data); // Mapping UserResponse to UserModel
+      //   console.log('Mapped user:', user);
+
+      //   setCurrentUser(user); // Setting the mapped user model
+      //   // No need to redirect here, PrivateRoutes will handle it
+      // } catch (error) {
+      //   console.error('Login error:', error);
+      //   saveAuth(undefined);
+      //   setStatus('The login detail is incorrect');
+      //   setSubmitting(false);
+      //   setLoading(false);
+      // }
     },
   });
 

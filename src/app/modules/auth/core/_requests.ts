@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AuthModel, UserModel } from './_models'
+import { AuthModel, UserModel, PaginatedStory, StoryDetails } from './_models'
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -7,6 +7,7 @@ export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/auth/activate-account`
 export const LOGIN_URL = `${API_URL}/auth/authenticate` // Update the login URL
 export const REGISTER_URL = `${API_URL}/register`
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`
+export const STORIES_URL = `${API_URL}/stories`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {
@@ -42,12 +43,33 @@ export function requestPassword(email: string) {
 
 // Pass the token in the headers for the API call
 export function getUserByToken(token: string) {
-  return axios.post<UserModel>(GET_USER_BY_ACCESSTOKEN_URL, {
-    // You might not need to pass the token in the body,
-    // but only in headers based on your API design.
-  }, {
+  return axios.get<UserModel>(GET_USER_BY_ACCESSTOKEN_URL, {
     headers: {
       Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-    }
+    },
+    params: {
+      token: '395805',
+    },
   })
+}
+
+// Pass the token in the headers for the API call
+export function getStories(token: string, page: number, size: number = 10) {
+  return axios.get<PaginatedStory>(STORIES_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+    },
+    params: {
+      page,
+      size,
+    },
+  })
+}
+
+export function getStoryDetails(storyId: number, token: string) {
+  return axios.get<StoryDetails>(`${STORIES_URL}/${storyId}/details`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

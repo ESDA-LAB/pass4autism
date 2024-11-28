@@ -83,8 +83,8 @@ export function Registration() {
         console.log('Registration Successful:', auth);
         saveAuth(auth);
         // Optional: Check if the token exists before fetching the user
-        if (auth.api_token) {
-          const user = await getUserByToken(auth.api_token);
+        if (auth.token) {
+          const user = await getUserByToken(auth.token);
           // @ts-ignore
           setCurrentUser(user);
         }
