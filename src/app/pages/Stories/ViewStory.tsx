@@ -242,7 +242,7 @@ export const ViewStory = () => {
   const [filteredAge, setFilteredAge] = useState<string | null>(null);
 
   //Προσθήκη Κατάστασης για Εικόνες και Σελίδα
-  const [initialImages1, setImages] = useState<Image[]>([]); // Για τις εικόνες
+  const [initialImages, setImages] = useState<Image[]>([]); // Για τις εικόνες
   const [currentPage, setCurrentPage] = useState(0); // Τρέχουσα σελίδα
   const [totalPages, setTotalPages] = useState(0);   // Σύνολο σελίδων
   const [storyDetails, setStoryDetails] = useState<StoryDetails>({
@@ -296,7 +296,8 @@ export const ViewStory = () => {
           return;
         }
 
-        const response = await getStories(auth.token, currentPage, 10);
+        //const response = await getStories(auth.token, currentPage, 10);
+        const response = await getStories('928249', currentPage, 10);
         const data = response.data;
 
         setImages(mapBackendDataToImages(data.content));
@@ -338,7 +339,7 @@ export const ViewStory = () => {
   
 
   // Define initial images with all properties
-  const initialImages: Image[] = [
+  const initialImages1: Image[] = [
     { id: 1, src: 'media/Picture7.png', alt: 'Image 1', title: 'Say NO-Limits', language: 'en', level: 'level1', age: '2-5' },
     { id: 2, src: 'media/Picture8.jpg', alt: 'Image 2', title: 'Negotiate', language: 'es', level: 'level2', age: '10-12' },
     { id: 3, src: 'media/Picture9.jpg', alt: 'Image 3', title: 'Gather and collect my things at home', language: 'it', level: 'level3', age: '13-17' },
@@ -364,7 +365,8 @@ export const ViewStory = () => {
           return;
         }
   
-        const response = await getStoryDetails(id, auth.token);
+        //const response = await getStoryDetails(id, auth.token);
+        const response = await getStoryDetails(id, '928249');
         const data = response.data;
   
         // Αποθηκεύουμε τα δεδομένα απευθείας στο state
