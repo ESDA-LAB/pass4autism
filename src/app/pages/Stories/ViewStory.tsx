@@ -297,7 +297,7 @@ export const ViewStory = () => {
         }
 
         //const response = await getStories(auth.token, currentPage, 10);
-        const response = await getStories('928249', currentPage, 10);
+        const response = await getStories('538684', currentPage, 10);
         const data = response.data;
 
         setImages(mapBackendDataToImages(data.content));
@@ -366,7 +366,7 @@ export const ViewStory = () => {
         }
   
         //const response = await getStoryDetails(id, auth.token);
-        const response = await getStoryDetails(id, '928249');
+        const response = await getStoryDetails(id, '538684');
         const data = response.data;
   
         // Αποθηκεύουμε τα δεδομένα απευθείας στο state
@@ -456,7 +456,7 @@ export const ViewStory = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        selectedStory={selectedStory}
+        /*selectedStory={selectedStory} */
         storyDetails={storyDetails}
       />
 

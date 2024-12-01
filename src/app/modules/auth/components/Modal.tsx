@@ -8,17 +8,18 @@ interface Image {
     language: string;
     level: string;
     age: string; // New property for age filter
+    text: string | null;
 }
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    selectedStory: Image | null;
+    // selectedStory: Image | null;
     storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, selectedStory, storyDetails }) => {
-    if (!isOpen || !selectedStory || !storyDetails) return null;
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, storyDetails }) => {
+    if (!isOpen || !storyDetails) return null;
 
     const modalStyle: React.CSSProperties = {
         position: 'fixed',
@@ -44,22 +45,40 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, selectedStory, st
         color: '#333',
     };
 
+    const gridStyle: React.CSSProperties = {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)', // 3 στήλες
+        gap: '20px',
+        marginTop: '20px',
+    };
+
+    const itemStyle: React.CSSProperties = {
+        textAlign: 'center',
+    };
+
     const imageStyle: React.CSSProperties = {
         width: '100%',
+        height: 'auto',
         borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         marginBottom: '10px',
     };
 
-    // Δημιουργούμε έναν πίνακα με τις εικόνες που δεν είναι undefined
-    const images = [
-        storyDetails.image1,
-        storyDetails.image2,
-        storyDetails.image3,
-        storyDetails.image4,
-        storyDetails.image5,
-        storyDetails.image6,
-        storyDetails.image7,
-    ].filter((image) => image);
+    const textStyle: React.CSSProperties = {
+        fontSize: '14px',
+        color: '#555',
+    };
+
+    // Δημιουργούμε έναν πίνακα με εικόνες και τα αντίστοιχα κείμενα
+    const imagesWithTexts: ({ src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null })[] = [
+        { id: 1, src: storyDetails.image1, text: storyDetails.text1 },
+        { id: 2, src: storyDetails.image2, text: storyDetails.text2 },
+        { id: 3, src: storyDetails.image3, text: storyDetails.text3 },
+        { id: 4, src: storyDetails.image4, text: storyDetails.text4 },
+        { id: 5, src: storyDetails.image5, text: storyDetails.text5 },
+        { id: 6, src: storyDetails.image6, text: storyDetails.text6 },
+        { id: 7, src: storyDetails.image7, text: storyDetails.text7 },
+    ].filter((item) => item.src); // Φιλτράρουμε τις εικόνες που είναι null
 
     return (
         <>
@@ -68,21 +87,26 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, selectedStory, st
                 <p><strong>Author:</strong> {storyDetails.authorName}</p>
                 <p><strong>Synopsis:</strong> {storyDetails.synopsis}</p>
                 <p><strong>Rate:</strong> {storyDetails.rate}</p>
-                <p><strong>Text:</strong></p>
-                <ul>
-                    {[storyDetails.text1, storyDetails.text2, storyDetails.text3, storyDetails.text4, storyDetails.text5, storyDetails.text6, storyDetails.text7]
-                        .filter((text) => text) // Φιλτράρουμε τα `null`
-                        .map((text, index) => (
-                            <li key={index}>{text}</li>
-                        ))}
-                </ul>
-                <div>
-                    <h3>Images:</h3>
-                    {images.map((image, index) => (
-                        <img key={index} src={image??''} alt={`Story Image ${index + 1}`} style={imageStyle} />
+                <div style={gridStyle}>
+                    {imagesWithTexts.map((item) => (
+                        <div key={item.id} style={itemStyle}>
+                            <img src={item.src || ''} alt={`Story Image ${item.id}`} style={imageStyle} />
+                            {item.text && <p style={textStyle}>{item.text}</p>}
+                        </div>
                     ))}
                 </div>
-                <button onClick={onClose} style={{ marginTop: '20px', padding: '10px', backgroundColor: '#ff5c5c', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                <button
+                    onClick={onClose}
+                    style={{
+                        marginTop: '20px',
+                        padding: '10px',
+                        backgroundColor: '#ff5c5c',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                    }}
+                >
                     Close
                 </button>
             </div>
