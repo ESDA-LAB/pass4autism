@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
 import { getStories, getStoryDetails } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
-import { StoryDetails } from '../../modules/auth/core/_models'
+import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
 
 // Define the type for images, including language, level, and age
 interface Image {
@@ -22,37 +22,39 @@ interface LanguageOption {
 }
 
 const languageOptions: LanguageOption[] = [
+  { code: '', label: 'All Languages' }, // Κενή επιλογή
   { code: 'en', label: 'English' },
-  { code: 'el', label: 'Greek' },
+  { code: 'gr', label: 'Greek' },
   { code: 'es', label: 'Spanish' },
   { code: 'it', label: 'Italian' },
 ];
 
 // Levels dropdown options
-const levelOptions: string[] = ['level1', 'level2', 'level3'];
+const levelOptions: string[] = ['', 'level1', 'level2', 'level3'];
 
 // Age dropdown options
-const ageOptions: string[] = ['2-5', '10-12', '13-17'];
+const ageOptions: string[] = ['', '2-5', '10-12', '13-17'];
 
 // Dropdown component for languages
-const Dropdown: React.FC<{ onLanguageChange: (lang: string) => void }> = ({ onLanguageChange }) => {
+const LanguageDropdown: React.FC<{ 
+  onLanguageChange: (lang: string | undefined) => void, 
+  selectedLanguage: string | undefined 
+}> = ({ onLanguageChange, selectedLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('Select Language');
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleLanguageSelect = (lang: string) => {
-    setSelectedLanguage(lang);
-    onLanguageChange(lang);
+  const handleLanguageSelect = (code: string) => {
+    onLanguageChange(code || undefined); // Χρησιμοποιούμε το code για backend
     setIsOpen(false);
   };
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {selectedLanguage}
+        {languageOptions.find((option) => option.code === selectedLanguage)?.label || 'All Languages'}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
@@ -61,7 +63,7 @@ const Dropdown: React.FC<{ onLanguageChange: (lang: string) => void }> = ({ onLa
             <div
               key={option.code}
               style={dropdownStyle.item}
-              onClick={() => handleLanguageSelect(option.label)}
+              onClick={() => handleLanguageSelect(option.code)}
             >
               {option.label}
             </div>
@@ -73,24 +75,25 @@ const Dropdown: React.FC<{ onLanguageChange: (lang: string) => void }> = ({ onLa
 };
 
 // Dropdown component for levels
-const LevelsDropdown: React.FC<{ onLevelChange: (level: string) => void }> = ({ onLevelChange }) => {
+const LevelsDropdown: React.FC<{ 
+  onLevelChange: (level: string | undefined) => void, 
+  selectedLevel: string | undefined 
+}> = ({ onLevelChange, selectedLevel }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLevel, setSelectedLevel] = useState<string>('Select Level');
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleLevelSelect = (level: string) => {
-    setSelectedLevel(level);
-    onLevelChange(level);
+    onLevelChange(level || undefined); // Χρησιμοποιούμε το level για backend
     setIsOpen(false);
   };
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {selectedLevel}
+        {selectedLevel || 'All Levels'}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
@@ -101,7 +104,7 @@ const LevelsDropdown: React.FC<{ onLevelChange: (level: string) => void }> = ({ 
               style={dropdownStyle.item}
               onClick={() => handleLevelSelect(option)}
             >
-              {option}
+              {option || 'All Levels'}
             </div>
           ))}
         </div>
@@ -111,24 +114,25 @@ const LevelsDropdown: React.FC<{ onLevelChange: (level: string) => void }> = ({ 
 };
 
 // Dropdown component for age
-const AgeDropdown: React.FC<{ onAgeChange: (age: string) => void }> = ({ onAgeChange }) => {
+const AgeDropdown: React.FC<{ 
+  onAgeChange: (age: string | undefined) => void, 
+  selectedAge: string | undefined 
+}> = ({ onAgeChange, selectedAge }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAge, setSelectedAge] = useState<string>('Select Age');
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleAgeSelect = (age: string) => {
-    setSelectedAge(age);
-    onAgeChange(age);
+    onAgeChange(age || undefined); // Χρησιμοποιούμε το age για backend
     setIsOpen(false);
   };
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {selectedAge}
+        {selectedAge || 'All Ages'}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
@@ -139,7 +143,7 @@ const AgeDropdown: React.FC<{ onAgeChange: (age: string) => void }> = ({ onAgeCh
               style={dropdownStyle.item}
               onClick={() => handleAgeSelect(option)}
             >
-              {option}
+              {option || 'All Ages'}
             </div>
           ))}
         </div>
@@ -237,9 +241,9 @@ const paginationStyle = {
 // Main ViewStory component
 export const ViewStory = () => {
   const [clickedImageId, setClickedImageId] = useState<number | null>(null);
-  const [filteredLanguage, setFilteredLanguage] = useState<string | null>(null);
-  const [filteredLevel, setFilteredLevel] = useState<string | null>(null);
-  const [filteredAge, setFilteredAge] = useState<string | null>(null);
+  const [filteredLanguage, setFilteredLanguage] = useState<string | undefined>(undefined);
+  const [filteredLevel, setFilteredLevel] = useState<string | undefined>(undefined);
+  const [filteredAge, setFilteredAge] = useState<string | undefined>(undefined);
 
   //Προσθήκη Κατάστασης για Εικόνες και Σελίδα
   const [initialImages, setImages] = useState<Image[]>([]); // Για τις εικόνες
@@ -280,37 +284,48 @@ export const ViewStory = () => {
       src: item.cover || 'default-image.png', // Χρήση του cover ως εικόνα
       alt: item.title,
       title: item.title,
-      language: 'en', // Υποθέτουμε προεπιλογή για τη γλώσσα
+      language: item.language || 'en', // Υποθέτουμε προεπιλογή για τη γλώσσα
       level: `level${item.functional || 1}`, // Προσαρμογή του functional ως level
       age: '2-5', // Χρησιμοποίησε προεπιλογή αν δεν παρέχεται
     }));
   };
 
   // useEffect για φόρτωση stories από το backend
-  useEffect(() => {
-    const loadStories = async () => {
-      try {
-        const auth = getAuth();
-        if (!auth){
-          console.error('No auth token found');
-          return;
-        }
-
-        //const response = await getStories(auth.token, currentPage, 10);
-        const response = await getStories('538684', currentPage, 10);
-        const data = response.data;
-
-        setImages(mapBackendDataToImages(data.content));
-        setTotalPages(data.totalPages);
-      } catch (error) {
-        console.error('Error fetching stories:', error);
+  const loadStories = async (filters: { language?: string; level?: string; age?: string } = {}) => {
+    try {
+      const auth = getAuth();
+      if (!auth){
+        console.error('No auth token found');
+        return;
       }
-    };
 
-    loadStories();
-  }, [currentPage]);
+      //const response = await getStories(auth.token, currentPage, 9, filters);
+      const response = await getStories('538684', currentPage, 9, filters);
+      const data: PaginatedStory = response.data;
+
+      setImages(mapBackendDataToImages(data.content));
+      setTotalPages(data.totalPages);
+
+      if (data.filters?.length && data.filters.length > 0) {
+        console.log('Filters from backend:', data.filters);
+        const languageFilter = data.filters.find((filter) => filter.key === 'language')?.value;
+        const levelFilter = data.filters.find((filter) => filter.key === 'level')?.value;
+        const ageFilter = data.filters.find((filter) => filter.key === 'age')?.value;
+        if (languageFilter) setFilteredLanguage(languageFilter);
+        if (levelFilter) setFilteredLevel(`level${levelFilter}`);
+        if (ageFilter) setFilteredAge(ageFilter);
+      }
+    } catch (error) {
+      console.error('Error fetching stories:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadStories({ language: filteredLanguage, level: filteredLevel, age: filteredAge });
+  }, [currentPage, filteredLanguage, filteredLevel, filteredAge]);
 
   //Προσθήκη Πλοήγησης Pagination
+
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
@@ -377,16 +392,22 @@ export const ViewStory = () => {
     }
   };
 
-  const handleLanguageChange = (lang: string) => {
+  const handleLanguageChange = (lang: string | undefined) => {
     setFilteredLanguage(lang);
+    setCurrentPage(0); // Reset στο pagination
+    loadStories({ language: lang, level: filteredLevel, age: filteredAge });
   };
-
-  const handleLevelChange = (level: string) => {
+  
+  const handleLevelChange = (level: string | undefined) => {
     setFilteredLevel(level);
+    setCurrentPage(0); // Reset στο pagination
+    loadStories({ language: filteredLanguage, level, age: filteredAge });
   };
-
-  const handleAgeChange = (age: string) => {
+  
+  const handleAgeChange = (age: string | undefined) => {
     setFilteredAge(age);
+    setCurrentPage(0); // Reset στο pagination
+    loadStories({ language: filteredLanguage, level: filteredLevel, age });
   };
 
   // Filtering logic based on language, level, and age
@@ -448,10 +469,20 @@ export const ViewStory = () => {
       {/* Filters Panel */}
       <div style={filtersPanelStyle}>
         <h2 style={headerStyle}>Filters</h2>
-        <Dropdown onLanguageChange={handleLanguageChange} /> {/* Language Dropdown */}
-        <LevelsDropdown onLevelChange={handleLevelChange} /> {/* Level Dropdown */}
-        <AgeDropdown onAgeChange={handleAgeChange} /> {/* Age Dropdown */}
+        <LanguageDropdown 
+          onLanguageChange={handleLanguageChange} 
+          selectedLanguage={filteredLanguage} // Pass the selectedLanguage prop
+        />{/* Language Dropdown */}
+        <LevelsDropdown 
+          onLevelChange={handleLevelChange} 
+          selectedLevel={filteredLevel} // Pass the selectedLevel prop
+        />{/* Level Dropdown */}
+        <AgeDropdown 
+          onAgeChange={handleAgeChange} 
+          selectedAge={filteredAge} // Pass the selectedAge prop
+        />{/* Age Dropdown */}
       </div>
+
 
       <Modal
         isOpen={isModalOpen}

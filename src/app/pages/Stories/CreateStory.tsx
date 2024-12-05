@@ -1,78 +1,105 @@
-import { useState } from 'react'
-import axios from 'axios'
-import { useIntl } from 'react-intl'
-import { PageTitle } from '../../../_metronic/layout/core'
-import { StatisticsWidget5 } from '../../../_metronic/partials/widgets'
+import { useState } from 'react';
+import { useIntl } from 'react-intl';
+import { PageTitle } from '../../../_metronic/layout/core';
+import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
+import { getStories } from '../../modules/auth/core/_requests';
+import { StoryDetails } from '../../modules/auth/core/_models'
 
-const CreateStoryPage = () => {
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState<any[]>([])
-  const [selectedStory, setSelectedStory] = useState<any | null>(null)
-  const [editingIndex, setEditingIndex] = useState<number | null>(null) // To track the editing index
-  const [isPublic, setIsPublic] = useState(false) // New state for public/private status
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+interface Story {
+  id: number;
+  title: string;
+  text: string;
+  images: { url: string; title: string }[];
+}
+
+const CreateStoryPage: React.FC = () => {
+  const [query, setQuery] = useState<string>('');
+  const [results, setResults] = useState<any>([]);
+  const [selectedStory, setSelectedStory] = useState<Story | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isPublic, setIsPublic] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Function to handle search
-  const handleSearch = async () => {
-    setLoading(true)
-    setError(null)
+  const handleSearch = async (page: number = 0) => {
+    setLoading(true);
+    setError(null);
+  
     try {
-      setResults([
-        {
-          id: 1,
-          title: 'Share a toy',
-          text: 'Share a toy',
-          images: [
-            { url: 'media/Picture1.jpg', title: 'In the school' },
-            { url: 'media/Picture2.jpg', title: 'I play' },
-            { url: 'media/Picture3.jpg', title: 'With other children' },
-            { url: 'media/Picture4.jpg', title: 'We play' },
-            { url: 'media/Picture5.jpg', title: 'We share the toys' },
-            { url: 'media/Picture6.jpg', title: 'We play together' },
-          ], // Array of image URLs with titles
-        },
-      ]) // Store search results
-    } catch (error) {
-      setError('Failed to fetch search results.')
+      const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
+      const response = await getStories(authToken, page, 10, { searchKeywords: query });
+  
+      const { content, totalPages: pages } = response.data;
+  
+      const mappedContent = content.map((item: StoryDetails) => ({
+        id: item.id,
+        title: item.title,
+        text: item.synopsis || '', // Use synopsis as a default
+        images: [
+          { url: item.cover || 'default-image.png', title: item.title || 'No Title' },
+        ], // Map cover as the single image
+      }));
+  
+      setResults(mappedContent);
+      setTotalPages(pages);
+      setCurrentPage(page);
+    } catch (err) {
+      console.error('Error fetching stories:', err);
+      setError('Failed to fetch search results.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Function to handle selecting a story
-  const handleSelectStory = (story: any) => {
-    setSelectedStory(story)
-  }
+  const handleSelectStory = (story: Story) => {
+    setSelectedStory(story);
+  };
 
   // Function to handle edit
   const handleEdit = (index: number) => {
-    setEditingIndex(index)
-  }
+    setEditingIndex(index);
+  };
 
   // Function to save the new title
   const handleSaveTitle = (index: number, newTitle: string) => {
     if (selectedStory) {
-      const updatedImages = [...selectedStory.images]
-      updatedImages[index].title = newTitle
-      setSelectedStory({ ...selectedStory, images: updatedImages })
-      setEditingIndex(null) // Stop editing mode
+      const updatedImages = [...selectedStory.images];
+      updatedImages[index].title = newTitle;
+      setSelectedStory({ ...selectedStory, images: updatedImages });
+      setEditingIndex(null);
     }
-  }
+  };
 
   // Function to handle story save
   const handleSaveStory = () => {
     const savePayload = {
       story: selectedStory,
       isPublic,
-    }
-    console.log('Saving Story:', savePayload)
+    };
+    console.log('Saving Story:', savePayload);
     // You can add your API request here to save the story
-  }
+  };
+
+  // Pagination controls
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      handleSearch(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      handleSearch(currentPage - 1);
+    }
+  };
 
   return (
     <>
-      {/* begin::Row */}
+      {/* Header Section */}
       <div className='row g-5 g-xl-8'>
         <div className='col-xl-12'>
           <StatisticsWidget5
@@ -99,7 +126,7 @@ const CreateStoryPage = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)} // Update query state
           />
-          <button className='btn btn-primary' type='button' onClick={handleSearch}>
+          <button className='btn btn-primary' type='button' onClick={() => handleSearch(0)}>
             {loading ? 'Searching...' : 'Search'}
           </button>
         </div>
@@ -110,23 +137,22 @@ const CreateStoryPage = () => {
         {loading && <p>Loading results...</p>}
         {error && <p className='text-danger'>{error}</p>}
         {results.length > 0 ? (
-          <div className='search-results text-center'>
+          <div className="search-results text-center">
             {results.map((result: any) => (
               <div
                 key={result.id}
-                className='search-result-item'
-                onClick={() => handleSelectStory(result)} // Handle story selection
+                className="search-result-item"
+                onClick={() => handleSelectStory(result)}
                 style={{ cursor: 'pointer' }}
               >
-                {/* Hide the selected cover */}
-                {selectedStory?.id !== result.id && (
+                {result.images?.[0] && ( // Check if the first image exists
                   <>
                     <img
-                      src={result.images[0].url} // Display the first image as a thumbnail
-                      alt={result.title}
-                      width='300'
-                      className='mb-3'
-                      style={{ display: 'block', margin: '0 auto' }} // Center the image
+                      src={result.images[0].url}
+                      alt={result.images[0].title}
+                      width="300"
+                      className="mb-3"
+                      style={{ display: 'block', margin: '0 auto' }}
                     />
                     <p>{result.text}</p>
                   </>
@@ -139,12 +165,35 @@ const CreateStoryPage = () => {
         )}
       </div>
 
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className='col-xl-12 d-flex justify-content-center mt-4'>
+          <button
+            className='btn btn-secondary me-2'
+            onClick={handlePreviousPage}
+            disabled={currentPage === 0}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <button
+            className='btn btn-secondary ms-2'
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
       {/* Selected Story Display */}
       {selectedStory && (
         <div className='col-xl-12 mt-4'>
           <h2>{selectedStory.title}</h2>
           <div className='row'>
-            {selectedStory.images.slice(0, 3).map((image: any, index: number) => (
+            {selectedStory.images.map((image, index) => (
               <div className='col-lg-4 text-center' key={index}>
                 <img src={image.url} alt={`Story image ${index + 1}`} className='img-fluid' />
                 {editingIndex === index ? (
@@ -175,41 +224,6 @@ const CreateStoryPage = () => {
               </div>
             ))}
           </div>
-          <div className='row mt-3'>
-            {selectedStory.images.slice(3, 6).map((image: any, index: number) => (
-              <div className='col-lg-4 text-center' key={index + 3}>
-                <img src={image.url} alt={`Story image ${index + 4}`} className='img-fluid' />
-                {editingIndex === index + 3 ? (
-                  <div>
-                    <input
-                      type='text'
-                      value={image.title}
-                      onChange={(e) =>
-                        handleSaveTitle(index + 3, e.target.value) // Save the new title on change
-                      }
-                    />
-                    <button
-                      className='btn btn-primary mt-2'
-                      onClick={() => handleSaveTitle(index + 3, image.title)}
-                    >
-                      Save
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{image.title}</p>
-                    <button
-                      className='btn btn-secondary mt-2'
-                      onClick={() => handleEdit(index + 3)}
-                    >
-                      Edit Title
-                    </button>
-                    <button className='btn btn-info mt-2 ms-2'>Edit Image</button>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
 
           {/* Public/Private Selection */}
           <div className='mt-4 d-flex justify-content-center'>
@@ -230,17 +244,17 @@ const CreateStoryPage = () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-const CreateStory = () => {
-  const intl = useIntl()
+const CreateStory: React.FC = () => {
+  const intl = useIntl();
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({ id: 'MENU.CREATE_STORY' })}</PageTitle>
       <CreateStoryPage />
     </>
-  )
-}
+  );
+};
 
-export { CreateStory }
+export { CreateStory };

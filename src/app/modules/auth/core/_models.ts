@@ -104,4 +104,5 @@ export interface PaginatedStory {
   totalPages: number
   first: boolean
   last: boolean
+  filters?: Array<{ key: string; value: string }>
 }

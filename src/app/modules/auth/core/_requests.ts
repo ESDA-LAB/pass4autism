@@ -48,13 +48,13 @@ export function getUserByToken(token: string) {
       Authorization: `Bearer ${token}`, // Include the token in the Authorization header
     },
     params: {
-      token: '395805',
+      token: '762902',
     },
   })
 }
 
 // Pass the token in the headers for the API call
-export function getStories(token: string, page: number, size: number = 10) {
+export function getStories(token: string, page: number, size: number = 9, filters?: { language?: string; level?: string; age?: string, searchKeywords?: string }) {
   return axios.get<PaginatedStory>(STORIES_URL, {
     headers: {
       Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -62,6 +62,7 @@ export function getStories(token: string, page: number, size: number = 10) {
     params: {
       page,
       size,
+      ...filters,
     },
   })
 }
