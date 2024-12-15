@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
+import { PageTitle } from '../../../_metronic/layout/core';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
 import { getStories, getStoryDetails } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
@@ -239,7 +241,7 @@ const paginationStyle = {
 
 
 // Main ViewStory component
-export const ViewStory = () => {
+const ViewStoryPage = () => {
   const [clickedImageId, setClickedImageId] = useState<number | null>(null);
   const [filteredLanguage, setFilteredLanguage] = useState<string | undefined>(undefined);
   const [filteredLevel, setFilteredLevel] = useState<string | undefined>(undefined);
@@ -537,3 +539,15 @@ export const ViewStory = () => {
     </div>
   );
 };
+
+const ViewStory: React.FC = () => {
+  const intl = useIntl();
+  return (
+    <>
+      <PageTitle breadcrumbs={[]}>{intl.formatMessage({ id: 'MENU.VIEW_STORIES' })}</PageTitle>
+      <ViewStoryPage />
+    </>
+  );
+};
+
+export { ViewStory };

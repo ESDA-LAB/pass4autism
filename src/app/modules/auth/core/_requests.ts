@@ -8,6 +8,7 @@ export const LOGIN_URL = `${API_URL}/auth/authenticate` // Update the login URL
 export const REGISTER_URL = `${API_URL}/register`
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`
 export const STORIES_URL = `${API_URL}/stories`
+export const STORIES_OWNER_URL = `${API_URL}/stories/owner`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {
@@ -73,4 +74,17 @@ export function getStoryDetails(storyId: number, token: string) {
       Authorization: `Bearer ${token}`,
     },
   });
+}
+
+// Pass the token in the headers for the API call
+export function getStoriesByOwner(token: string, page: number, size: number = 3) {
+  return axios.get<PaginatedStory>(STORIES_OWNER_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+    },
+    params: {
+      page,
+      size,
+    },
+  })
 }

@@ -14,6 +14,7 @@ import {
   StatisticsWidget5,
   ListsWidget1,
 } from '../../../_metronic/partials/widgets'
+import { MyStoriesGrid } from './components/MyStoriesGrid';
 
 const DashboardPage = () => (
   <>
@@ -69,6 +70,13 @@ const DashboardPage = () => (
       </div>
     </div>
     {/* end::Row */}
+
+    {/* My Stories Section */}
+    <div className="row g-5 g-xl-8">
+      <div className="col-xl-12">
+        <MyStoriesGrid />
+      </div>
+    </div>
 
     {/* begin::Row */}
     <div className="row g-5 g-xl-8">

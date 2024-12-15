@@ -3,7 +3,8 @@ import { useIntl } from 'react-intl';
 import { PageTitle } from '../../../_metronic/layout/core';
 import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
 import { getStories } from '../../modules/auth/core/_requests';
-import { StoryDetails } from '../../modules/auth/core/_models'
+import { StoryDetails } from '../../modules/auth/core/_models';
+import { useNavigate } from 'react-router-dom'; // Για πλοήγηση
 
 interface Story {
   id: number;
@@ -14,36 +15,32 @@ interface Story {
 
 const CreateStoryPage: React.FC = () => {
   const [query, setQuery] = useState<string>('');
-  const [results, setResults] = useState<any>([]);
-  const [selectedStory, setSelectedStory] = useState<Story | null>(null);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [isPublic, setIsPublic] = useState<boolean>(false);
+  const [results, setResults] = useState<Story[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState<boolean>(false); // Ελέγχουμε αν έχει γίνει αναζήτηση
+  const navigate = useNavigate(); // Χρησιμοποιείται για πλοήγηση στη νέα σελίδα
 
-  // Function to handle search
-  const handleSearch = async (page: number = 0) => {
+  // Function to fetch stories with pagination
+  const fetchStories = async (page: number = 0, searchQuery: string = query) => {
     setLoading(true);
     setError(null);
-  
     try {
       const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
-      const response = await getStories(authToken, page, 10, { searchKeywords: query });
-  
+      const response = await getStories(authToken, page, 9, { searchKeywords: searchQuery });
       const { content, totalPages: pages } = response.data;
-  
-      const mappedContent = content.map((item: StoryDetails) => ({
+
+      // Map API response to the Story format
+      const mappedResults = content.map((item: StoryDetails) => ({
         id: item.id,
         title: item.title,
-        text: item.synopsis || '', // Use synopsis as a default
-        images: [
-          { url: item.cover || 'default-image.png', title: item.title || 'No Title' },
-        ], // Map cover as the single image
+        text: item.synopsis || '',
+        images: [{ url: item.cover || 'default-image.png', title: item.title || 'No Title' }],
       }));
-  
-      setResults(mappedContent);
+
+      setResults(mappedResults);
       setTotalPages(pages);
       setCurrentPage(page);
     } catch (err) {
@@ -51,50 +48,92 @@ const CreateStoryPage: React.FC = () => {
       setError('Failed to fetch search results.');
     } finally {
       setLoading(false);
+      setHasSearched(true); // Ορίζουμε ότι έγινε αναζήτηση
     }
   };
 
-  // Function to handle selecting a story
-  const handleSelectStory = (story: Story) => {
-    setSelectedStory(story);
+  // Function to handle search
+  const handleSearch = () => {
+    fetchStories(0);
   };
 
-  // Function to handle edit
-  const handleEdit = (index: number) => {
-    setEditingIndex(index);
-  };
-
-  // Function to save the new title
-  const handleSaveTitle = (index: number, newTitle: string) => {
-    if (selectedStory) {
-      const updatedImages = [...selectedStory.images];
-      updatedImages[index].title = newTitle;
-      setSelectedStory({ ...selectedStory, images: updatedImages });
-      setEditingIndex(null);
-    }
-  };
-
-  // Function to handle story save
-  const handleSaveStory = () => {
-    const savePayload = {
-      story: selectedStory,
-      isPublic,
-    };
-    console.log('Saving Story:', savePayload);
-    // You can add your API request here to save the story
-  };
-
-  // Pagination controls
+  // Pagination handlers
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) {
-      handleSearch(currentPage + 1);
+      fetchStories(currentPage + 1);
     }
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 0) {
-      handleSearch(currentPage - 1);
+      fetchStories(currentPage - 1);
     }
+  };
+
+  // Handle story click
+  const handleStoryClick = (id: number) => {
+    navigate(`/stories/${id}`); // Πλοήγηση στη νέα σελίδα με βάση το ID της ιστορίας
+  };
+
+  const containerStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: '20px',
+  };
+
+  const gridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '20px',
+    marginBottom: '20px',
+  };
+
+  const imageStyle: React.CSSProperties = {
+    width: '100%',
+    cursor: 'pointer',
+    transition: 'transform 0.3s ease',
+  };
+
+  const titleStyle: React.CSSProperties = {
+    fontSize: '18px',
+    marginTop: '10px',
+    marginBottom: '20px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  };
+
+  const paginationStyle = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: '20px',
+      gap: '15px',
+    } as React.CSSProperties,
+    button: {
+      backgroundColor: '#009ef7',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '5px',
+      padding: '10px 15px',
+      cursor: 'pointer',
+      fontSize: '14px',
+      fontWeight: 'bold',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+      transition: 'background-color 0.3s, transform 0.2s',
+      outline: 'none',
+    } as React.CSSProperties,
+    buttonDisabled: {
+      backgroundColor: '#c4c4c4',
+      color: '#fff',
+      cursor: 'not-allowed',
+    } as React.CSSProperties,
+    text: {
+      fontSize: '16px',
+      fontWeight: 'bold',
+      color: '#333',
+    } as React.CSSProperties,
   };
 
   return (
@@ -122,125 +161,66 @@ const CreateStoryPage: React.FC = () => {
             type='text'
             className='form-control form-control-lg'
             placeholder='Search visual stories...'
-            aria-label='Search'
             value={query}
-            onChange={(e) => setQuery(e.target.value)} // Update query state
+            onChange={(e) => setQuery(e.target.value)}
           />
-          <button className='btn btn-primary' type='button' onClick={() => handleSearch(0)}>
+          <button className='btn btn-primary' onClick={handleSearch}>
             {loading ? 'Searching...' : 'Search'}
           </button>
         </div>
       </div>
 
-      {/* Search Results */}
-      <div className='col-xl-12 mt-4 d-flex flex-column align-items-center'>
-        {loading && <p>Loading results...</p>}
-        {error && <p className='text-danger'>{error}</p>}
-        {results.length > 0 ? (
-          <div className="search-results text-center">
-            {results.map((result: any) => (
-              <div
-                key={result.id}
-                className="search-result-item"
-                onClick={() => handleSelectStory(result)}
-                style={{ cursor: 'pointer' }}
-              >
-                {result.images?.[0] && ( // Check if the first image exists
-                  <>
-                    <img
-                      src={result.images[0].url}
-                      alt={result.images[0].title}
-                      width="300"
-                      className="mb-3"
-                      style={{ display: 'block', margin: '0 auto' }}
-                    />
-                    <p>{result.text}</p>
-                  </>
-                )}
+      {/* Stories Grid */}
+      <div style={containerStyle}>
+        {!hasSearched && <p>Please use the search bar to look for visual stories.</p>}
+        {hasSearched && results.length === 0 && !loading && (
+          <p>No stories found. Try different keywords to find what you're looking for.</p>
+        )}
+        {results.length > 0 && (
+          <div style={gridStyle}>
+            {results.map((story) => (
+              <div key={story.id}>
+                <img
+                  src={story.images[0].url}
+                  alt={story.images[0].title}
+                  style={imageStyle}
+                  onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                  onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  onClick={() => handleStoryClick(story.id)} // Πλοήγηση στη νέα σελίδα
+                />
+                <p style={titleStyle}>{story.title}</p>
               </div>
             ))}
           </div>
-        ) : (
-          !loading && <p>No results found</p>
         )}
       </div>
 
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className='col-xl-12 d-flex justify-content-center mt-4'>
+      {/* Pagination */}
+      {hasSearched && results.length > 0 && totalPages > 1 && (
+        <div style={paginationStyle.container}>
           <button
-            className='btn btn-secondary me-2'
             onClick={handlePreviousPage}
             disabled={currentPage === 0}
+            style={{
+              ...paginationStyle.button,
+              ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
+            }}
           >
             Previous
           </button>
-          <span>
+          <span style={paginationStyle.text}>
             Page {currentPage + 1} of {totalPages}
           </span>
           <button
-            className='btn btn-secondary ms-2'
             onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
+            style={{
+              ...paginationStyle.button,
+              ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
+            }}
           >
             Next
           </button>
-        </div>
-      )}
-
-      {/* Selected Story Display */}
-      {selectedStory && (
-        <div className='col-xl-12 mt-4'>
-          <h2>{selectedStory.title}</h2>
-          <div className='row'>
-            {selectedStory.images.map((image, index) => (
-              <div className='col-lg-4 text-center' key={index}>
-                <img src={image.url} alt={`Story image ${index + 1}`} className='img-fluid' />
-                {editingIndex === index ? (
-                  <div>
-                    <input
-                      type='text'
-                      value={image.title}
-                      onChange={(e) =>
-                        handleSaveTitle(index, e.target.value) // Save the new title on change
-                      }
-                    />
-                    <button
-                      className='btn btn-primary mt-2'
-                      onClick={() => handleSaveTitle(index, image.title)}
-                    >
-                      Save
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{image.title}</p>
-                    <button className='btn btn-secondary mt-2' onClick={() => handleEdit(index)}>
-                      Edit Title
-                    </button>
-                    <button className='btn btn-info mt-2 ms-2'>Edit Image</button>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Public/Private Selection */}
-          <div className='mt-4 d-flex justify-content-center'>
-            <label className='me-3' style={{ fontSize: '1.2rem' }}>Make Story Public:</label>
-            <input
-              type='checkbox'
-              checked={isPublic}
-              onChange={() => setIsPublic(!isPublic)} // Toggle public/private status
-            />
-          </div>
-
-          {/* Save Button */}
-          <div className='mt-4 d-flex justify-content-center'>
-            <button className='btn btn-success' onClick={handleSaveStory}>
-              Save Story
-            </button>
-          </div>
         </div>
       )}
     </>

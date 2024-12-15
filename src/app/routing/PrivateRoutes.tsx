@@ -9,6 +9,7 @@ import { WithChildren } from '../../_metronic/helpers';
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper';
 import { CreateStory } from '../pages/Stories/CreateStory';
 import { ViewStory } from '../pages/Stories/ViewStory';
+import { DetailsStory } from '../pages/Stories/DetailsStory';
 import { useAuth } from '../modules/auth/core/Auth'; // Import the useAuth hook
 
 const PrivateRoutes = () => {
@@ -31,6 +32,7 @@ const PrivateRoutes = () => {
             <Route path='dashboard' element={<DashboardWrapper />} />
             <Route path="/createStory" element={<CreateStory />} />
             <Route path="/ViewStory" element={<ViewStory />} />
+            <Route path="/stories/:id" element={<DetailsStory />} />
             <Route
               path='builder'
               element={
