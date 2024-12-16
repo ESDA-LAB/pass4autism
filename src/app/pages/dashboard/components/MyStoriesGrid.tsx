@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getStoriesByOwner } from '../../../modules/auth/core/_requests';
+import { getStoriesByOwner, getStoryDetails } from '../../../modules/auth/core/_requests';
 import { StoryDetails } from '../../../modules/auth/core/_models';
+import { Modal } from '../../../modules/auth/components/Modal';
 
 const MyStoriesGrid: React.FC = () => {
   const [myStories, setMyStories] = useState<StoryDetails[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const storiesPerPage = 3;
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // Διαχείριση του modal
+  const [selectedStory, setSelectedStory] = useState<StoryDetails | null>(null); // Επιλεγμένη ιστορία
 
   // Λήψη ιστοριών χρήστη
   const loadMyStories = async () => {
@@ -36,6 +40,22 @@ const MyStoriesGrid: React.FC = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
+  };
+
+  const openModal = async (storyId: number) => {
+    try {
+      const authToken = 'mock-auth-token'; // Αντικατέστησέ το με το πραγματικό token
+      const response = await getStoryDetails(storyId, authToken); // Λήψη λεπτομερειών ιστορίας
+      setSelectedStory(response.data);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching story details:', error);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedStory(null);
+    setIsModalOpen(false);
   };
 
   // Inline styles για το grid
@@ -118,6 +138,7 @@ const MyStoriesGrid: React.FC = () => {
                   src={story.cover || 'default-image.png'}
                   alt={story.title}
                   style={imageStyle}
+                  onClick={() => openModal(story.id)} // Άνοιγμα του Modal
                   onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
                   onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                 />
@@ -150,6 +171,14 @@ const MyStoriesGrid: React.FC = () => {
         <p style={{ fontSize: '18px', color: '#666' }}>
           You don't have any stories yet. Start creating your first story!
         </p>
+      )}
+      {/* Modal */}
+      {selectedStory && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          storyDetails={selectedStory}
+        />
       )}
     </div>
   );
