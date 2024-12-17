@@ -124,7 +124,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-warning'>Coming soon</span>
+                      <span className='badge badge-light-success'>Available</span>
                     </td>
                     <td className='text-end'>
                       <a
@@ -158,7 +158,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-warning'>Coming soon</span>
+                      <span className='badge badge-light-success'>Available</span>
                     </td>
                     <td className='text-end'>
                       <a
@@ -192,7 +192,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-warning'>Coming soon</span>
+                      <span className='badge badge-light-success'>Available</span>
                     </td>
                     <td className='text-end'>
                       <a

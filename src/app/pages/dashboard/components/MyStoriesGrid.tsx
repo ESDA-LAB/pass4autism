@@ -7,7 +7,7 @@ const MyStoriesGrid: React.FC = () => {
   const [myStories, setMyStories] = useState<StoryDetails[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const storiesPerPage = 3;
+  const storiesPerPage = 6;
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Διαχείριση του modal
   const [selectedStory, setSelectedStory] = useState<StoryDetails | null>(null); // Επιλεγμένη ιστορία
