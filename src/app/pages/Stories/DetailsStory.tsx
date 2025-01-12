@@ -207,8 +207,8 @@ const DetailsStoryPage: React.FC = () => {
           const imageValue = story?.[imageField];
 
           return (
-            <div key={index} className="mb-3">
-              <label>Image {index + 1}</label>
+            <div key={index} className="mb-3 d-flex align-items-center">
+              <label style={{ marginRight: '10px' }}>Image {index + 1}</label>
               {imageValue ? (
                 <>
                   <img
@@ -218,10 +218,16 @@ const DetailsStoryPage: React.FC = () => {
                     style={{ width: '100px', marginRight: '10px' }}
                   />
                   <button
-                    className="btn btn-secondary"
+                    className="btn btn-secondary me-2"
                     onClick={() => openModal(imageField)}
                   >
                     Change Image
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleChange(imageField, null)} // Διαγράφουμε την εικόνα
+                  >
+                    Delete Image
                   </button>
                 </>
               ) : (

@@ -1,3 +1,4 @@
+
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../helpers'
@@ -15,37 +16,6 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
           <span className='card-label fw-bold fs-3 mb-1'>PASS4Autism Training Courses</span>
           <span className='text-muted mt-1 fw-semibold fs-7'>Find our Courses and enroll now</span>
         </h3>
-        <div className='card-toolbar'>
-          <ul className='nav'>
-            <li className='nav-item'>
-              <a
-                className='nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary active fw-bold px-4 me-1'
-                data-bs-toggle='tab'
-                href='#kt_table_widget_5_tab_1'
-              >
-                All
-              </a>
-            </li>
-            <li className='nav-item'>
-              <a
-                className='nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4 me-1'
-                data-bs-toggle='tab'
-                href='#kt_table_widget_5_tab_2'
-              >
-                Available
-              </a>
-            </li>
-            <li className='nav-item'>
-              <a
-                className='nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4'
-                data-bs-toggle='tab'
-                href='#kt_table_widget_5_tab_3'
-              >
-                Coming soon
-              </a>
-            </li>
-          </ul>
-        </div>
       </div>
       {/* end::Header */}
       {/* begin::Body */}
@@ -86,7 +56,6 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                       <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
                         Improving the social skills of ASD people using visual stories
                       </a>
-                      <span className='text-muted fw-semibold d-block'>English Version</span>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
@@ -118,9 +87,8 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td>
                       <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Improving the social skills of ASD people using visual stories
+                        Mejora de habilidades sociales de personas con TEA mediante historias visuales
                       </a>
-                      <span className='text-muted fw-semibold d-block'>Spanish Version</span>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
@@ -128,7 +96,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end'>
                       <a
-                        href='#'
+                        href='https://pass4autism-es.thinkific.com/' target='{_blank}'
                         className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG
@@ -152,9 +120,8 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td>
                       <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Improving the social skills of ASD people using visual stories
+                        Βελτιώνοντας τις κοινωνικές δεξιότητες των ατόμων με ΔΑΦ με τη χρήση οπτικών ιστοριών
                       </a>
-                      <span className='text-muted fw-semibold d-block'>Greek Version</span>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
@@ -162,7 +129,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end'>
                       <a
-                        href='#'
+                        href='https://pass4autism-gr.thinkific.com/' target='{_blank}'
                         className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG
@@ -186,9 +153,8 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td>
                       <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Improving the social skills of ASD people using visual stories
+                        Migliorare le abilità sociali delle persone con ASD utilizzando storie visive
                       </a>
-                      <span className='text-muted fw-semibold d-block'>Italian Version</span>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
@@ -196,297 +162,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end'>
                       <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-                {/* end::Table body */}
-              </table>
-            </div>
-            {/* end::Table */}
-          </div>
-          {/* end::Tap pane */}
-          {/* begin::Tap pane */}
-          <div className='tab-pane fade' id='kt_table_widget_5_tab_2'>
-            {/* begin::Table container */}
-            <div className='table-responsive'>
-              {/* begin::Table */}
-              <table className='table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4'>
-                {/* begin::Table head */}
-                <thead>
-                  <tr className='border-0'>
-                    <th className='p-0 w-50px'></th>
-                    <th className='p-0 min-w-150px'></th>
-                    <th className='p-0 min-w-140px'></th>
-                    <th className='p-0 min-w-110px'></th>
-                    <th className='p-0 min-w-50px'></th>
-                  </tr>
-                </thead>
-                {/* end::Table head */}
-                {/* begin::Table body */}
-                <tbody>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/plurk.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Brad Simmons
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Movie Creator</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>React, HTML</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-success'>Approved</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/telegram.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Popular Authors
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Most Successful</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>Python, MySQL</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-warning'>In Progress</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/bebo.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Active Customers
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Movie Creator</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>AngularJS, C#</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-danger'>Rejected</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-                {/* end::Table body */}
-              </table>
-            </div>
-            {/* end::Table */}
-          </div>
-          {/* end::Tap pane */}
-          {/* begin::Tap pane */}
-          <div className='tab-pane fade' id='kt_table_widget_5_tab_3'>
-            {/* begin::Table container */}
-            <div className='table-responsive'>
-              {/* begin::Table */}
-              <table className='table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4'>
-                {/* begin::Table head */}
-                <thead>
-                  <tr className='border-0'>
-                    <th className='p-0 w-50px'></th>
-                    <th className='p-0 min-w-150px'></th>
-                    <th className='p-0 min-w-140px'></th>
-                    <th className='p-0 min-w-110px'></th>
-                    <th className='p-0 min-w-50px'></th>
-                  </tr>
-                </thead>
-                {/* end::Table head */}
-                {/* begin::Table body */}
-                <tbody>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/kickstarter.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Bestseller Theme
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Best Customers</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>ReactJS, Ruby</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-warning'>In Progress</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/bebo.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Active Customers
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Movie Creator</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>AngularJS, C#</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-danger'>Rejected</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/vimeo.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        New Users
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Awesome Users</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>Laravel,Metronic</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-primary'>Success</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className='symbol symbol-45px me-2'>
-                        <span className='symbol-label'>
-                          <img
-                            src={toAbsoluteUrl('/media/svg/brand-logos/telegram.svg')}
-                            className='h-50 align-self-center'
-                            alt=''
-                          />
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
-                        Popular Authors
-                      </a>
-                      <span className='text-muted fw-semibold d-block'>Most Successful</span>
-                    </td>
-                    <td className='text-end text-muted fw-semibold'>Python, MySQL</td>
-                    <td className='text-end'>
-                      <span className='badge badge-light-warning'>In Progress</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='#'
+                        href='https://pass4autism-it.thinkific.com/' target='{_blank}'
                         className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG

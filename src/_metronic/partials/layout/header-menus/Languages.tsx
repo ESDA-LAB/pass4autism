@@ -8,12 +8,7 @@ const languages = [
   {
     lang: 'en',
     name: 'English',
-    flag: toAbsoluteUrl('/media/flags/united-states.svg'),
-  },
-  {
-    lang: 'zh',
-    name: 'Mandarin',
-    flag: toAbsoluteUrl('/media/flags/china.svg'),
+    flag: toAbsoluteUrl('/media/flags/united-kingdom.svg'),
   },
   {
     lang: 'es',
@@ -21,19 +16,14 @@ const languages = [
     flag: toAbsoluteUrl('/media/flags/spain.svg'),
   },
   {
-    lang: 'ja',
-    name: 'Japanese',
-    flag: toAbsoluteUrl('/media/flags/japan.svg'),
+    lang: 'el',
+    name: 'Greek',
+    flag: toAbsoluteUrl('/media/flags/greece.svg'),
   },
   {
-    lang: 'de',
-    name: 'German',
-    flag: toAbsoluteUrl('/media/flags/germany.svg'),
-  },
-  {
-    lang: 'fr',
-    name: 'French',
-    flag: toAbsoluteUrl('/media/flags/france.svg'),
+    lang: 'it',
+    name: 'Italian',
+    flag: toAbsoluteUrl('/media/flags/italy.svg'),
   },
 ]
 

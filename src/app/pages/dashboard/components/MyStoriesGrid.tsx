@@ -83,11 +83,22 @@ const MyStoriesGrid: React.FC = () => {
     marginBottom: '20px',
   };
 
+  const gridItemStyle: React.CSSProperties = {
+    backgroundColor: '#f9f9f9', // Ανοιχτό γκρι χρώμα
+    padding: '10px',
+    borderRadius: '8px',
+    textAlign: 'center',
+    display: 'flex', // Ευθυγράμμιση περιεχομένων
+    flexDirection: 'column',
+    justifyContent: 'space-between', // Στοιχίσεις των στοιχείων
+    height: '100%', // Ισοσταθμισμένο ύψος
+    cursor: 'pointer',
+    transition: 'transform 0.3s ease',
+  };
+  
   const imageStyle: React.CSSProperties = {
     width: '100%',
     borderRadius: '8px',
-    cursor: 'pointer',
-    transition: 'transform 0.3s ease',
   };
 
   const storyTitleStyle: React.CSSProperties = {
@@ -133,14 +144,14 @@ const MyStoriesGrid: React.FC = () => {
         <>
           <div style={gridStyle}>
             {myStories.map((story) => (
-              <div key={story.id}>
+              <div key={story.id} style={gridItemStyle}
+                onClick={() => openModal(story.id)} // Άνοιγμα του Modal
+                onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
                 <img
                   src={story.cover || 'default-image.png'}
                   alt={story.title}
                   style={imageStyle}
-                  onClick={() => openModal(story.id)} // Άνοιγμα του Modal
-                  onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-                  onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                 />
                 <p style={storyTitleStyle}>{story.title}</p>
               </div>
@@ -176,6 +187,7 @@ const MyStoriesGrid: React.FC = () => {
       {selectedStory && (
         <Modal
           isOpen={isModalOpen}
+          showPrintButton={false}
           onClose={closeModal}
           storyDetails={selectedStory}
         />

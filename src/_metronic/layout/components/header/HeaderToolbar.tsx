@@ -110,52 +110,7 @@ const HeaderToolbar = () => {
 
             {/* begin::NoUiSlider */}
             {/* end::NoUiSlider */}
-
-            {/* begin::Separartor */}
-            <div className='bullet bg-secondary h-35px w-1px mx-5'></div>
-            {/* end::Separartor */}
-          </div>
-          {/* end::Action wrapper */}
-
-          {/* begin::Action wrapper */}
-          <div className='d-flex align-items-center'>
-            {/* begin::Label */}
-            <span className='fs-7 text-gray-700 fw-bolder pe-3 d-none d-xxl-block'>
-              Quick Tools:
-            </span>
-            {/* end::Label */}
-
-            {/* begin::Actions */}
-            <div className='d-flex'>
-              {/* begin::Action */}
-
-              {/* end::Action */}
-
-              {/* begin::Notifications */}
-              <div className='d-flex align-items-center'>
-                {/* begin::Menu- wrapper */}
-                <a href='#' className='btn btn-sm btn-icon btn-icon-muted btn-active-icon-primary'>
-                  <KTSVG path='/media/icons/duotune/files/fil005.svg' className='svg-icon-1' />
-                </a>
-                {/* end::Menu wrapper */}
-              </div>
-              {/* end::Notifications */}
-
-              {/* begin::Quick links */}
-              <div className='d-flex align-items-center'>
-                {/* begin::Menu wrapper */}
-
-                {/* end::Menu wrapper */}
-              </div>
-              {/* end::Quick links */}
-
-              {/* begin::Theme mode */}
-              <div className='d-flex align-items-center'>
-                <ThemeModeSwitcher toggleBtnClass='btn btn-sm btn-icon btn-icon-muted btn-active-icon-primary' />
-              </div>
-              {/* end::Theme mode */}
-            </div>
-            {/* end::Actions */}
+            
           </div>
           {/* end::Action wrapper */}
         </div>

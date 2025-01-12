@@ -76,10 +76,16 @@ const CreateStoryPage: React.FC = () => {
   };
 
   const containerStyle: React.CSSProperties = {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    marginTop: '20px',
+    marginBottom: '20px',
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    margin: '20px',
   };
 
   const gridStyle: React.CSSProperties = {
@@ -88,11 +94,23 @@ const CreateStoryPage: React.FC = () => {
     gap: '20px',
     marginBottom: '20px',
   };
+  
+  const gridItemStyle: React.CSSProperties = {
+    backgroundColor: '#f9f9f9', // Ανοιχτό γκρι χρώμα
+    padding: '10px',
+    borderRadius: '8px',
+    textAlign: 'center',
+    display: 'flex', // Ευθυγράμμιση περιεχομένων
+    flexDirection: 'column',
+    justifyContent: 'space-between', // Στοιχίσεις των στοιχείων
+    height: '100%', // Ισοσταθμισμένο ύψος
+    cursor: 'pointer',
+    transition: 'transform 0.3s ease',
+  };
 
   const imageStyle: React.CSSProperties = {
     width: '100%',
-    cursor: 'pointer',
-    transition: 'transform 0.3s ease',
+    borderRadius: '8px',
   };
 
   const titleStyle: React.CSSProperties = {
@@ -147,7 +165,7 @@ const CreateStoryPage: React.FC = () => {
             color='primary'
             iconColor='white'
             title='Create Visual Story'
-            description='When creating a visual story: Search through existing stories using keywords, select and edit the one you like, modify the text and images, and when saving, a new version is created with the author’s name, specifying whether it will be public or not.'
+            description='<ul><li>Search through existing stories using keywords</li><li>Select and edit the one you like</li><li>Modify the text and images</li><li>Click Save.</li></ul>'
             titleColor='white'
             descriptionColor='white'
           />
@@ -179,50 +197,50 @@ const CreateStoryPage: React.FC = () => {
         {results.length > 0 && (
           <div style={gridStyle}>
             {results.map((story) => (
-              <div key={story.id}>
+              <div key={story.id} style={gridItemStyle}
+                onClick={() => handleStoryClick(story.id)} // Πλοήγηση στη νέα σελίδα
+                onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
                 <img
                   src={story.images[0].url}
                   alt={story.images[0].title}
                   style={imageStyle}
-                  onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-                  onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                  onClick={() => handleStoryClick(story.id)} // Πλοήγηση στη νέα σελίδα
                 />
                 <p style={titleStyle}>{story.title}</p>
               </div>
             ))}
           </div>
         )}
-      </div>
 
-      {/* Pagination */}
-      {hasSearched && results.length > 0 && totalPages > 1 && (
-        <div style={paginationStyle.container}>
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 0}
-            style={{
-              ...paginationStyle.button,
-              ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
-            }}
-          >
-            Previous
-          </button>
-          <span style={paginationStyle.text}>
-            Page {currentPage + 1} of {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages - 1}
-            style={{
-              ...paginationStyle.button,
-              ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
-            }}
-          >
-            Next
-          </button>
-        </div>
-      )}
+        {/* Pagination */}
+        {hasSearched && results.length > 0 && totalPages > 1 && (
+          <div style={paginationStyle.container}>
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+              style={{
+                ...paginationStyle.button,
+                ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
+              }}
+            >
+              Previous
+            </button>
+            <span style={paginationStyle.text}>
+              Page {currentPage + 1} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages - 1}
+              style={{
+                ...paginationStyle.button,
+                ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
+              }}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 };

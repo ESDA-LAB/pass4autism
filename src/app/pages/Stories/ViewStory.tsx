@@ -5,6 +5,7 @@ import {getAuth} from '../../modules/auth/core/AuthHelpers';
 import { getStories, getStoryDetails } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
 import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
+import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
 
 // Define the type for images, including language, level, and age
 interface Image {
@@ -26,8 +27,8 @@ interface LanguageOption {
 const languageOptions: LanguageOption[] = [
   { code: '', label: 'All Languages' }, // Κενή επιλογή
   { code: 'en', label: 'English' },
-  { code: 'gr', label: 'Greek' },
   { code: 'es', label: 'Spanish' },
+  { code: 'gr', label: 'Greek' },
   { code: 'it', label: 'Italian' },
 ];
 
@@ -35,7 +36,7 @@ const languageOptions: LanguageOption[] = [
 const levelOptions: string[] = ['', 'level1', 'level2', 'level3'];
 
 // Age dropdown options
-const ageOptions: string[] = ['', '2-5', '10-12', '13-17'];
+const ageOptions: string[] = ['', '2-5', '6-9', '10-12', '13-17'];
 
 // Dropdown component for languages
 const LanguageDropdown: React.FC<{ 
@@ -242,7 +243,6 @@ const paginationStyle = {
 
 // Main ViewStory component
 const ViewStoryPage = () => {
-  const [clickedImageId, setClickedImageId] = useState<number | null>(null);
   const [filteredLanguage, setFilteredLanguage] = useState<string | undefined>(undefined);
   const [filteredLevel, setFilteredLevel] = useState<string | undefined>(undefined);
   const [filteredAge, setFilteredAge] = useState<string | undefined>(undefined);
@@ -354,23 +354,6 @@ const ViewStoryPage = () => {
     setIsModalOpen(false);
   };
   
-
-  // Define initial images with all properties
-  const initialImages1: Image[] = [
-    { id: 1, src: 'media/Picture7.png', alt: 'Image 1', title: 'Say NO-Limits', language: 'en', level: 'level1', age: '2-5' },
-    { id: 2, src: 'media/Picture8.jpg', alt: 'Image 2', title: 'Negotiate', language: 'es', level: 'level2', age: '10-12' },
-    { id: 3, src: 'media/Picture9.jpg', alt: 'Image 3', title: 'Gather and collect my things at home', language: 'it', level: 'level3', age: '13-17' },
-  ];
-
-  const storyDetails1: Image[] = [
-    { id: 4, src: 'media/Picture10.jpg', alt: 'Image 4', title: 'Story Title 4', language: 'el', level: 'level1', age: '2-5' },
-    { id: 5, src: 'media/Picture11.jpg', alt: 'Image 5', title: 'Story Title 5', language: 'en', level: 'level2', age: '10-12' },
-    { id: 6, src: 'media/Picture12.jpg', alt: 'Image 6', title: 'Story Title 6', language: 'es', level: 'level3', age: '13-17' },
-  ];
-
-  // const handleImageClick = (id: number) => {
-  //   setClickedImageId(id);
-  // };
   const handleImageClick = async (id: number) => {
     const story = initialImages.find((img) => img.id === id);
     if (story) {
@@ -423,10 +406,16 @@ const ViewStoryPage = () => {
 
   // Inline styles
   const containerStyle: React.CSSProperties = {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    marginTop: '20px',
+    marginBottom: '20px',
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    margin: '20px',
   };
 
   const gridStyle: React.CSSProperties = {
@@ -435,11 +424,23 @@ const ViewStoryPage = () => {
     gap: '20px',
     marginBottom: '20px',
   };
+  
+  const gridItemStyle: React.CSSProperties = {
+    backgroundColor: '#f9f9f9', // Ανοιχτό γκρι χρώμα
+    padding: '10px',
+    borderRadius: '8px',
+    textAlign: 'center',
+    display: 'flex', // Ευθυγράμμιση περιεχομένων
+    flexDirection: 'column',
+    justifyContent: 'space-between', // Στοιχίσεις των στοιχείων
+    height: '100%', // Ισοσταθμισμένο ύψος
+    cursor: 'pointer',
+    transition: 'transform 0.3s ease',
+  };
 
   const imageStyle: React.CSSProperties = {
     width: '100%',
-    cursor: 'pointer',
-    transition: 'transform 0.3s ease',
+    borderRadius: '8px',
   };
 
   const titleStyle: React.CSSProperties = {
@@ -467,76 +468,94 @@ const ViewStoryPage = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      {/* Filters Panel */}
-      <div style={filtersPanelStyle}>
-        <h2 style={headerStyle}>Filters</h2>
-        <LanguageDropdown 
-          onLanguageChange={handleLanguageChange} 
-          selectedLanguage={filteredLanguage} // Pass the selectedLanguage prop
-        />{/* Language Dropdown */}
-        <LevelsDropdown 
-          onLevelChange={handleLevelChange} 
-          selectedLevel={filteredLevel} // Pass the selectedLevel prop
-        />{/* Level Dropdown */}
-        <AgeDropdown 
-          onAgeChange={handleAgeChange} 
-          selectedAge={filteredAge} // Pass the selectedAge prop
-        />{/* Age Dropdown */}
+    <>
+      {/* Header Section */}
+      <div className='row g-5 g-xl-8'>
+        <div className='col-xl-12'>
+          <StatisticsWidget5
+            className='card-xl-stretch mb-xl-5'
+            svgIcon='/media/icons/duotune/general/gen004.svg'
+            color='primary'
+            iconColor='white'
+            title='View Visual Stories'
+            description='Viewing visual stories.'
+            titleColor='white'
+            descriptionColor='white'
+          />
+        </div>
       </div>
+      <div style={containerStyle}>
+        {/* Filters Panel */}
+        <div style={filtersPanelStyle}>
+          <h2 style={headerStyle}>Filters</h2>
+          <LanguageDropdown 
+            onLanguageChange={handleLanguageChange} 
+            selectedLanguage={filteredLanguage} // Pass the selectedLanguage prop
+          />{/* Language Dropdown */}
+          <LevelsDropdown 
+            onLevelChange={handleLevelChange} 
+            selectedLevel={filteredLevel} // Pass the selectedLevel prop
+          />{/* Level Dropdown */}
+          <AgeDropdown 
+            onAgeChange={handleAgeChange} 
+            selectedAge={filteredAge} // Pass the selectedAge prop
+          />{/* Age Dropdown */}
+        </div>
 
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        /*selectedStory={selectedStory} */
-        storyDetails={storyDetails}
-      />
+        <Modal
+          isOpen={isModalOpen}
+          showPrintButton={true}
+          onClose={closeModal}
+          /*selectedStory={selectedStory} */
+          storyDetails={storyDetails}
+        />
 
-      {/* Initial Image Row from images*/}
-      <div style={gridStyle}>
-        {filterImages(initialImages).map((image) => (
-          <div key={image.id} style={{ textAlign: 'center' }}>
-            <img
-              src={image.src}
-              alt={image.alt}
+        {/* Initial Image Row from images*/}
+        <div style={gridStyle}>
+          {filterImages(initialImages).map((image) => (
+            <div key={image.id} style={gridItemStyle}
               onClick={() => handleImageClick(image.id)}
-              style={imageStyle}
               onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-              onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-            />
-            <p style={titleStyle}>{image.title}</p>
-          </div>
-        ))}
-      </div>
+              onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
+              <img
+                src={image.src}
+                alt={image.alt}
+                style={imageStyle}
+              />
+              <p style={titleStyle}>{image.title}</p>
+            </div>
+          ))}
+        </div>
 
-      {/*Προσθήκη Πλοήγησης Pagination*/}
-      <div style={paginationStyle.container}>
-        <button
-          onClick={handlePreviousPage}
-          disabled={currentPage === 0}
-          style={{
-            ...paginationStyle.button,
-            ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
-          }}
-        >
-          Previous
-        </button>
-        <span style={paginationStyle.text}>
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages - 1}
-          style={{
-            ...paginationStyle.button,
-            ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
-          }}
-        >
-          Next
-        </button>
+        {/*Προσθήκη Πλοήγησης Pagination*/}
+        <div style={paginationStyle.container}>
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 0}
+            style={{
+              ...paginationStyle.button,
+              ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
+            }}
+          >
+            Previous
+          </button>
+          <span style={paginationStyle.text}>
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+            style={{
+              ...paginationStyle.button,
+              ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
+            }}
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

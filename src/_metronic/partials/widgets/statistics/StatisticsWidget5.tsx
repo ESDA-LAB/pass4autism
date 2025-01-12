@@ -9,7 +9,7 @@ type Props = {
   iconColor: string
   title: string
   titleColor?: string
-  description: string
+  description: string | React.ReactNode // Υποστηρίζει HTML ή JSX
   descriptionColor?: string
 }
 
@@ -24,15 +24,24 @@ const StatisticsWidget5: React.FC<Props> = ({
   descriptionColor,
 }) => {
   return (
-    <a href='#' className={`card bg-${color} hoverable ${className}`}>
+    <div className={`card bg-${color} hoverable ${className}`}>
       <div className='card-body'>
         <KTSVG path={svgIcon} className={`svg-icon-${iconColor} svg-icon-3x ms-n1`} />
 
         <div className={`text-${titleColor} fw-bold fs-2 mb-2 mt-5`}>{title}</div>
 
-        <div className={`fw-semibold text-${descriptionColor}`}>{description}</div>
+        {/* Αν το description είναι string, επιτρέπουμε HTML με dangerouslySetInnerHTML */}
+        {typeof description === 'string' ? (
+          <div
+            className={`fw-semibold text-${descriptionColor}`}
+            dangerouslySetInnerHTML={{__html: description}}
+          />
+        ) : (
+          // Αν το description είναι JSX ή React node, το εμφανίζουμε κανονικά
+          <div className={`fw-semibold text-${descriptionColor}`}>{description}</div>
+        )}
       </div>
-    </a>
+    </div>
   )
 }
 

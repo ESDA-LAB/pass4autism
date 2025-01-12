@@ -27,12 +27,12 @@ const Footer: FC = () => {
             </a>
           </li>
           <li className='menu-item'>
-            <a href='#' className='menu-link pe-0 pe-2'>
+            <a href='https://pass4autism-project.eu/contact/' target='_blank' className='menu-link pe-0 pe-2'>
               Contact us
             </a>
           </li>
           <li className='menu-item'>
-            <a href='#' className='menu-link pe-0'>
+            <a href='https://pass4autism-project.eu/forum/' target='_blank' className='menu-link pe-0'>
               PASS4Autism Forum
             </a>
           </li>

@@ -9,13 +9,8 @@ const AsideToolbar = () => {
   return (
     <>
       {/*begin::User*/}
-      <div className='aside-user d-flex align-items-sm-center justify-content-center py-5'>
-        {/*begin::Symbol*/}
-        <div className='symbol symbol-50px'>
-          <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='' />
-        </div>
-        {/*end::Symbol*/}
-
+      <div className='aside-user d-flex align-items-sm-center justify-content-center py-5'
+        style={{borderBottom: '1px solid #2d2d43'}}>
         {/*begin::Wrapper*/}
         <div className='aside-user-info flex-row-fluid flex-wrap ms-5'>
           {/*begin::Section*/}
@@ -23,20 +18,14 @@ const AsideToolbar = () => {
             {/*begin::Info*/}
             <div className='flex-grow-1 me-2'>
               {/*begin::Username*/}
-              <a href='#' className='text-white text-hover-primary fs-6 fw-bold'>
+              <span className='text-white text-hover-primary fs-6 fw-bold'>
                 {currentUser?.first_name} {currentUser?.last_name}
-              </a>
+              </span>
               {/*end::Username*/}
 
               {/*begin::Description*/}
-              <span className='text-gray-600 fw-bold d-block fs-8 mb-1'>Python dev</span>
+              <span className='text-gray-600 fw-bold d-block fs-8 mb-1'>{currentUser?.email}</span>
               {/*end::Description*/}
-
-              {/*begin::Label*/}
-              <div className='d-flex align-items-center text-success fs-9'>
-                <span className='bullet bullet-dot bg-success me-1'></span>online
-              </div>
-              {/*end::Label*/}
             </div>
             {/*end::Info*/}
 
@@ -66,17 +55,6 @@ const AsideToolbar = () => {
         {/*end::Wrapper*/}
       </div>
       {/*end::User*/}
-
-      {/*begin::Aside search*/}
-      <div className='aside-search py-5'>
-        {/* <?php Theme::getView('partials/search/_inline', array(
-        'class' => 'w-100',
-        'menu-placement' => 'bottom-start',
-        'responsive' => 'false'
-    ))?> */}
-        <Search />
-      </div>
-      {/*end::Aside search*/}
     </>
   )
 }
