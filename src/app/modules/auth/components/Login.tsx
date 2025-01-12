@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useAuth } from '../core/Auth';
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import { login, getUserByToken } from '../core/_requests';
+import { login/*, getUserByToken*/ } from '../core/_requests';
 
 // Define types for the auth response and user
-interface AuthResponse {
-  token: string;
-}
+// interface AuthResponse {
+//   token: string;
+// }
 
 interface UserResponse {
   id: number;

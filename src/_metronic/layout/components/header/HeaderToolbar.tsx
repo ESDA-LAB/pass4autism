@@ -1,14 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState, useEffect} from 'react'
+import {useEffect} from 'react'
 import noUiSlider from 'nouislider'
 import {useLayout} from '../../core'
-import {KTSVG} from '../../../helpers'
 import {DefaultTitle} from './page-title/DefaultTitle'
-import {ThemeModeSwitcher} from '../../../partials'
 
 const HeaderToolbar = () => {
   const {classes} = useLayout()
-  const [status, setStatus] = useState<string>('1')
 
   useEffect(() => {
     const rangeSlider = document.querySelector('#kt_toolbar_slider')

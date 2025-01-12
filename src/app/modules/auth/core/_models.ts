@@ -1,5 +1,3 @@
-import { number } from "yup"
-
 export interface AuthModel {
   token: string
   refreshToken?: string

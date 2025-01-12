@@ -27,16 +27,6 @@ const DetailsStoryPage: React.FC = () => {
     setCurrentImageField(null);
   };
 
-  const handleSelectImage = (imageUrl: string) => {
-    if (story && currentImageField) {
-      setStory({
-        ...story,
-        [currentImageField]: imageUrl,
-      });
-    }
-    closeModal();
-  };
-
   // Κλήση στο backend για φόρτωση των λεπτομερειών της ιστορίας
   useEffect(() => {
     const fetchStoryDetails = async () => {
@@ -76,7 +66,7 @@ const DetailsStoryPage: React.FC = () => {
   const handleSave = async () => {
     try {
       if (story) {
-        const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
+        //const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
         //await updateStoryDetails(story.id, { ...story, shareable: isPublic }, authToken);
         setOriginalStory(story); // Ενημερώνουμε την αρχική κατάσταση μετά την αποθήκευση
         navigate('/create-story'); // Επιστροφή στη σελίδα CreateStory μετά την αποθήκευση
@@ -213,7 +203,7 @@ const DetailsStoryPage: React.FC = () => {
                 <>
                   <img
                     src={imageValue as string}
-                    alt={`Story image ${index + 1}`}
+                    alt={`Story ${index + 1}`}
                     className="img-thumbnail"
                     style={{ width: '100px', marginRight: '10px' }}
                   />

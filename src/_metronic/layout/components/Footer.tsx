@@ -13,7 +13,7 @@ const Footer: FC = () => {
         {/* begin::Copyright */}
         <div className='text-dark order-2 order-md-1'>
           <span className='text-muted fw-bold me-2'>{new Date().getFullYear()} &copy;</span>
-          <a href='https://pass4autism-project.eu/' target={'_blank'} className='text-gray-800 text-hover-primary'>
+          <a href='https://pass4autism-project.eu/' target={'_blank'} rel='noopener noreferrer' className='text-gray-800 text-hover-primary'>
             PASS4Autism Project
           </a>
         </div>
@@ -22,17 +22,17 @@ const Footer: FC = () => {
         {/* begin::Nav */}
         <ul className='menu menu-gray-600 menu-hover-primary fw-bold order-1'>
           <li className='menu-item'>
-            <a href='https://pass4autism-project.eu/' target='_blank' className='menu-link ps-0 pe-2'>
+            <a href='https://pass4autism-project.eu/' target='_blank' rel='noopener noreferrer' className='menu-link ps-0 pe-2'>
               Visit Website
             </a>
           </li>
           <li className='menu-item'>
-            <a href='https://pass4autism-project.eu/contact/' target='_blank' className='menu-link pe-0 pe-2'>
+            <a href='https://pass4autism-project.eu/contact/' target='_blank' rel='noopener noreferrer' className='menu-link pe-0 pe-2'>
               Contact us
             </a>
           </li>
           <li className='menu-item'>
-            <a href='https://pass4autism-project.eu/forum/' target='_blank' className='menu-link pe-0'>
+            <a href='https://pass4autism-project.eu/forum/' target='_blank' rel='noopener noreferrer' className='menu-link pe-0'>
               PASS4Autism Forum
             </a>
           </li>

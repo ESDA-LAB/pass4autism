@@ -64,7 +64,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     <td className='text-end'>
                       <a
                         href='https://pass4autism.thinkific.com/' target='{_blank}'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
+                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG
                           path='/media/icons/duotune/arrows/arr064.svg'
@@ -97,7 +97,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     <td className='text-end'>
                       <a
                         href='https://pass4autism-es.thinkific.com/' target='{_blank}'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
+                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG
                           path='/media/icons/duotune/arrows/arr064.svg'
@@ -130,7 +130,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     <td className='text-end'>
                       <a
                         href='https://pass4autism-gr.thinkific.com/' target='{_blank}'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
+                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG
                           path='/media/icons/duotune/arrows/arr064.svg'
@@ -163,7 +163,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     <td className='text-end'>
                       <a
                         href='https://pass4autism-it.thinkific.com/' target='{_blank}'
-                        className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
+                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
                       >
                         <KTSVG
                           path='/media/icons/duotune/arrows/arr064.svg'

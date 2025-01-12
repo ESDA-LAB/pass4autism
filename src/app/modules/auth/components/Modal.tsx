@@ -1,16 +1,16 @@
 import React, { useRef } from 'react';
 import { StoryDetails } from '../core/_models';
 // Define the type for images, including language, level, and age
-interface Image {
-  id: number;
-  src: string;
-  alt: string;
-  title: string;
-  language: string;
-  level: string;
-  age: string; // New property for age filter
-  text: string | null;
-}
+// interface Image {
+//   id: number;
+//   src: string;
+//   alt: string;
+//   title: string;
+//   language: string;
+//   level: string;
+//   age: string; // New property for age filter
+//   text: string | null;
+// }
 
 interface ModalProps {
   isOpen: boolean;
@@ -146,7 +146,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
           <div style={gridStyle}>
             {imagesWithTexts.map((item) => (
               <div key={item.id} style={itemStyle}>
-                <img src={item.src || ''} alt={`Story Image ${item.id}`} style={imageStyle} />
+                <img src={item.src || ''} alt={`Story ${item.id}`} style={imageStyle} />
                 {item.text && <p style={textStyle}>{item.text}</p>}
               </div>
             ))}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { getStoriesByOwner, getStoryDetails } from '../../../modules/auth/core/_requests';
 import { StoryDetails } from '../../../modules/auth/core/_models';
 import { Modal } from '../../../modules/auth/components/Modal';
@@ -13,7 +13,8 @@ const MyStoriesGrid: React.FC = () => {
   const [selectedStory, setSelectedStory] = useState<StoryDetails | null>(null); // Επιλεγμένη ιστορία
 
   // Λήψη ιστοριών χρήστη
-  const loadMyStories = async () => {
+  // Wrap loadMyStories with useCallback
+  const loadMyStories = useCallback(async () => {
     try {
       const authToken = 'mock-auth-token'; // Αντικατέστησέ το με το πραγματικό token του χρήστη
       const response = await getStoriesByOwner(authToken, currentPage, storiesPerPage);
@@ -24,11 +25,12 @@ const MyStoriesGrid: React.FC = () => {
     } catch (error) {
       console.error('Error fetching user stories:', error);
     }
-  };
+  }, [currentPage, storiesPerPage]); // Add dependencies used inside the function
 
+  // Call loadMyStories in useEffect
   useEffect(() => {
     loadMyStories();
-  }, [currentPage]);
+  }, [loadMyStories]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) {

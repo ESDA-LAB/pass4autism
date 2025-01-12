@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {FC} from 'react'
 import {useLayout} from '../../core'
-import {KTSVG} from '../../../helpers'
 import {AsideMenu} from './AsideMenu'
 import {AsideToolbar} from './AsideToolbar'
 

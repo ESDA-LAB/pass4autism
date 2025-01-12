@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { PageTitle } from '../../../_metronic/layout/core';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
@@ -293,38 +293,42 @@ const ViewStoryPage = () => {
   };
 
   // useEffect για φόρτωση stories από το backend
-  const loadStories = async (filters: { language?: string; level?: string; age?: string } = {}) => {
-    try {
-      const auth = getAuth();
-      if (!auth){
-        console.error('No auth token found');
-        return;
+  // Wrap the loadStories function with useCallback
+  const loadStories = useCallback(
+    async (filters: { language?: string; level?: string; age?: string } = {}) => {
+      try {
+        const auth = getAuth();
+        if (!auth) {
+          console.error('No auth token found');
+          return;
+        }
+
+        // const response = await getStories(auth.token, currentPage, 9, filters);
+        const response = await getStories('538684', currentPage, 9, filters);
+        const data: PaginatedStory = response.data;
+
+        setImages(mapBackendDataToImages(data.content));
+        setTotalPages(data.totalPages);
+
+        if (data.filters?.length && data.filters.length > 0) {
+          console.log('Filters from backend:', data.filters);
+          const languageFilter = data.filters.find((filter) => filter.key === 'language')?.value;
+          const levelFilter = data.filters.find((filter) => filter.key === 'level')?.value;
+          const ageFilter = data.filters.find((filter) => filter.key === 'age')?.value;
+          if (languageFilter) setFilteredLanguage(languageFilter);
+          if (levelFilter) setFilteredLevel(`level${levelFilter}`);
+          if (ageFilter) setFilteredAge(ageFilter);
+        }
+      } catch (error) {
+        console.error('Error fetching stories:', error);
       }
-
-      //const response = await getStories(auth.token, currentPage, 9, filters);
-      const response = await getStories('538684', currentPage, 9, filters);
-      const data: PaginatedStory = response.data;
-
-      setImages(mapBackendDataToImages(data.content));
-      setTotalPages(data.totalPages);
-
-      if (data.filters?.length && data.filters.length > 0) {
-        console.log('Filters from backend:', data.filters);
-        const languageFilter = data.filters.find((filter) => filter.key === 'language')?.value;
-        const levelFilter = data.filters.find((filter) => filter.key === 'level')?.value;
-        const ageFilter = data.filters.find((filter) => filter.key === 'age')?.value;
-        if (languageFilter) setFilteredLanguage(languageFilter);
-        if (levelFilter) setFilteredLevel(`level${levelFilter}`);
-        if (ageFilter) setFilteredAge(ageFilter);
-      }
-    } catch (error) {
-      console.error('Error fetching stories:', error);
-    }
-  };
+    },
+    [currentPage] // Add dependencies such as currentPage, or any variables used inside loadStories
+  );
 
   useEffect(() => {
     loadStories({ language: filteredLanguage, level: filteredLevel, age: filteredAge });
-  }, [currentPage, filteredLanguage, filteredLevel, filteredAge]);
+  }, [currentPage, filteredLanguage, filteredLevel, filteredAge, loadStories]);
 
   //Προσθήκη Πλοήγησης Pagination
 
