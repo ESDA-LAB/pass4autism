@@ -27,6 +27,7 @@ const DashboardPage: React.FC = () => {
     marginBottom: '20px',
   };
   
+  const intl = useIntl();
   return (
     <>
       {/* begin::Row */}
@@ -46,8 +47,8 @@ const DashboardPage: React.FC = () => {
               svgIcon="/media/icons/duotune/general/gen005.svg"
               color="primary"
               iconColor="white"
-              title="Create a new Visual Story"
-              description="Create and save a visual story through keywords"
+              title={intl.formatMessage({ id: 'DASHBOARD.CreateanewVisualStory' })}
+              description={intl.formatMessage({ id: 'DASHBOARD.Createandsaveavisualstorythroughkeywords' })}
               titleColor="white"
               descriptionColor="white"
             />
@@ -69,8 +70,8 @@ const DashboardPage: React.FC = () => {
               svgIcon="/media/icons/duotune/general/gen004.svg"
               color="dark"
               iconColor="gray-100"
-              title="View Visual Stories"
-              description="View and guide through the created Visual Stories"
+              title={intl.formatMessage({ id: 'DASHBOARD.ViewVisualStories' })}
+              description={intl.formatMessage({ id: 'DASHBOARD.ViewandguidethroughthecreatedVisualStories' })}
               titleColor="gray-100"
               descriptionColor="gray-100"
             />
@@ -92,8 +93,8 @@ const DashboardPage: React.FC = () => {
               svgIcon="/media/icons/duotune/electronics/elc001.svg"
               color="secondary"
               iconColor="primary"
-              title="Visit our Website"
-              description="Learn more about the project - PASS4Autism"
+              title={intl.formatMessage({ id: 'DASHBOARD.VisitourWebsite' })}
+              description={intl.formatMessage({ id: 'DASHBOARD.Learnmoreabouttheproject-PASS4Autism' })}
               titleColor="gray-900"
               descriptionColor="gray-900"
             />
@@ -106,7 +107,7 @@ const DashboardPage: React.FC = () => {
       <div className="row g-5 g-xl-8">
         <div className="col-xl-12">  
           <div style={containerStyle}>
-            <h2 style={titleStyle}>Welcome Message</h2>
+            <h2 style={titleStyle}>{intl.formatMessage({ id: 'DASHBOARD.WelcomeMessage' })}</h2>
           </div>
         </div>
       </div>

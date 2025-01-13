@@ -9,7 +9,7 @@ export function AsideMenuMain() {
     <>
       <div className='menu-item'>
         <div className='menu-content pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Menu</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({id: 'MENU.Menu'})}</span>
         </div>
       </div>
       <AsideMenuItem
@@ -19,21 +19,21 @@ export function AsideMenuMain() {
       />
       <AsideMenuItem
         to="/createStory"
-        title="Create Story"
+        title={intl.formatMessage({id: 'MENU.CreateStory'})}
         icon='/media/icons/duotune/files/fil005.svg'/>
       <AsideMenuItem
         to="/ViewStory"
-        title="View Stories"
+        title={intl.formatMessage({id: 'MENU.ViewStories'})}
         icon='/media/icons/duotune/general/gen004.svg'/>
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Admin</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({id: 'MENU.Admin'})}</span>
         </div>
       </div>
       <AsideMenuItem
         to='/apps/user-management/users'
         icon='/media/icons/duotune/general/gen051.svg'
-        title='User management'
+        title={intl.formatMessage({id: 'MENU.Usermanagement'})}
       />
       <div className='menu-item'>
         <div className='menu-content'>

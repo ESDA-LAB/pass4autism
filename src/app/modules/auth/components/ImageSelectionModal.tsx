@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl'
 
 interface Image {
   id: number;
@@ -22,6 +23,7 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const imagesPerPage = 6;
+  const intl = useIntl();
 
   // Reset του pagination όταν ανοίγει το modal
   useEffect(() => {
@@ -103,7 +105,7 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
   return (
     <div style={modalStyle}>
       <h2 style={{ textAlign: 'center', fontSize: '24px', marginBottom: '20px' }}>
-        Select an Image
+        {intl.formatMessage({ id: 'SelectanImage' })}
       </h2>
       <div style={gridStyle}>
         {currentImages.map((image) => (
@@ -131,17 +133,17 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
           style={{ ...buttonStyle, opacity: currentPage === 0 ? 0.5 : 1 }}
           disabled={currentPage === 0}
         >
-          Previous
+          {intl.formatMessage({ id: 'Previous' })}
         </button>
         <span>
-          Page {currentPage + 1} of {totalPages}
+          {intl.formatMessage({ id: 'Page' })} {currentPage + 1} {intl.formatMessage({ id: 'of' })} {totalPages}
         </span>
         <button
           onClick={handleNextPage}
           style={{ ...buttonStyle, opacity: currentPage === totalPages - 1 ? 0.5 : 1 }}
           disabled={currentPage === totalPages - 1}
         >
-          Next
+          {intl.formatMessage({ id: 'Next' })}
         </button>
       </div>
 
@@ -160,7 +162,7 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
           marginRight: 'auto',
         }}
       >
-        Cancel
+        {intl.formatMessage({ id: 'Cancel' })}
       </button>
     </div>
   );

@@ -7,6 +7,7 @@ import { getStoryDetails/*, updateStoryDetails*/ } from '../../modules/auth/core
 import { ImageSelectionModal } from '../../modules/auth/components/ImageSelectionModal';
 
 const DetailsStoryPage: React.FC = () => {
+  const intl = useIntl();
   const { id } = useParams<{ id: string }>(); // Παίρνουμε το ID της ιστορίας από το URL
   const navigate = useNavigate();
   const [story, setStory] = useState<StoryDetails | null>(null);
@@ -83,7 +84,7 @@ const DetailsStoryPage: React.FC = () => {
   };
 
   if (loading) {
-    return <p>Loading story details...</p>;
+    return <p>{intl.formatMessage({ id: 'DetailsStory.Loadingstorydetails...' })}</p>;
   }
 
   if (error) {
@@ -91,15 +92,15 @@ const DetailsStoryPage: React.FC = () => {
   }
 
   if (!story) {
-    return <p>Story not found.</p>;
+    return <p>{intl.formatMessage({ id: 'DetailsStory.Storynotfound.' })}</p>;
   }
 
   return (
     <div className="container">
-      <h1>Edit Story and Save it as new</h1>
+      <h1>{intl.formatMessage({ id: 'DetailsStory.EditStoryandSaveitasnew' })}</h1>
       {/* Τίτλος */}
       <div className="form-group">
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title">{intl.formatMessage({ id: 'Title' })}</label>
         <input
           id="title"
           className="form-control"
@@ -110,7 +111,7 @@ const DetailsStoryPage: React.FC = () => {
 
       {/* Σύνοψη */}
       <div className="form-group">
-        <label htmlFor="synopsis">Synopsis</label>
+        <label htmlFor="synopsis">{intl.formatMessage({ id: 'Synopsis' })}</label>
         <textarea
           id="synopsis"
           className="form-control"
@@ -122,7 +123,7 @@ const DetailsStoryPage: React.FC = () => {
 
       {/* Cover */}
       <div className="form-group mb-4">
-        <label>Cover Image</label>
+        <label>{intl.formatMessage({ id: 'CoverImage' })}</label>
         {story?.cover ? (
           <>
             <img
@@ -135,7 +136,7 @@ const DetailsStoryPage: React.FC = () => {
               className="btn btn-secondary"
               onClick={() => openModal('cover')}
             >
-              Change Cover
+              {intl.formatMessage({ id: 'ChangeCover' })}
             </button>
           </>
         ) : (
@@ -143,14 +144,14 @@ const DetailsStoryPage: React.FC = () => {
             className="btn btn-primary"
             onClick={() => openModal('cover')}
           >
-            Add Cover
+            {intl.formatMessage({ id: 'AddCover' })}
           </button>
         )}
       </div>
 
       {/* Rate */}
       <div className="form-group">
-        <label htmlFor="rate">Rate</label>
+        <label htmlFor="rate">{intl.formatMessage({ id: 'Rate' })}</label>
         <input
           id="rate"
           type="number"
@@ -164,22 +165,22 @@ const DetailsStoryPage: React.FC = () => {
 
       {/* Functional (Level) */}
       <div className="form-group">
-        <label htmlFor="functional">Level</label>
+        <label htmlFor="functional">{intl.formatMessage({ id: 'Level' })}</label>
         <select
           id="functional"
           className="form-control"
           value={story.functional}
           onChange={(e) => handleChange('functional', e.target.value)}
         >
-          <option value="level1">Level 1</option>
-          <option value="level2">Level 2</option>
-          <option value="level3">Level 3</option>
+          <option value="level1">{intl.formatMessage({ id: 'Level' })} 1</option>
+          <option value="level2">{intl.formatMessage({ id: 'Level' })} 2</option>
+          <option value="level3">{intl.formatMessage({ id: 'Level' })} 3</option>
         </select>
       </div>
 
       {/* Keywords */}
       <div className="form-group">
-        <label htmlFor="keywords">Keywords</label>
+        <label htmlFor="keywords">{intl.formatMessage({ id: 'Keywords' })}</label>
         <textarea
           id="keywords"
           className="form-control"
@@ -191,14 +192,14 @@ const DetailsStoryPage: React.FC = () => {
 
       {/* Εικόνες */}
       <div className="form-group">
-        <label>Images</label>
+        <label>{intl.formatMessage({ id: 'Images' })}</label>
         {[...Array(7)].map((_, index) => {
           const imageField = `image${index + 1}` as keyof StoryDetails;
           const imageValue = story?.[imageField];
 
           return (
             <div key={index} className="mb-3 d-flex align-items-center">
-              <label style={{ marginRight: '10px' }}>Image {index + 1}</label>
+              <label style={{ marginRight: '10px' }}>{intl.formatMessage({ id: 'Image' })} {index + 1}</label>
               {imageValue ? (
                 <>
                   <img
@@ -211,13 +212,13 @@ const DetailsStoryPage: React.FC = () => {
                     className="btn btn-secondary me-2"
                     onClick={() => openModal(imageField)}
                   >
-                    Change Image
+                    {intl.formatMessage({ id: 'ChangeImage' })}
                   </button>
                   <button
                     className="btn btn-danger"
                     onClick={() => handleChange(imageField, null)} // Διαγράφουμε την εικόνα
                   >
-                    Delete Image
+                    {intl.formatMessage({ id: 'DeleteImage' })}
                   </button>
                 </>
               ) : (
@@ -225,7 +226,7 @@ const DetailsStoryPage: React.FC = () => {
                   className="btn btn-primary"
                   onClick={() => openModal(imageField)}
                 >
-                  Add Image
+                  {intl.formatMessage({ id: 'AddImage' })}
                 </button>
               )}
             </div>
@@ -273,7 +274,7 @@ const DetailsStoryPage: React.FC = () => {
           onChange={() => setIsPublic(!isPublic)}
         />
         <label htmlFor="public" className="form-check-label">
-          Make Public
+        {intl.formatMessage({ id: 'MakePublic' })}
         </label>
       </div>
 
@@ -282,7 +283,7 @@ const DetailsStoryPage: React.FC = () => {
         const textField = `text${index + 1}` as keyof StoryDetails;
         return (
           <div key={index} className="form-group">
-            <label htmlFor={textField}>Text {index + 1}</label>
+            <label htmlFor={textField}>{intl.formatMessage({ id: 'Text' })} {index + 1}</label>
             <textarea
               id={textField}
               className="form-control"
@@ -299,10 +300,10 @@ const DetailsStoryPage: React.FC = () => {
         <button className="btn btn-success me-2" onClick={handleSave}
           disabled={!hasChanges()} // Ανενεργό αν δεν έχουν γίνει αλλαγές
         >
-          Save
+          {intl.formatMessage({ id: 'Save' })}
         </button>
         <button className="btn btn-danger" onClick={handleCancel}>
-          Cancel
+          {intl.formatMessage({ id: 'Cancel' })}
         </button>
       </div>
     </div>

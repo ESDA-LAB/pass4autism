@@ -14,6 +14,7 @@ interface Story {
 }
 
 const CreateStoryPage: React.FC = () => {
+  const intl = useIntl();
   const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<Story[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -164,8 +165,8 @@ const CreateStoryPage: React.FC = () => {
             svgIcon='/media/icons/duotune/arrows/arr013.svg'
             color='primary'
             iconColor='white'
-            title='Create Visual Story'
-            description='<ul><li>Search through existing stories using keywords</li><li>Select and edit the one you like</li><li>Modify the text and images</li><li>Click Save.</li></ul>'
+            title={intl.formatMessage({ id: 'CreateStory.CreateVisualStory' })}
+            description={intl.formatMessage({ id: 'CreateStory.<ul><li>Search through existing stories using keywords</li><li>Select and edit the one you like</li><li>Modify the text and images</li><li>Click Save.</li></ul>' })}
             titleColor='white'
             descriptionColor='white'
           />
@@ -178,21 +179,21 @@ const CreateStoryPage: React.FC = () => {
           <input
             type='text'
             className='form-control form-control-lg'
-            placeholder='Search visual stories...'
+            placeholder={intl.formatMessage({ id: 'CreateStory.Searchvisualstories...' })}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <button className='btn btn-primary' onClick={handleSearch}>
-            {loading ? 'Searching...' : 'Search'}
+            {loading ? intl.formatMessage({ id: 'Searching' })+'...' : intl.formatMessage({ id: 'Search' })}
           </button>
         </div>
       </div>
 
       {/* Stories Grid */}
       <div style={containerStyle}>
-        {!hasSearched && <p>Please use the search bar to look for visual stories.</p>}
+        {!hasSearched && <p>{intl.formatMessage({ id: 'CreateStory.Pleaseusethesearchbartolookforvisualstories.' })}</p>}
         {hasSearched && results.length === 0 && !loading && (
-          <p>No stories found. Try different keywords to find what you're looking for.</p>
+          <p>{intl.formatMessage({ id: 'CreateStory.Nostoriesfound.Trydifferentkeywordstofindwhatyourelookingfor.' })}</p>
         )}
         {results.length > 0 && (
           <div style={gridStyle}>
@@ -223,10 +224,10 @@ const CreateStoryPage: React.FC = () => {
                 ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
               }}
             >
-              Previous
+              {intl.formatMessage({ id: 'Previous' })}
             </button>
             <span style={paginationStyle.text}>
-              Page {currentPage + 1} of {totalPages}
+              {intl.formatMessage({ id: 'Page' })} {currentPage + 1} {intl.formatMessage({ id: 'of' })} {totalPages}
             </span>
             <button
               onClick={handleNextPage}
@@ -236,7 +237,7 @@ const CreateStoryPage: React.FC = () => {
                 ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
               }}
             >
-              Next
+              {intl.formatMessage({ id: 'Next' })}
             </button>
           </div>
         )}

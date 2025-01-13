@@ -2,8 +2,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { getStoriesByOwner, getStoryDetails } from '../../../modules/auth/core/_requests';
 import { StoryDetails } from '../../../modules/auth/core/_models';
 import { Modal } from '../../../modules/auth/components/Modal';
+import { useIntl } from 'react-intl'
 
 const MyStoriesGrid: React.FC = () => {
+  const intl = useIntl();
   const [myStories, setMyStories] = useState<StoryDetails[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -141,7 +143,7 @@ const MyStoriesGrid: React.FC = () => {
 
   return (
     <div style={containerStyle}>
-      <h2 style={titleStyle}>My Stories</h2>
+      <h2 style={titleStyle}>{intl.formatMessage({ id: 'MyStoriesGrid.MyStories' })}</h2>
       {myStories.length > 0 ? (
         <>
           <div style={gridStyle}>
@@ -166,23 +168,23 @@ const MyStoriesGrid: React.FC = () => {
               disabled={currentPage === 0}
               style={currentPage === 0 ? disabledButtonStyle : buttonStyle}
             >
-              Previous
+              {intl.formatMessage({ id: 'Previous' })}
             </button>
             <span style={{ fontSize: '16px', fontWeight: 'bold' }}>
-              Page {currentPage + 1} of {totalPages}
+              {intl.formatMessage({ id: 'Page' })} {currentPage + 1} {intl.formatMessage({ id: 'of' })} {totalPages}
             </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
               style={currentPage === totalPages - 1 ? disabledButtonStyle : buttonStyle}
             >
-              Next
+              {intl.formatMessage({ id: 'Next' })}
             </button>
           </div>
         </>
       ) : (
         <p style={{ fontSize: '18px', color: '#666' }}>
-          You don't have any stories yet. Start creating your first story!
+          {intl.formatMessage({ id: 'MyStoriesGrid.Youdonthaveanystoriesyet.Startcreatingyourfirststory' })}
         </p>
       )}
       {/* Modal */}

@@ -3,31 +3,33 @@ import clsx from 'clsx'
 import {FC} from 'react'
 import {toAbsoluteUrl} from '../../../helpers'
 import {useLang, setLanguage} from '../../../i18n/Metronici18n'
+import { useIntl } from 'react-intl'
 
-const languages = [
-  {
-    lang: 'en',
-    name: 'English',
-    flag: toAbsoluteUrl('/media/flags/united-kingdom.svg'),
-  },
-  {
-    lang: 'es',
-    name: 'Spanish',
-    flag: toAbsoluteUrl('/media/flags/spain.svg'),
-  },
-  {
-    lang: 'el',
-    name: 'Greek',
-    flag: toAbsoluteUrl('/media/flags/greece.svg'),
-  },
-  {
-    lang: 'it',
-    name: 'Italian',
-    flag: toAbsoluteUrl('/media/flags/italy.svg'),
-  },
-]
 
 const Languages: FC = () => {
+  const intl = useIntl();
+  const languages = [
+    {
+      lang: 'en',
+      name: intl.formatMessage({ id: 'English' }),
+      flag: toAbsoluteUrl('/media/flags/united-kingdom.svg'),
+    },
+    {
+      lang: 'es',
+      name: intl.formatMessage({ id: 'Spanish' }),
+      flag: toAbsoluteUrl('/media/flags/spain.svg'),
+    },
+    {
+      lang: 'el',
+      name: intl.formatMessage({ id: 'Greek' }),
+      flag: toAbsoluteUrl('/media/flags/greece.svg'),
+    },
+    {
+      lang: 'it',
+      name: intl.formatMessage({ id: 'Italian' }),
+      flag: toAbsoluteUrl('/media/flags/italy.svg'),
+    },
+  ]
   const lang = useLang()
   const currentLanguage = languages.find((x) => x.lang === lang)
   return (
@@ -39,7 +41,7 @@ const Languages: FC = () => {
     >
       <a href='#' className='menu-link px-5'>
         <span className='menu-title position-relative'>
-          Language
+          {intl.formatMessage({ id: 'Language' })}
           <span className='fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0'>
             {currentLanguage?.name}{' '}
             <img

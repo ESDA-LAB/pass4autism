@@ -24,17 +24,6 @@ interface LanguageOption {
   label: string;
 }
 
-const languageOptions: LanguageOption[] = [
-  { code: '', label: 'All Languages' }, // Κενή επιλογή
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Spanish' },
-  { code: 'gr', label: 'Greek' },
-  { code: 'it', label: 'Italian' },
-];
-
-// Levels dropdown options
-const levelOptions: string[] = ['', 'level1', 'level2', 'level3'];
-
 // Age dropdown options
 const ageOptions: string[] = ['', '2-5', '6-9', '10-12', '13-17'];
 
@@ -53,11 +42,20 @@ const LanguageDropdown: React.FC<{
     onLanguageChange(code || undefined); // Χρησιμοποιούμε το code για backend
     setIsOpen(false);
   };
+  const intl = useIntl();
+  
+  const languageOptions: LanguageOption[] = [
+    { code: '', label: intl.formatMessage({ id: 'AllLanguages' }) }, // Κενή επιλογή
+    { code: 'en', label: intl.formatMessage({ id: 'English' }) },
+    { code: 'es', label: intl.formatMessage({ id: 'Spanish' }) },
+    { code: 'gr', label: intl.formatMessage({ id: 'Greek' }) },
+    { code: 'it', label: intl.formatMessage({ id: 'Italian' }) },
+  ];
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {languageOptions.find((option) => option.code === selectedLanguage)?.label || 'All Languages'}
+        {languageOptions.find((option) => option.code === selectedLanguage)?.label || intl.formatMessage({ id: 'AllLanguages' })}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
@@ -92,11 +90,15 @@ const LevelsDropdown: React.FC<{
     onLevelChange(level || undefined); // Χρησιμοποιούμε το level για backend
     setIsOpen(false);
   };
+  const intl = useIntl();
+
+  // Levels dropdown options
+  const levelOptions: string[] = ['', 'level1', 'level2', 'level3'];
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {selectedLevel || 'All Levels'}
+        {selectedLevel || intl.formatMessage({ id: 'AllLevels' })}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
@@ -107,7 +109,7 @@ const LevelsDropdown: React.FC<{
               style={dropdownStyle.item}
               onClick={() => handleLevelSelect(option)}
             >
-              {option || 'All Levels'}
+              {option.replace('level', intl.formatMessage({ id: 'Level' })) || intl.formatMessage({ id: 'AllLevels' })}
             </div>
           ))}
         </div>
@@ -131,11 +133,12 @@ const AgeDropdown: React.FC<{
     onAgeChange(age || undefined); // Χρησιμοποιούμε το age για backend
     setIsOpen(false);
   };
+  const intl = useIntl();
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {selectedAge || 'All Ages'}
+        {selectedAge || intl.formatMessage({ id: 'AllAges' })}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
@@ -146,7 +149,7 @@ const AgeDropdown: React.FC<{
               style={dropdownStyle.item}
               onClick={() => handleAgeSelect(option)}
             >
-              {option || 'All Ages'}
+              {option || intl.formatMessage({ id: 'AllAges' })}
             </div>
           ))}
         </div>
@@ -461,7 +464,7 @@ const ViewStoryPage = () => {
     boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
     marginBottom: '20px',
     width: '100%',
-    maxWidth: '600px',
+    maxWidth: '800px',
     textAlign: 'center',
   };
 
@@ -470,6 +473,7 @@ const ViewStoryPage = () => {
     fontWeight: 'bold',
     marginBottom: '20px',
   };
+  const intl = useIntl();
 
   return (
     <>
@@ -481,8 +485,8 @@ const ViewStoryPage = () => {
             svgIcon='/media/icons/duotune/general/gen004.svg'
             color='primary'
             iconColor='white'
-            title='View Visual Stories'
-            description='Viewing visual stories.'
+            title={intl.formatMessage({ id: 'ViewStory.ViewVisualStories' })}
+            description={intl.formatMessage({ id: 'ViewStory.Viewingvisualstories.' })}
             titleColor='white'
             descriptionColor='white'
           />
@@ -542,10 +546,10 @@ const ViewStoryPage = () => {
               ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
             }}
           >
-            Previous
+            {intl.formatMessage({ id: 'Previous' })}
           </button>
           <span style={paginationStyle.text}>
-            Page {currentPage + 1} of {totalPages}
+            {intl.formatMessage({ id: 'Page' })} {currentPage + 1} {intl.formatMessage({ id: 'of' })} {totalPages}
           </span>
           <button
             onClick={handleNextPage}
@@ -555,7 +559,7 @@ const ViewStoryPage = () => {
               ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
             }}
           >
-            Next
+            {intl.formatMessage({ id: 'Next' })}
           </button>
         </div>
       </div>

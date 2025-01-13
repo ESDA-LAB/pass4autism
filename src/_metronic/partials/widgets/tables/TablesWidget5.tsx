@@ -2,19 +2,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import {KTSVG, toAbsoluteUrl} from '../../../helpers'
+import { useIntl } from 'react-intl'
 
 type Props = {
   className: string
 }
 
 const TablesWidget5: React.FC<Props> = ({className}) => {
+  const intl = useIntl();
   return (
     <div className={`card ${className}`}>
       {/* begin::Header */}
       <div className='card-header border-0 pt-5'>
         <h3 className='card-title align-items-start flex-column'>
-          <span className='card-label fw-bold fs-3 mb-1'>PASS4Autism Training Courses</span>
-          <span className='text-muted mt-1 fw-semibold fs-7'>Find our Courses and enroll now</span>
+          <span className='card-label fw-bold fs-3 mb-1'>{intl.formatMessage({ id: 'TablesWidget5.PASS4AutismTrainingCourses' })}</span>
+          <span className='text-muted mt-1 fw-semibold fs-7'>{intl.formatMessage({ id: 'TablesWidget5.FindourCoursesandenrollnow' })}</span>
         </h3>
       </div>
       {/* end::Header */}
@@ -59,7 +61,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-success'>Available</span>
+                      <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
                     </td>
                     <td className='text-end'>
                       <a
@@ -92,7 +94,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-success'>Available</span>
+                      <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
                     </td>
                     <td className='text-end'>
                       <a
@@ -125,7 +127,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-success'>Available</span>
+                      <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
                     </td>
                     <td className='text-end'>
                       <a
@@ -158,7 +160,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
-                      <span className='badge badge-light-success'>Available</span>
+                      <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
                     </td>
                     <td className='text-end'>
                       <a

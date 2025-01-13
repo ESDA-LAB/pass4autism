@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {FC} from 'react'
 import {useLayout} from '../core'
+import { useIntl } from 'react-intl'
 
 const Footer: FC = () => {
   const {classes} = useLayout()
+  const intl = useIntl();
   return (
     <div className='footer py-4 d-flex flex-lg-column' id='kt_footer'>
       {/* begin::Container */}
@@ -23,17 +25,17 @@ const Footer: FC = () => {
         <ul className='menu menu-gray-600 menu-hover-primary fw-bold order-1'>
           <li className='menu-item'>
             <a href='https://pass4autism-project.eu/' target='_blank' rel='noopener noreferrer' className='menu-link ps-0 pe-2'>
-              Visit Website
+              {intl.formatMessage({ id: 'Footer.VisitWebsite' })}
             </a>
           </li>
           <li className='menu-item'>
             <a href='https://pass4autism-project.eu/contact/' target='_blank' rel='noopener noreferrer' className='menu-link pe-0 pe-2'>
-              Contact us
+              {intl.formatMessage({ id: 'Footer.Contactus' })}
             </a>
           </li>
           <li className='menu-item'>
             <a href='https://pass4autism-project.eu/forum/' target='_blank' rel='noopener noreferrer' className='menu-link pe-0'>
-              PASS4Autism Forum
+              {intl.formatMessage({ id: 'Footer.PASS4AutismForum' })}
             </a>
           </li>
         </ul>

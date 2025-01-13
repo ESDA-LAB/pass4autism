@@ -11,6 +11,7 @@ import { StoryDetails } from '../core/_models';
 //   age: string; // New property for age filter
 //   text: string | null;
 // }
+import { useIntl } from 'react-intl'
 
 interface ModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, storyDetails }) => {
+  const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
   if (!isOpen || !storyDetails) return null;
 
@@ -140,9 +142,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
       <div style={modalStyle}>
         <div ref={printRef}>
           <h2 style={headerStyle}>{storyDetails.title}</h2>
-          <p><strong>Author:</strong> {storyDetails.authorName}</p>
-          <p><strong>Synopsis:</strong> {storyDetails.synopsis}</p>
-          <p><strong>Rate:</strong> {storyDetails.rate}</p>
+          <p><strong>{intl.formatMessage({ id: 'Author' })}:</strong> {storyDetails.authorName}</p>
+          <p><strong>{intl.formatMessage({ id: 'Synopsis' })}:</strong> {storyDetails.synopsis}</p>
+          <p><strong>{intl.formatMessage({ id: 'Rate' })}:</strong> {storyDetails.rate}</p>
           <div style={gridStyle}>
             {imagesWithTexts.map((item) => (
               <div key={item.id} style={itemStyle}>
@@ -153,11 +155,11 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
           </div>
           <div style={footerStyle}>
             <button onClick={onClose} style={closeButtonStyle}>
-                Close
+              {intl.formatMessage({ id: 'Close' })}
             </button>
             {showPrintButton && (
               <button onClick={handlePrint} style={printButtonStyle}>
-                Print
+                {intl.formatMessage({ id: 'Print' })}
               </button>
             )}
           </div>
