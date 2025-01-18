@@ -5,6 +5,7 @@ import { PageTitle } from '../../../_metronic/layout/core';
 import { StoryDetails } from '../../modules/auth/core/_models';
 import { getStoryDetails/*, updateStoryDetails*/ } from '../../modules/auth/core/_requests';
 import { ImageSelectionModal } from '../../modules/auth/components/ImageSelectionModal';
+import {getAuth} from '../../modules/auth/core/AuthHelpers';
 
 const DetailsStoryPage: React.FC = () => {
   const intl = useIntl();
@@ -32,9 +33,13 @@ const DetailsStoryPage: React.FC = () => {
   useEffect(() => {
     const fetchStoryDetails = async () => {
       try {
+        const auth = getAuth();
+        if (!auth) {
+          console.error('No auth token found');
+          return;
+        }
         setLoading(true);
-        const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
-        const response = await getStoryDetails(Number(id), authToken);
+        const response = await getStoryDetails(Number(id), auth.token);
         setStory(response.data);
         setOriginalStory(response.data); // Αποθήκευση της αρχικής κατάστασης
         setIsPublic(response.data.shareable);
@@ -67,8 +72,12 @@ const DetailsStoryPage: React.FC = () => {
   const handleSave = async () => {
     try {
       if (story) {
-        //const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
-        //await updateStoryDetails(story.id, { ...story, shareable: isPublic }, authToken);
+        const auth = getAuth();
+        if (!auth) {
+          console.error('No auth token found');
+          return;
+        }
+        //await updateStoryDetails(story.id, { ...story, shareable: isPublic }, auth.token);
         setOriginalStory(story); // Ενημερώνουμε την αρχική κατάσταση μετά την αποθήκευση
         navigate('/create-story'); // Επιστροφή στη σελίδα CreateStory μετά την αποθήκευση
       }

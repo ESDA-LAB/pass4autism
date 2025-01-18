@@ -5,6 +5,7 @@ import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
 import { getStories } from '../../modules/auth/core/_requests';
 import { StoryDetails } from '../../modules/auth/core/_models';
 import { useNavigate } from 'react-router-dom'; // Για πλοήγηση
+import {getAuth} from '../../modules/auth/core/AuthHelpers';
 
 interface Story {
   id: number;
@@ -29,8 +30,12 @@ const CreateStoryPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const authToken = 'mock-auth-token'; // Replace with actual auth token retrieval logic
-      const response = await getStories(authToken, page, 9, { searchKeywords: searchQuery });
+      const auth = getAuth();
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      const response = await getStories(auth.token, page, 9, { searchKeywords: searchQuery });
       const { content, totalPages: pages } = response.data;
 
       // Map API response to the Story format

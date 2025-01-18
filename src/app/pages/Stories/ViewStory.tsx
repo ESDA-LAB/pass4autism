@@ -306,8 +306,7 @@ const ViewStoryPage = () => {
           return;
         }
 
-        // const response = await getStories(auth.token, currentPage, 9, filters);
-        const response = await getStories('538684', currentPage, 9, filters);
+        const response = await getStories(auth.token, currentPage, 9, filters);
         const data: PaginatedStory = response.data;
 
         setImages(mapBackendDataToImages(data.content));

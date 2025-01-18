@@ -3,6 +3,7 @@ import { getStoriesByOwner, getStoryDetails } from '../../../modules/auth/core/_
 import { StoryDetails } from '../../../modules/auth/core/_models';
 import { Modal } from '../../../modules/auth/components/Modal';
 import { useIntl } from 'react-intl'
+import {getAuth} from '../../../modules/auth/core/AuthHelpers';
 
 const MyStoriesGrid: React.FC = () => {
   const intl = useIntl();
@@ -18,8 +19,12 @@ const MyStoriesGrid: React.FC = () => {
   // Wrap loadMyStories with useCallback
   const loadMyStories = useCallback(async () => {
     try {
-      const authToken = 'mock-auth-token'; // Αντικατέστησέ το με το πραγματικό token του χρήστη
-      const response = await getStoriesByOwner(authToken, currentPage, storiesPerPage);
+      const auth = getAuth();
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      const response = await getStoriesByOwner(auth.token, currentPage, storiesPerPage);
       const { content, totalPages: total } = response.data;
 
       setMyStories(content);
@@ -48,8 +53,12 @@ const MyStoriesGrid: React.FC = () => {
 
   const openModal = async (storyId: number) => {
     try {
-      const authToken = 'mock-auth-token'; // Αντικατέστησέ το με το πραγματικό token
-      const response = await getStoryDetails(storyId, authToken); // Λήψη λεπτομερειών ιστορίας
+      const auth = getAuth();
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      const response = await getStoryDetails(storyId, auth.token); // Λήψη λεπτομερειών ιστορίας
       setSelectedStory(response.data);
       setIsModalOpen(true);
     } catch (error) {
