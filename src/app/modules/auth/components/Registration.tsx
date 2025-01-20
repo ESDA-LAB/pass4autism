@@ -9,7 +9,7 @@ import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/componen
 import { useAuth } from '../core/Auth';
 import { getUserByToken } from '../core/_requests';
 
-const API_BASE_URL = 'http://localhost:8088/api/v1';
+const API_BASE_URL = 'http://10.10.20.16:8088/api/v1';
 
 const initialValues = {
   firstname: '',
