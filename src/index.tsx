@@ -18,6 +18,8 @@ import './_metronic/assets/sass/style.react.scss'
 import {AppRoutes} from './app/routing/AppRoutes'
 import {AuthProvider, setupAxios} from './app/modules/auth'
 import {ThemeModeProvider} from './_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import {ReactKeycloakProvider} from '@react-keycloak/web' // Προσθήκη του ReactKeycloakProvider
+import keycloak from './keycloak' // Import της ρύθμισης Keycloak
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
  * basic Metronic mocks and returns it.
@@ -34,17 +36,41 @@ Chart.register(...registerables)
 
 const queryClient = new QueryClient()
 const container = document.getElementById('root')
+
+const eventLogger = (event: any, error: any) => {
+  console.log('Keycloak event:', event, error);
+};
+
+const tokenLogger = (tokens: any) => {
+  console.log('Keycloak tokens:', tokens);
+  if (tokens.token) {
+    localStorage.setItem('kcToken', tokens.token); // Αποθηκεύουμε το access token
+    localStorage.setItem('kcRefreshToken', tokens.refreshToken); // Αποθηκεύουμε το refresh token
+  }
+};
+
 if (container) {
   createRoot(container).render(
-    <QueryClientProvider client={queryClient}>
-      <MetronicI18nProvider>
-        <ThemeModeProvider>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </ThemeModeProvider>
-      </MetronicI18nProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ReactKeycloakProvider
+      authClient={keycloak}
+      onEvent={eventLogger}
+      onTokens={tokenLogger}
+      initOptions={{
+        onLoad: 'login-required',
+        checkLoginIframe: false,
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <MetronicI18nProvider>
+          <ThemeModeProvider>
+            <AuthProvider>
+              <AppRoutes />
+            </AuthProvider>
+          </ThemeModeProvider>
+        </MetronicI18nProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ReactKeycloakProvider>
   )
 }

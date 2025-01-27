@@ -7,95 +7,120 @@ import {
   useRef,
   Dispatch,
   SetStateAction,
-} from 'react'
-import {LayoutSplashScreen} from '../../../../_metronic/layout/core'
-import {AuthModel, UserModel} from './_models'
-import * as authHelper from './AuthHelpers'
-import {getUserByToken} from './_requests'
-import {WithChildren} from '../../../../_metronic/helpers'
+} from 'react';
+import {LayoutSplashScreen} from '../../../../_metronic/layout/core';
+import {AuthModel, UserModel} from './_models';
+import * as authHelper from './AuthHelpers';
+import {WithChildren} from '../../../../_metronic/helpers';
+import {useKeycloak} from '@react-keycloak/web'; // Χρήση του Keycloak
 
+// Τύπος δεδομένων για το AuthContext
 type AuthContextProps = {
-  auth: AuthModel | undefined
-  saveAuth: (auth: AuthModel | undefined) => void
-  currentUser: UserModel | undefined
-  setCurrentUser: Dispatch<SetStateAction<UserModel | undefined>>
-  logout: () => void
-}
+  auth: AuthModel | undefined; // Το auth token ή undefined
+  saveAuth: (auth: AuthModel | undefined) => void; // Αποθηκεύει το auth
+  currentUser: UserModel | undefined; // Πληροφορίες χρήστη
+  setCurrentUser: Dispatch<SetStateAction<UserModel | undefined>>; // Ενημέρωση του χρήστη
+  logout: () => void; // Διαγραφή auth και αποσύνδεση
+};
 
+// Αρχική κατάσταση του AuthContext
 const initAuthContextPropsState = {
-  auth: authHelper.getAuth(),
+  auth: undefined,
   saveAuth: () => {},
   currentUser: undefined,
   setCurrentUser: () => {},
   logout: () => {},
-}
+};
 
-const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState)
+const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState);
 
+// Custom hook για πρόσβαση στο AuthContext
 const useAuth = () => {
-  return useContext(AuthContext)
-}
+  return useContext(AuthContext);
+};
 
 const AuthProvider: FC<WithChildren> = ({children}) => {
-  const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
-  const [currentUser, setCurrentUser] = useState<UserModel | undefined>()
-  const saveAuth = (auth: AuthModel | undefined) => {
-    setAuth(auth)
-    if (auth) {
-      authHelper.setAuth(auth)
-    } else {
-      authHelper.removeAuth()
-    }
-  }
+  const {keycloak, initialized} = useKeycloak(); // Αρχικοποίηση Keycloak
+  const [auth, setAuth] = useState<AuthModel | undefined>();
+  const [currentUser, setCurrentUser] = useState<UserModel | undefined>();
 
+  // Αποθήκευση Auth
+  const saveAuth = (auth: AuthModel | undefined) => {
+    setAuth(auth);
+    if (auth) {
+      authHelper.setAuth(auth); // Αποθηκεύει το auth token στο localStorage
+    } else {
+      authHelper.removeAuth();
+    }
+  };
+
+  // Logout
   const logout = () => {
-    saveAuth(undefined)
-    setCurrentUser(undefined)
-  }
+    setAuth(undefined);
+    setCurrentUser(undefined);
+    keycloak.logout({
+      redirectUri: `${window.location.origin}`, // Ανακατεύθυνση στην αρχική σελίδα
+    });
+    authHelper.removeAuth(); // Καθαρισμός του localStorage
+  };
+
+  useEffect(() => {
+    if (initialized && keycloak.authenticated) {
+      // Ενημέρωση auth και χρήστη αν το Keycloak είναι συνδεδεμένο
+      const token = keycloak.token;
+      const parsedToken = keycloak.tokenParsed as any; // Προσαρμογή τύπου αν χρειάζεται
+
+      saveAuth({token}); // Αποθήκευση του token μέσω saveAuth
+
+      setCurrentUser({
+        id: parsedToken.sub,
+        username: parsedToken.preferred_username,
+        first_name: parsedToken.given_name, // Το πεδίο "first_name" από το token
+        last_name: parsedToken.family_name, // Το πεδίο "last_name" από το token
+        email: parsedToken.email, // Το email από το token
+        roles: parsedToken.realm_access?.roles || [], // Ανάκτηση ρόλων από το token
+      });
+    }
+  }, [keycloak, initialized]);
 
   return (
     <AuthContext.Provider value={{auth, saveAuth, currentUser, setCurrentUser, logout}}>
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
 const AuthInit: FC<WithChildren> = ({children}) => {
-  const {auth, logout, setCurrentUser} = useAuth()
-  const didRequest = useRef(false)
-  const [showSplashScreen, setShowSplashScreen] = useState(true)
-  // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
+  const {auth, logout} = useAuth(); // Από το AuthContext
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
+  const didRequest = useRef(false); // Για αποφυγή διπλών αιτημάτων
+
   useEffect(() => {
-    const requestUser = async (apiToken: string) => {
-      try {
-        if (!didRequest.current) {
-          const {data} = await getUserByToken(apiToken)
-          if (data) {
-            setCurrentUser(data)
-          }
-        }
-      } catch (error) {
-        console.error(error)
-        if (!didRequest.current) {
-          logout()
-        }
-      } finally {
-        setShowSplashScreen(false)
+    const initializeAuth = async () => {
+      const token = auth?.token;
+
+      // Αν υπάρχει token, θεωρούμε ότι ο χρήστης είναι συνδεδεμένος
+      if (token) {
+        console.log('Auth Token Found:', token);
+        setShowSplashScreen(false);
+        return;
       }
 
-      return () => (didRequest.current = true)
-    }
+      // Αν δεν υπάρχει token και δεν έχουμε κάνει request ακόμα
+      if (!didRequest.current) {
+        didRequest.current = true;
+        console.warn('No Auth Token Found, waiting for Keycloak...');
+        // Δεν κάνουμε logout εδώ, περιμένουμε να αρχικοποιηθεί το Keycloak
+      }
 
-    if (auth && auth.token) {
-      requestUser(auth.token)
-    } else {
-      logout()
-      setShowSplashScreen(false)
-    }
-    // eslint-disable-next-line
-  }, [])
+      // Καταργούμε το splash screen, ώστε να προχωρήσει η εφαρμογή
+      setShowSplashScreen(false);
+    };
 
-  return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
-}
+    initializeAuth();
+  }, [auth]);
 
-export {AuthProvider, AuthInit, useAuth}
+  return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>;
+};
+
+export {AuthProvider, AuthInit, useAuth};

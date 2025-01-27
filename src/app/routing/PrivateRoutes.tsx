@@ -13,7 +13,7 @@ import { DetailsStory } from '../pages/Stories/DetailsStory';
 import { useAuth } from '../modules/auth/core/Auth'; // Import the useAuth hook
 
 const PrivateRoutes = () => {
-  const { auth } = useAuth(); // Access the auth context
+  const { auth, currentUser } = useAuth(); // Access the auth context
 
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'));
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'));
@@ -22,81 +22,83 @@ const PrivateRoutes = () => {
   const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'));
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'));
 
+  // Ασφαλής έλεγχος αν ο χρήστης είναι αυθεντικοποιημένος
+  if (!auth) {
+    return <Navigate to="/auth/login" />;
+  }
+
   return (
     <Routes>
       <Route element={<MasterLayout />}>
-        {/* Redirect to Dashboard after successful login/registration */}
-        {auth ? (
-          <>
-            <Route path='auth/*' element={<Navigate to='/dashboard' />} />
-            <Route path='dashboard' element={<DashboardWrapper />} />
-            <Route path="/createStory" element={<CreateStory />} />
-            <Route path="/ViewStory" element={<ViewStory />} />
-            <Route path="/stories/:id" element={<DetailsStory />} />
-            <Route
-              path='builder'
-              element={
-                <SuspensedView>
-                  <BuilderPageWrapper />
-                </SuspensedView>
-              }
-            />
-            <Route path='menu-test' element={<MenuTestPage />} />
-            {/* Lazy Modules */}
-            <Route
-              path='crafted/pages/profile/*'
-              element={
-                <SuspensedView>
-                  <ProfilePage />
-                </SuspensedView>
-              }
-            />
-            <Route
-              path='crafted/pages/wizards/*'
-              element={
-                <SuspensedView>
-                  <WizardsPage />
-                </SuspensedView>
-              }
-            />
-            <Route
-              path='crafted/widgets/*'
-              element={
-                <SuspensedView>
-                  <WidgetsPage />
-                </SuspensedView>
-              }
-            />
-            <Route
-              path='crafted/account/*'
-              element={
-                <SuspensedView>
-                  <AccountPage />
-                </SuspensedView>
-              }
-            />
-            <Route
-              path='apps/chat/*'
-              element={
-                <SuspensedView>
-                  <ChatPage />
-                </SuspensedView>
-              }
-            />
-            <Route
-              path='apps/user-management/*'
-              element={
-                <SuspensedView>
-                  <UsersPage />
-                </SuspensedView>
-              }
-            />
-          </>
-        ) : (
-          <Navigate to='/auth/login' /> // Redirect to login if not authenticated
+        {/* Redirect to Dashboard after successful login */}
+        <Route path="auth/*" element={<Navigate to="/dashboard" />} />
+        <Route path="dashboard" element={<DashboardWrapper />} />
+        <Route path="/createStory" element={<CreateStory />} />
+        <Route path="/ViewStory" element={<ViewStory />} />
+        <Route path="/stories/:id" element={<DetailsStory />} />
+        <Route
+          path="builder"
+          element={
+            <SuspensedView>
+              <BuilderPageWrapper />
+            </SuspensedView>
+          }
+        />
+        <Route path="menu-test" element={<MenuTestPage />} />
+        {/* Lazy Modules */}
+        <Route
+          path="crafted/pages/profile/*"
+          element={
+            <SuspensedView>
+              <ProfilePage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="crafted/pages/wizards/*"
+          element={
+            <SuspensedView>
+              <WizardsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="crafted/widgets/*"
+          element={
+            <SuspensedView>
+              <WidgetsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="crafted/account/*"
+          element={
+            <SuspensedView>
+              <AccountPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="apps/chat/*"
+          element={
+            <SuspensedView>
+              <ChatPage />
+            </SuspensedView>
+          }
+        />
+        {/* Προστατευμένο Route για User Management */}
+        {currentUser?.roles?.includes('admin') && (
+          <Route
+            path="apps/user-management/*"
+            element={
+              <SuspensedView>
+                <UsersPage />
+              </SuspensedView>
+            }
+          />
         )}
         {/* Page Not Found */}
-        <Route path='*' element={<Navigate to='/error/404' />} />
+        <Route path="*" element={<Navigate to="/error/404" />} />
       </Route>
     </Routes>
   );

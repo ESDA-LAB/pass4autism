@@ -1,9 +1,11 @@
 /* eslint-disable react/jsx-no-target-blank */
 import {useIntl} from 'react-intl'
 import {AsideMenuItem} from './AsideMenuItem'
+import {useAuth} from '../../../../app/modules/auth'; // Πρόσβαση στο Auth Context
 
 export function AsideMenuMain() {
   const intl = useIntl()
+  const {currentUser} = useAuth(); // Πρόσβαση στον τρέχοντα χρήστη και τους ρόλους του
 
   return (
     <>
@@ -25,16 +27,22 @@ export function AsideMenuMain() {
         to="/ViewStory"
         title={intl.formatMessage({id: 'MENU.ViewStories'})}
         icon='/media/icons/duotune/general/gen004.svg'/>
-      <div className='menu-item'>
-        <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({id: 'MENU.Admin'})}</span>
-        </div>
-      </div>
-      <AsideMenuItem
-        to='/apps/user-management/users'
-        icon='/media/icons/duotune/general/gen051.svg'
-        title={intl.formatMessage({id: 'MENU.Usermanagement'})}
-      />
+
+      {/* Εμφάνιση μόνο για τον Admin */}
+      {currentUser?.roles?.includes('admin') && ( // Ασφαλής πρόσβαση στο currentUser και roles
+        <>
+          <div className='menu-item'>
+            <div className='menu-content pt-8 pb-2'>
+              <span className='menu-section text-muted text-uppercase fs-8 ls-1'>{intl.formatMessage({id: 'MENU.Admin'})}</span>
+            </div>
+          </div>
+          <AsideMenuItem
+            to='/apps/user-management/users'
+            icon='/media/icons/duotune/general/gen051.svg'
+            title={intl.formatMessage({id: 'MENU.Usermanagement'})}
+          />
+        </>
+      )}
       <div className='menu-item'>
         <div className='menu-content'>
           <div className='separator mx-1 my-4'></div>

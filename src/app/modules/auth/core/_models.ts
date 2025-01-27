@@ -46,7 +46,7 @@ export interface UserSocialNetworksModel {
 export interface UserModel {
   id: number
   username: string
-  password: string | undefined
+  password?: string | undefined
   email: string
   name?: string
   first_name: string
@@ -55,7 +55,7 @@ export interface UserModel {
   occupation?: string
   companyName?: string
   phone?: string
-  roles?: Array<number>
+  roles?: Array<string>
   pic?: string
   language?: 'en' | 'de' | 'es' | 'fr' | 'ja' | 'zh' | 'ru'
   timeZone?: string
