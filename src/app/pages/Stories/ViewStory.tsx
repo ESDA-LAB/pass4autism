@@ -346,6 +346,14 @@ const ViewStoryPage = () => {
     }
   };
 
+  const handleFirstPage = () => {
+    setCurrentPage(0); // Μετάβαση στην πρώτη σελίδα
+  };
+  
+  const handleLastPage = () => {
+    setCurrentPage(totalPages - 1); // Μετάβαση στην τελευταία σελίδα
+  };
+
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false); // Ελέγχει αν το modal είναι ανοιχτό.
   const [selectedStory, setSelectedStory] = useState<Image | null>(null); // Αποθηκεύει την επιλεγμένη ιστορία.
@@ -538,6 +546,16 @@ const ViewStoryPage = () => {
         {/*Προσθήκη Πλοήγησης Pagination*/}
         <div style={paginationStyle.container}>
           <button
+            onClick={handleFirstPage}
+            disabled={currentPage === 0}
+            style={{
+              ...paginationStyle.button,
+              ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
+            }}
+          >
+            {intl.formatMessage({ id: 'First' })}
+          </button>
+          <button
             onClick={handlePreviousPage}
             disabled={currentPage === 0}
             style={{
@@ -559,6 +577,16 @@ const ViewStoryPage = () => {
             }}
           >
             {intl.formatMessage({ id: 'Next' })}
+          </button>
+          <button
+            onClick={handleLastPage}
+            disabled={currentPage === totalPages - 1}
+            style={{
+              ...paginationStyle.button,
+              ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
+            }}
+          >
+            {intl.formatMessage({ id: 'Last' })}
           </button>
         </div>
       </div>
