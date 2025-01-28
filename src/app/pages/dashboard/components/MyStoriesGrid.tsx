@@ -51,6 +51,14 @@ const MyStoriesGrid: React.FC = () => {
     }
   };
 
+  const handleFirstPage = () => {
+    setCurrentPage(0); // Μετάβαση στην πρώτη σελίδα
+  };
+  
+  const handleLastPage = () => {
+    setCurrentPage(totalPages - 1); // Μετάβαση στην τελευταία σελίδα
+  };
+
   const openModal = async (storyId: number) => {
     try {
       const auth = getAuth();
@@ -173,6 +181,13 @@ const MyStoriesGrid: React.FC = () => {
           {/* Pagination */}
           <div style={paginationStyle}>
             <button
+              onClick={handleFirstPage}
+              disabled={currentPage === 0}
+              style={currentPage === 0 ? disabledButtonStyle : buttonStyle}
+            >
+              {intl.formatMessage({ id: 'First' })}
+            </button>
+            <button
               onClick={handlePreviousPage}
               disabled={currentPage === 0}
               style={currentPage === 0 ? disabledButtonStyle : buttonStyle}
@@ -188,6 +203,13 @@ const MyStoriesGrid: React.FC = () => {
               style={currentPage === totalPages - 1 ? disabledButtonStyle : buttonStyle}
             >
               {intl.formatMessage({ id: 'Next' })}
+            </button>
+            <button
+              onClick={handleLastPage}
+              disabled={currentPage === totalPages - 1}
+              style={currentPage === totalPages - 1 ? disabledButtonStyle : buttonStyle}
+            >
+              {intl.formatMessage({ id: 'Last' })}
             </button>
           </div>
         </>

@@ -102,6 +102,14 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
     }
   };
 
+  const handleFirstPage = () => {
+    setCurrentPage(0); // Μετάβαση στην πρώτη σελίδα
+  };
+  
+  const handleLastPage = () => {
+    setCurrentPage(totalPages - 1); // Μετάβαση στην τελευταία σελίδα
+  };
+
   return (
     <div style={modalStyle}>
       <h2 style={{ textAlign: 'center', fontSize: '24px', marginBottom: '20px' }}>
@@ -129,6 +137,13 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
       {/* Pagination Controls */}
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
+          onClick={handleFirstPage}
+          style={{ ...buttonStyle, opacity: currentPage === 0 ? 0.5 : 1 }}
+          disabled={currentPage === 0}
+        >
+          {intl.formatMessage({ id: 'First' })}
+        </button>
+        <button
           onClick={handlePreviousPage}
           style={{ ...buttonStyle, opacity: currentPage === 0 ? 0.5 : 1 }}
           disabled={currentPage === 0}
@@ -144,6 +159,13 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
           disabled={currentPage === totalPages - 1}
         >
           {intl.formatMessage({ id: 'Next' })}
+        </button>
+        <button
+          onClick={handleLastPage}
+          style={{ ...buttonStyle, opacity: currentPage === totalPages - 1 ? 0.5 : 1 }}
+          disabled={currentPage === totalPages - 1}
+        >
+          {intl.formatMessage({ id: 'Last' })}
         </button>
       </div>
 

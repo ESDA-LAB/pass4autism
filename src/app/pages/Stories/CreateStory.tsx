@@ -76,6 +76,14 @@ const CreateStoryPage: React.FC = () => {
     }
   };
 
+  const handleFirstPage = () => {
+    setCurrentPage(0); // Μετάβαση στην πρώτη σελίδα
+  };
+  
+  const handleLastPage = () => {
+    setCurrentPage(totalPages - 1); // Μετάβαση στην τελευταία σελίδα
+  };
+
   // Handle story click
   const handleStoryClick = (id: number) => {
     navigate(`/stories/${id}`); // Πλοήγηση στη νέα σελίδα με βάση το ID της ιστορίας
@@ -222,6 +230,16 @@ const CreateStoryPage: React.FC = () => {
         {hasSearched && results.length > 0 && totalPages > 1 && (
           <div style={paginationStyle.container}>
             <button
+              onClick={handleFirstPage}
+              disabled={currentPage === 0}
+              style={{
+                ...paginationStyle.button,
+                ...(currentPage === 0 ? paginationStyle.buttonDisabled : {}),
+              }}
+            >
+              {intl.formatMessage({ id: 'First' })}
+            </button>
+            <button
               onClick={handlePreviousPage}
               disabled={currentPage === 0}
               style={{
@@ -243,6 +261,16 @@ const CreateStoryPage: React.FC = () => {
               }}
             >
               {intl.formatMessage({ id: 'Next' })}
+            </button>
+            <button
+              onClick={handleLastPage}
+              disabled={currentPage === totalPages - 1}
+              style={{
+                ...paginationStyle.button,
+                ...(currentPage === totalPages - 1 ? paginationStyle.buttonDisabled : {}),
+              }}
+            >
+              {intl.formatMessage({ id: 'Last' })}
             </button>
           </div>
         )}
