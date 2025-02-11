@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { PageTitle } from '../../../_metronic/layout/core';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
-import { getStories, getStoryDetails } from '../../modules/auth/core/_requests';
+import { getStories, getStoryDetails, deleteStoryById } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
 import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
 import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
@@ -391,6 +391,30 @@ const ViewStoryPage = () => {
     }
   };
 
+  const handleDeleteStory = async (storyId: number) => {
+    if (!storyId) return; // Αν δεν υπάρχει ID, δεν προχωράμε
+  
+    const confirmDelete = window.confirm("Are you sure you want to delete this story?");
+    if (!confirmDelete) return; // Αν ο χρήστης ακυρώσει, δεν κάνουμε τίποτα
+  
+    try {
+      const auth = getAuth(); // Λήψη token
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      const authToken = 'mock-auth-token'; // Εδώ βάλε το πραγματικό token
+      //await deleteStoryById(storyId, auth.token); // Κλήση στο API
+      await deleteStoryById(storyId, authToken); // Κλήση στο API
+      // Αφαίρεση της ιστορίας από το state
+      setImages((prevImages) => prevImages.filter((image) => image.id !== storyId));
+      closeModal(); // Κλείσιμο του modal
+    } catch (error) {
+      console.error("Error deleting story:", error);
+      alert("Failed to delete the story. Please try again.");
+    }
+  };
+
   const handleLanguageChange = (lang: string | undefined) => {
     setFilteredLanguage(lang);
     setCurrentPage(0); // Reset στο pagination
@@ -522,6 +546,7 @@ const ViewStoryPage = () => {
           isOpen={isModalOpen}
           showPrintButton={true}
           onClose={closeModal}
+          onDelete={() => handleDeleteStory(storyDetails.id)} // Ενεργοποίηση του κουμπιού διαγραφής
           /*selectedStory={selectedStory} */
           storyDetails={storyDetails}
         />
