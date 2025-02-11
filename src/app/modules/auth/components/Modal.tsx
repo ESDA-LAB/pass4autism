@@ -17,11 +17,12 @@ interface ModalProps {
   isOpen: boolean;
   showPrintButton: boolean;
   onClose: () => void;
+  onDelete?: () => void; // Νέο prop για διαγραφή
   // selectedStory: Image | null;
   storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, storyDetails }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, storyDetails }) => {
   const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
   if (!isOpen || !storyDetails) return null;
@@ -126,6 +127,15 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
     backgroundColor: '#4CAF50',
   };
 
+  const deleteButtonStyle: React.CSSProperties = {
+    padding: '10px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: '#d9534f', // Κόκκινο για διαγραφή
+    color: '#fff',
+  };
+
   // Δημιουργούμε έναν πίνακα με εικόνες και τα αντίστοιχα κείμενα
   const imagesWithTexts: ({ src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null } | { src: string | null; id: number; text: string | null })[] = [
     { id: 1, src: storyDetails.image1, text: storyDetails.text1 },
@@ -162,6 +172,11 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
                 {intl.formatMessage({ id: 'Print' })}
               </button>
             )}
+            {onDelete && (
+                <button onClick={onDelete} style={deleteButtonStyle}>
+                  {intl.formatMessage({ id: 'DeleteStory' })}
+                </button>
+              )}
           </div>
         </div>
       </div>

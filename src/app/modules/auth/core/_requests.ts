@@ -76,6 +76,14 @@ export function getStoryDetails(storyId: number, token: string) {
   });
 }
 
+export function deleteStoryById(storyId: number, token: string) {
+  return axios.delete(`${STORIES_URL}/${storyId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 // Pass the token in the headers for the API call
 export function getStoriesByOwner(token: string, page: number, size: number = 3) {
   return axios.get<PaginatedStory>(STORIES_OWNER_URL, {
