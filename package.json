@@ -18,6 +18,7 @@
     "chart.js": "3.7.1",
     "clsx": "1.1.1",
     "formik": "2.2.9",
+    "keycloak-admin": "^1.14.22",
     "keycloak-js": "^26.1.0",
     "line-awesome": "1.3.0",
     "nouislider": "15.5.1",

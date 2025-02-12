@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StoryDetails } from '../core/_models';
+import { StoryDetails, UserModel } from '../core/_models';
 // Define the type for images, including language, level, and age
 // interface Image {
 //   id: number;
@@ -18,11 +18,12 @@ interface ModalProps {
   showPrintButton: boolean;
   onClose: () => void;
   onDelete?: () => void; // Νέο prop για διαγραφή
+  currentUser?: UserModel;
   // selectedStory: Image | null;
   storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, storyDetails }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, currentUser, storyDetails }) => {
   const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
   if (!isOpen || !storyDetails) return null;
@@ -172,7 +173,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
                 {intl.formatMessage({ id: 'Print' })}
               </button>
             )}
-            {onDelete && (
+            {currentUser?.roles?.includes('admin') && onDelete && (
                 <button onClick={onDelete} style={deleteButtonStyle}>
                   {intl.formatMessage({ id: 'DeleteStory' })}
                 </button>

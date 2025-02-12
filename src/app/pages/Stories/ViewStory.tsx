@@ -6,6 +6,7 @@ import { getStories, getStoryDetails, deleteStoryById } from '../../modules/auth
 import { Modal } from '../../modules/auth/components/Modal';
 import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
 import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
+import {useAuth} from '../../../app/modules/auth'; // Πρόσβαση στο Auth Context
 
 // Define the type for images, including language, level, and age
 interface Image {
@@ -505,6 +506,7 @@ const ViewStoryPage = () => {
     marginBottom: '20px',
   };
   const intl = useIntl();
+  const {currentUser} = useAuth(); // Πρόσβαση στον τρέχοντα χρήστη και τους ρόλους του
 
   return (
     <>
@@ -547,6 +549,7 @@ const ViewStoryPage = () => {
           showPrintButton={true}
           onClose={closeModal}
           onDelete={() => handleDeleteStory(storyDetails.id)} // Ενεργοποίηση του κουμπιού διαγραφής
+          currentUser ={currentUser}
           /*selectedStory={selectedStory} */
           storyDetails={storyDetails}
         />
