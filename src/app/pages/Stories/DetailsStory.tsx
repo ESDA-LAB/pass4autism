@@ -6,6 +6,7 @@ import { StoryDetails } from '../../modules/auth/core/_models';
 import { getStoryDetails/*, updateStoryDetails*/ } from '../../modules/auth/core/_requests';
 import { ImageSelectionModal } from '../../modules/auth/components/ImageSelectionModal';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
+import StarRatings from 'react-star-ratings';
 
 const DetailsStoryPage: React.FC = () => {
   const intl = useIntl();
@@ -59,7 +60,7 @@ const DetailsStoryPage: React.FC = () => {
     if (story) {
       setStory({
         ...story,
-        [field]: field === 'rate' ? Number(value) : value, // Μετατροπή σε number αν είναι το πεδίο 'rate'
+        [field]: value,
       });
     }
   };
@@ -160,16 +161,15 @@ const DetailsStoryPage: React.FC = () => {
 
       {/* Rate */}
       <div className="form-group">
-        <label htmlFor="rate">{intl.formatMessage({ id: 'Rate' })}</label>
-        <input
-          id="rate"
-          type="number"
-          className="form-control"
-          min="0"
-          max="5"
-          value={story.rate || 0}
-          onChange={(e) => handleChange('rate', e.target.value)}
-        />
+        {intl.formatMessage({ id: 'Rate' })}
+          <StarRatings
+            rating={story.rate}
+            starRatedColor="gold"
+            numberOfStars={5}
+            name="rating"
+            starDimension="20px"
+            starSpacing="2px"
+          />
       </div>
 
       {/* Functional (Level) */}
