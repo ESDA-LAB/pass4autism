@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { PageTitle } from '../../../_metronic/layout/core';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
-import { getStories, getStoryDetails, deleteStoryById } from '../../modules/auth/core/_requests';
+import { getStories, getStoryDetails, deleteStoryById, rateStoryById } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
 import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
 import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
@@ -416,6 +416,32 @@ const ViewStoryPage = () => {
     }
   };
 
+  const handleRatingStory = async (storyId: number, rating: number) => {
+    if (!storyId) return; // Αν δεν υπάρχει ID, δεν προχωράμε
+  
+    try {
+      const auth = getAuth(); // Λήψη token
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      
+      const authToken = 'mock-auth-token'; // Εδώ βάλε το πραγματικό token
+      //await rateStoryById(storyId, auth.token); // Κλήση στο API
+      await rateStoryById(storyId, rating, authToken); // Κλήση στο API
+      
+      // Ενημέρωση της τοπικής κατάστασης αν χρειάζεται
+      setStoryDetails((prevDetails) => ({
+        ...prevDetails,
+        rate: rating,
+      }));
+  
+    } catch (error) {
+      console.error('Failed to save rating', error);
+      alert('Failed to save the rating. Please try again.');
+    }
+  };
+
   const handleLanguageChange = (lang: string | undefined) => {
     setFilteredLanguage(lang);
     setCurrentPage(0); // Reset στο pagination
@@ -549,6 +575,7 @@ const ViewStoryPage = () => {
           showPrintButton={true}
           onClose={closeModal}
           onDelete={() => handleDeleteStory(storyDetails.id)} // Ενεργοποίηση του κουμπιού διαγραφής
+          onRate={(rating) => handleRatingStory(storyDetails.id, rating)} // Νέο prop
           currentUser ={currentUser}
           /*selectedStory={selectedStory} */
           storyDetails={storyDetails}
