@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StoryDetails } from '../core/_models';
 // Define the type for images, including language, level, and age
 // interface Image {
@@ -12,20 +12,35 @@ import { StoryDetails } from '../core/_models';
 //   text: string | null;
 // }
 import { useIntl } from 'react-intl'
+import StarRatings from 'react-star-ratings';
 
 interface ModalProps {
   isOpen: boolean;
   showPrintButton: boolean;
   onClose: () => void;
   onDelete?: () => void; // Νέο prop για διαγραφή
+  onRate?: (rating: number) => void; // Νέο prop για rating
   // selectedStory: Image | null;
   storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, storyDetails }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, storyDetails }) => {
   const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
+  const [userRating, setUserRating] = useState(storyDetails.rate);
+
+  useEffect(() => {
+    setUserRating(storyDetails.rate);
+  }, [storyDetails]);
+  
   if (!isOpen || !storyDetails) return null;
+
+  const handleRatingChange = (newRating: number) => {
+    setUserRating(newRating);
+    if (onRate) {
+      onRate(newRating); // Καλούμε τη συνάρτηση onRate αν υπάρχει
+    }
+  };
 
   const handlePrint = () => {
     if (printRef.current) {
@@ -154,7 +169,18 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
           <h2 style={headerStyle}>{storyDetails.title}</h2>
           <p><strong>{intl.formatMessage({ id: 'Author' })}:</strong> {storyDetails.authorName}</p>
           <p><strong>{intl.formatMessage({ id: 'Synopsis' })}:</strong> {storyDetails.synopsis}</p>
-          <p><strong>{intl.formatMessage({ id: 'Rate' })}:</strong> {storyDetails.rate}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <strong>{intl.formatMessage({ id: 'Rate' })}:</strong>
+            <StarRatings
+              rating={userRating}
+              starRatedColor="gold"
+              numberOfStars={5}
+              name="rating"
+              starDimension="20px"
+              starSpacing="2px"
+              changeRating={onRate ? handleRatingChange : undefined}
+            />
+          </div>
           <div style={gridStyle}>
             {imagesWithTexts.map((item) => (
               <div key={item.id} style={itemStyle}>

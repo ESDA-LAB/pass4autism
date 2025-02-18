@@ -84,6 +84,19 @@ export function deleteStoryById(storyId: number, token: string) {
   });
 }
 
+export function rateStoryById(storyId: number, rating: number, token: string) {
+  return axios.put(
+    `${STORIES_URL}/${storyId}/rate`, // Προσαρμογή της διαδρομής αν χρειάζεται
+    { rating }, // Στέλνουμε το rating στο request body
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+}
+
 // Pass the token in the headers for the API call
 export function getStoriesByOwner(token: string, page: number, size: number = 3) {
   return axios.get<PaginatedStory>(STORIES_OWNER_URL, {
