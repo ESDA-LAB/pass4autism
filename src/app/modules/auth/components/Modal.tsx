@@ -25,8 +25,7 @@ interface ModalProps {
   storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, storyDetails }) => {
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, currentUser, storyDetails }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, currentUser, storyDetails }) => {
   const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
   const [userRating, setUserRating] = useState(storyDetails.rate);
