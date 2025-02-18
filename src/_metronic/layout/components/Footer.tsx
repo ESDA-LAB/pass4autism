@@ -2,6 +2,7 @@
 import {FC} from 'react'
 import {useLayout} from '../core'
 import { useIntl } from 'react-intl'
+import {toAbsoluteUrl} from '../../helpers'
 
 const Footer: FC = () => {
   const {classes} = useLayout()
@@ -40,6 +41,19 @@ const Footer: FC = () => {
           </li>
         </ul>
         {/* end::Nav */}
+      </div>
+      {/* end::Container */}
+      {/* begin::Container */}
+      <div
+        className={`${classes.footerContainer} d-flex flex-column flex-md-row align-items-center justify-content-between`}
+      >
+        {/* begin::Copyright */}
+        <div className='text-dark order-2 order-md-1'>
+            <img src={toAbsoluteUrl('/media/footer/EN-Co-Funded-by-the-EU_POS-300x63.png')} alt='EN-Co-Funded-by-the-EU_POS' /><br></br>
+            Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Education and Culture Executive Agency (EACEA). Neither the European Union nor EACEA can be held responsible for them.<br></br>
+            <strong>Project No.</strong> 2023-1-ES01-KA220-ADU-000154910
+        </div>
+        {/* end::Copyright */}
       </div>
       {/* end::Container */}
     </div>
