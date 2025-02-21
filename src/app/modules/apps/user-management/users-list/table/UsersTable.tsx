@@ -14,7 +14,7 @@ const UsersTable = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const kcAdminClient = useMemo(() => new KcAdminClient({
-    baseUrl: 'https://195.251.8.195:8443',
+    baseUrl: 'http://localhost:8080',
   }), []);
 
   // Συνάρτηση Αυθεντικοποίησης στο Keycloak Admin API
