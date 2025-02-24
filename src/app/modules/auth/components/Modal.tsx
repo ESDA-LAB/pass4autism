@@ -179,7 +179,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
               name="rating"
               starDimension="20px"
               starSpacing="2px"
-              changeRating={onRate ? handleRatingChange : undefined}
+              changeRating={onRate ? (currentUser?.roles?.includes('therapist') ? handleRatingChange : undefined) : undefined}
             />
           </div>
           <div style={gridStyle}>
