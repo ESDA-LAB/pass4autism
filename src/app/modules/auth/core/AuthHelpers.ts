@@ -1,4 +1,5 @@
 import {AuthModel} from './_models'
+import keycloak from "../../../../keycloak"; // Βεβαιώσου ότι έχεις αρχικοποιήσει το Keycloak instance
 
 const AUTH_LOCAL_STORAGE_KEY = 'kt-auth-react-v'
 const getAuth = (): AuthModel | undefined => {
@@ -47,19 +48,25 @@ const removeAuth = () => {
   }
 }
 
-export function setupAxios(axios: any) {
-  axios.defaults.headers.Accept = 'application/json'
-  axios.interceptors.request.use(
-    (config: {headers: {Authorization: string}}) => {
-      const auth = getAuth()
-      if (auth && auth.token) {
-        config.headers.Authorization = `Bearer ${auth.token}`
+export function setupAxios(axiosInstance: any) {
+  axiosInstance.defaults.headers.Accept = "application/json";
+
+  axiosInstance.interceptors.request.use(
+    async (config: { headers: { Authorization?: string } }) => {
+      if (keycloak.authenticated) {
+        try {
+          await keycloak.updateToken(30); // Ανανεώνει το token αν λήγει σύντομα
+          config.headers.Authorization = `Bearer ${keycloak.token}`;
+        } catch (error) {
+          console.error("Token refresh failed, forcing login...");
+          keycloak.login(); // Αν αποτύχει, αναγκάζει τον χρήστη να ξανακάνει login
+        }
       }
 
-      return config
+      return config;
     },
-    (err: any) => Promise.reject(err)
-  )
+    (error: any) => Promise.reject(error)
+  );
 }
 
 export {getAuth, setAuth, removeAuth, AUTH_LOCAL_STORAGE_KEY}
