@@ -18,7 +18,7 @@ export function ActivationPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const apiUrl = `http://localhost:8088/api/v1/auth/activate-account?token=${code}`;
+    const apiUrl = `http://195.251.8.197:8088/api/v1/auth/activate-account?token=${code}`;
 
     try {
       const response = await fetch(apiUrl, {

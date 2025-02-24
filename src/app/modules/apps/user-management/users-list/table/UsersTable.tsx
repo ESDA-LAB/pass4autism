@@ -14,7 +14,7 @@ const UsersTable = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const kcAdminClient = useMemo(() => new KcAdminClient({
-    baseUrl: 'http://localhost:8080',
+    baseUrl: 'https://sso.pass4autism-project.eu/',
   }), []);
 
   // Συνάρτηση Αυθεντικοποίησης στο Keycloak Admin API
