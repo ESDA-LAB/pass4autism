@@ -8,7 +8,7 @@ services:
     ports:
       - '80:80' # Το port 3000 του host συνδέεται με το port 80 του container (Nginx)
     environment:
-      REACT_APP_API_URL: http://195.251.8.197:8088/api/v1
+      REACT_APP_API_URL: https://api.pass4autism-project.eu/api/v1
     volumes:
       - .:/app # Χρήσιμο για dev περιβάλλοντα αν θες live updates
     restart: always # Αυτόματη επανεκκίνηση αν πέσει το container

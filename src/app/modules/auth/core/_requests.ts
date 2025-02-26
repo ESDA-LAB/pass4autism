@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { AuthModel, UserModel, PaginatedStory, StoryDetails } from './_models'
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://195.251.8.197:8088/api/v1';
+const API_URL = process.env.REACT_APP_API_URL || 'https://api.pass4autism-project.eu/api/v1';
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/auth/activate-account`
 export const LOGIN_URL = `${API_URL}/auth/authenticate` // Update the login URL

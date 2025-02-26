@@ -9,7 +9,7 @@ import { PasswordMeterComponent } from '../../../../_metronic/assets/ts/componen
 import { useAuth } from '../core/Auth';
 import { getUserByToken } from '../core/_requests';
 
-const API_BASE_URL = 'http://195.251.8.197:8088/api/v1';
+const API_BASE_URL = 'https://api.pass4autism-project.eu/api/v1';
 
 const initialValues = {
   firstname: '',

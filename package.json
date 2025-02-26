@@ -1,7 +1,7 @@
 {
   "name": "demo8",
   "version": "8.1.7",
-  "proxy": "http://195.251.8.197:8088",
+  "proxy": "https://api.pass4autism-project.eu",
   "private": true,
   "homepage": "/",
   "dependencies": {
