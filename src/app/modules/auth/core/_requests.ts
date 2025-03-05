@@ -9,6 +9,7 @@ export const REGISTER_URL = `${API_URL}/register`
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`
 export const STORIES_URL = `${API_URL}/stories`
 export const STORIES_OWNER_URL = `${API_URL}/stories/owner`
+export const STORY_CREATE_URL = `${API_URL}/stories/create`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {
@@ -108,4 +109,17 @@ export function getStoriesByOwner(token: string, page: number, size: number = 3)
       size,
     },
   })
+}
+
+export function createStoryDetails(storyData: object, token: string) {
+  return axios.post(
+    `${STORY_CREATE_URL}`,
+    storyData, // Στέλνουμε τα δεδομένα της ιστορίας στο request body
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 }
