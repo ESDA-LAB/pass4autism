@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { PageTitle } from '../../../_metronic/layout/core';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
-import { getStories, getStoryDetails, deleteStoryById, rateStoryById } from '../../modules/auth/core/_requests';
+import { getStories, getStoryDetails, deleteStoryById, rateStoryById, shareableStoryById } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
 import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
 import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
@@ -442,6 +442,30 @@ const ViewStoryPage = () => {
     }
   };
 
+  const handleShareableStory = async (storyId: number, shareable: boolean) => {
+    if (!storyId) return; // Αν δεν υπάρχει ID, δεν προχωράμε
+  
+    try {
+      const auth = getAuth(); // Λήψη token
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      
+      await shareableStoryById(storyId, auth.token); // Κλήση στο API
+      
+      // Ενημέρωση της τοπικής κατάστασης αν χρειάζεται
+      setStoryDetails((prevDetails) => ({
+        ...prevDetails,
+        shareable: shareable,
+      }));
+  
+    } catch (error) {
+      console.error('Failed to save shareable', error);
+      alert('Failed to save the shareable. Please try again.');
+    }
+  };
+
   const handleLanguageChange = (lang: string | undefined) => {
     setFilteredLanguage(lang);
     setCurrentPage(0); // Reset στο pagination
@@ -576,6 +600,7 @@ const ViewStoryPage = () => {
           onClose={closeModal}
           onDelete={() => handleDeleteStory(storyDetails.id)} // Ενεργοποίηση του κουμπιού διαγραφής
           onRate={(rating) => handleRatingStory(storyDetails.id, rating)} // Νέο prop
+          onShareableChange={(shareable) => handleShareableStory(storyDetails.id, shareable)} // Νέο prop
           currentUser ={currentUser}
           /*selectedStory={selectedStory} */
           storyDetails={storyDetails}

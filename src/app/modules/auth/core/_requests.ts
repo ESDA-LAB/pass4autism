@@ -123,3 +123,15 @@ export function createStoryDetails(storyData: object, token: string) {
     }
   );
 }
+
+export function shareableStoryById(storyId: number, token: string) {
+  return axios.patch(
+    `${STORIES_URL}/shareable/${storyId}`, // Προσαρμογή της διαδρομής αν χρειάζεται
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+}
