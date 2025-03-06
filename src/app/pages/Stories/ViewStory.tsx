@@ -261,6 +261,8 @@ const ViewStoryPage = () => {
     authorName: '',
     synopsis: '',
     owner: null,
+    language: null,
+    ages: null,
     cover: null,
     rate: 0,
     archived: false,
@@ -404,9 +406,7 @@ const ViewStoryPage = () => {
         console.error('No auth token found');
         return;
       }
-      const authToken = 'mock-auth-token'; // Εδώ βάλε το πραγματικό token
-      //await deleteStoryById(storyId, auth.token); // Κλήση στο API
-      await deleteStoryById(storyId, authToken); // Κλήση στο API
+      await deleteStoryById(storyId, auth.token); // Κλήση στο API
       // Αφαίρεση της ιστορίας από το state
       setImages((prevImages) => prevImages.filter((image) => image.id !== storyId));
       closeModal(); // Κλείσιμο του modal

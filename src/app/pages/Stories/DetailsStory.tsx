@@ -24,6 +24,8 @@ const DetailsStoryPage: React.FC = () => {
     synopsis: null as string | null,
     cover: null as string | null,
     keywords: null as string | null,
+    language: null as string | null,
+    ages: null as string | null,
   });
   
 
@@ -111,10 +113,12 @@ const DetailsStoryPage: React.FC = () => {
   
     // Δημιουργία νέων σφαλμάτων για την επικύρωση των πεδίων
     let newErrors = {
-      title: updatedStory?.title.trim() ? null : intl.formatMessage({ id: 'Title is required' }),
-      synopsis: updatedStory?.synopsis?.trim() ? null : intl.formatMessage({ id: 'Synopsis is required' }),
-      cover: updatedStory?.cover ? null : intl.formatMessage({ id: 'Cover Image is required' }),
-      keywords: updatedStory?.keywords?.trim() ? null : intl.formatMessage({ id: 'Keywords are required' }),
+      title: updatedStory?.title.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Titleisrequired' }),
+      synopsis: updatedStory?.synopsis?.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Synopsisisrequired' }),
+      cover: updatedStory?.cover ? null : intl.formatMessage({ id: 'DetailsStory.CoverImageisrequired' }),
+      keywords: updatedStory?.keywords?.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Keywordsarerequired' }),
+      language: updatedStory?.language ? null : intl.formatMessage({ id: 'DetailsStory.Languageisrequired' }),
+      ages: updatedStory?.ages ? null : intl.formatMessage({ id: 'DetailsStory.Agerangeisrequired' }),
     };
   
     setErrors(newErrors);
@@ -266,6 +270,48 @@ const DetailsStoryPage: React.FC = () => {
           }}
         ></textarea>
         {errors.keywords && <div className="invalid-feedback">{errors.keywords}</div>}
+      </div>
+
+      {/* Language */}
+      <div className="form-group">
+        <label htmlFor="language">{intl.formatMessage({ id: 'DetailsStory.Language' })}</label>
+        <select
+          id="language"
+          className={`form-control ${errors.language ? 'is-invalid' : ''}`}
+          value={story.language || ''}
+          onChange={(e) => {
+            handleChange('language', e.target.value);
+            setErrors({ ...errors, language: e.target.value ? null : intl.formatMessage({ id: 'DetailsStory.Languageisrequired' }) });
+          }}
+        >
+          <option value="">{intl.formatMessage({ id: 'DetailsStory.SelectLanguage' })}</option>
+          <option value="en">{intl.formatMessage({ id: 'English' })}</option>
+          <option value="es">{intl.formatMessage({ id: 'Spanish' })}</option>
+          <option value="gr">{intl.formatMessage({ id: 'Greek' })}</option>
+          <option value="it">{intl.formatMessage({ id: 'Italian' })}</option>
+        </select>
+        {errors.language && <div className="invalid-feedback">{errors.language}</div>}
+      </div>
+
+      {/* Ages */}
+      <div className="form-group">
+        <label htmlFor="ages">{intl.formatMessage({ id: 'DetailsStory.Ages' })}</label>
+        <select
+          id="ages"
+          className={`form-control ${errors.ages ? 'is-invalid' : ''}`}
+          value={story.ages || ''}
+          onChange={(e) => {
+            handleChange('ages', e.target.value);
+            setErrors({ ...errors, ages: e.target.value ? null : intl.formatMessage({ id: 'DetailsStory.Agerangeisrequired' }) });
+          }}
+        >
+          <option value="">{intl.formatMessage({ id: 'DetailsStory.SelectAgeRange' })}</option>
+          <option value="2-5">2-5</option>
+          <option value="6-9">6-9</option>
+          <option value="10-12">10-12</option>
+          <option value="13-17">13-17</option>
+        </select>
+        {errors.ages && <div className="invalid-feedback">{errors.ages}</div>}
       </div>
 
       {/* Εικόνες */}

@@ -73,6 +73,8 @@ export interface StoryDetails {
   authorName: string;
   synopsis: string;
   owner: string | null;
+  language: string | null;
+  ages: string | null;
   cover: string | null;
   rate: number;
   archived: boolean;
