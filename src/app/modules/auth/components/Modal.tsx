@@ -183,7 +183,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {/* Προσθήκη του Shareable Checkbox αν ο χρήστης είναι ο συγγραφέας */}
-            {currentUser?.name !== storyDetails.authorName && (
+            {currentUser?.name === storyDetails.authorName && (
             <div className="form-check">
               <input
                 id="shareable"
