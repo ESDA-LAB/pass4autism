@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PageTitle } from '../../../_metronic/layout/core';
 import { StoryDetails } from '../../modules/auth/core/_models';
-import { getStoryDetails/*, updateStoryDetails*/ } from '../../modules/auth/core/_requests';
+import { getStoryDetails, createStoryDetails } from '../../modules/auth/core/_requests';
 import { ImageSelectionModal } from '../../modules/auth/components/ImageSelectionModal';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
 import StarRatings from 'react-star-ratings';
@@ -19,6 +19,15 @@ const DetailsStoryPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageField, setCurrentImageField] = useState<string | null>(null);
+  const [errors, setErrors] = useState({
+    title: null as string | null,
+    synopsis: null as string | null,
+    cover: null as string | null,
+    keywords: null as string | null,
+    language: null as string | null,
+    ages: null as string | null,
+  });
+  
 
   const openModal = (imageField: string) => {
     setCurrentImageField(imageField);
@@ -71,22 +80,73 @@ const DetailsStoryPage: React.FC = () => {
 
   // Αποθήκευση αλλαγών
   const handleSave = async () => {
+    // Ελέγχουμε αν το story είναι null και επιστρέφουμε αν είναι
+    if (!story) {
+      console.error('Story is null');
+      return;
+    }
+
+    // Συνάρτηση για να εξάγουμε το όνομα του αρχείου από το URL
+    const extractFileName = (url: string | null): string | null => {
+      if (!url) return null;
+      return url.split('/').pop()?.split('?')[0] ?? null; // Επιστρέφει το όνομα αρχείου ή null
+    };
+  
+    // Λίστα με τα πεδία που είναι string ή null (για εικόνες)
+    const imageFields: (keyof StoryDetails)[] = [
+      "cover", "image1", "image2", "image3", "image4", "image5", "image6", "image7"
+    ];
+  
+    // Δημιουργούμε ένα νέο αντικείμενο με το πεδίο του story όπου τα πεδία εικόνας είναι τροποποιημένα
+    const updatedStory: StoryDetails = {
+      ...story,
+      ...Object.fromEntries(
+        imageFields
+          .map((field) => {
+            const fieldValue = story[field as keyof StoryDetails];
+            // Ελέγχουμε αν η τιμή είναι string ή null για να την επεξεργαστούμε
+            return [field, typeof fieldValue === 'string' ? extractFileName(fieldValue) : fieldValue];
+          })
+          .filter(([_, value]) => value !== null) // Φιλτράρουμε τα πεδία με null τιμές
+      ),
+    };
+  
+    // Δημιουργία νέων σφαλμάτων για την επικύρωση των πεδίων
+    let newErrors = {
+      title: updatedStory?.title.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Titleisrequired' }),
+      synopsis: updatedStory?.synopsis?.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Synopsisisrequired' }),
+      cover: updatedStory?.cover ? null : intl.formatMessage({ id: 'DetailsStory.CoverImageisrequired' }),
+      keywords: updatedStory?.keywords?.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Keywordsarerequired' }),
+      language: updatedStory?.language ? null : intl.formatMessage({ id: 'DetailsStory.Languageisrequired' }),
+      ages: updatedStory?.ages ? null : intl.formatMessage({ id: 'DetailsStory.Agerangeisrequired' }),
+    };
+  
+    setErrors(newErrors);
+  
+    // Αν υπάρχουν σφάλματα, σταματάμε τη διαδικασία αποθήκευσης
+    if (Object.values(newErrors).some((error) => error !== null)) {
+      return;
+    }
+  
     try {
-      if (story) {
+      // Αν το story είναι έγκυρο, αποθηκεύουμε τις αλλαγές
+      if (updatedStory) {
         const auth = getAuth();
         if (!auth) {
           console.error('No auth token found');
           return;
         }
-        //await updateStoryDetails(story.id, { ...story, shareable: isPublic }, auth.token);
-        setOriginalStory(story); // Ενημερώνουμε την αρχική κατάσταση μετά την αποθήκευση
-        navigate('/create-story'); // Επιστροφή στη σελίδα CreateStory μετά την αποθήκευση
+  
+        // Δημιουργούμε ή ενημερώνουμε την ιστορία με τις νέες τιμές
+        await createStoryDetails({ ...updatedStory, shareable: isPublic }, auth.token);
+        setOriginalStory(updatedStory); // Ενημέρωση της αρχικής κατάστασης μετά την αποθήκευση
+        navigate('/dashboard'); // Επιστροφή στο Dashboard μετά την αποθήκευση
       }
     } catch (err) {
-      console.error('Error updating story details:', err);
+      console.error('Error creating story details:', err);
       setError('Failed to save changes.');
     }
-  };
+  };  
 
   // Επιστροφή στη σελίδα CreateStory
   const handleCancel = () => {
@@ -113,10 +173,14 @@ const DetailsStoryPage: React.FC = () => {
         <label htmlFor="title">{intl.formatMessage({ id: 'Title' })}</label>
         <input
           id="title"
-          className="form-control"
+          className={`form-control ${errors.title ? 'is-invalid' : ''}`}
           value={story.title}
-          onChange={(e) => handleChange('title', e.target.value)}
+          onChange={(e) => {
+            handleChange('title', e.target.value);
+            setErrors({ ...errors, title: e.target.value.trim() ? null : errors.title });
+          }}
         />
+        {errors.title && <div className="invalid-feedback">{errors.title}</div>}
       </div>
 
       {/* Σύνοψη */}
@@ -124,11 +188,15 @@ const DetailsStoryPage: React.FC = () => {
         <label htmlFor="synopsis">{intl.formatMessage({ id: 'Synopsis' })}</label>
         <textarea
           id="synopsis"
-          className="form-control"
+          className={`form-control ${errors.synopsis ? 'is-invalid' : ''}`}
           rows={4}
-          value={String(story.synopsis || '')}
-          onChange={(e) => handleChange('synopsis', e.target.value)}
+          value={story.synopsis || ''}
+          onChange={(e) => {
+            handleChange('synopsis', e.target.value);
+            setErrors({ ...errors, synopsis: e.target.value.trim() ? null : errors.synopsis });
+          }}
         ></textarea>
+        {errors.synopsis && <div className="invalid-feedback">{errors.synopsis}</div>}
       </div>
 
       {/* Cover */}
@@ -157,6 +225,7 @@ const DetailsStoryPage: React.FC = () => {
             {intl.formatMessage({ id: 'AddCover' })}
           </button>
         )}
+        {errors.cover && <div className="text-danger">{errors.cover}</div>}
       </div>
 
       {/* Rate */}
@@ -181,9 +250,9 @@ const DetailsStoryPage: React.FC = () => {
           value={story.functional}
           onChange={(e) => handleChange('functional', e.target.value)}
         >
-          <option value="level1">{intl.formatMessage({ id: 'Level' })} 1</option>
-          <option value="level2">{intl.formatMessage({ id: 'Level' })} 2</option>
-          <option value="level3">{intl.formatMessage({ id: 'Level' })} 3</option>
+          <option value="1">{intl.formatMessage({ id: 'Level' })} 1</option>
+          <option value="2">{intl.formatMessage({ id: 'Level' })} 2</option>
+          <option value="3">{intl.formatMessage({ id: 'Level' })} 3</option>
         </select>
       </div>
 
@@ -192,11 +261,57 @@ const DetailsStoryPage: React.FC = () => {
         <label htmlFor="keywords">{intl.formatMessage({ id: 'Keywords' })}</label>
         <textarea
           id="keywords"
-          className="form-control"
+          className={`form-control ${errors.keywords ? 'is-invalid' : ''}`}
           rows={3}
           value={story.keywords || ''}
-          onChange={(e) => handleChange('keywords', e.target.value)}
+          onChange={(e) => {
+            handleChange('keywords', e.target.value);
+            setErrors({ ...errors, keywords: e.target.value.trim() ? null : errors.keywords });
+          }}
         ></textarea>
+        {errors.keywords && <div className="invalid-feedback">{errors.keywords}</div>}
+      </div>
+
+      {/* Language */}
+      <div className="form-group">
+        <label htmlFor="language">{intl.formatMessage({ id: 'DetailsStory.Language' })}</label>
+        <select
+          id="language"
+          className={`form-control ${errors.language ? 'is-invalid' : ''}`}
+          value={story.language || ''}
+          onChange={(e) => {
+            handleChange('language', e.target.value);
+            setErrors({ ...errors, language: e.target.value ? null : intl.formatMessage({ id: 'DetailsStory.Languageisrequired' }) });
+          }}
+        >
+          <option value="">{intl.formatMessage({ id: 'DetailsStory.SelectLanguage' })}</option>
+          <option value="en">{intl.formatMessage({ id: 'English' })}</option>
+          <option value="es">{intl.formatMessage({ id: 'Spanish' })}</option>
+          <option value="gr">{intl.formatMessage({ id: 'Greek' })}</option>
+          <option value="it">{intl.formatMessage({ id: 'Italian' })}</option>
+        </select>
+        {errors.language && <div className="invalid-feedback">{errors.language}</div>}
+      </div>
+
+      {/* Ages */}
+      <div className="form-group">
+        <label htmlFor="ages">{intl.formatMessage({ id: 'DetailsStory.Ages' })}</label>
+        <select
+          id="ages"
+          className={`form-control ${errors.ages ? 'is-invalid' : ''}`}
+          value={story.ages || ''}
+          onChange={(e) => {
+            handleChange('ages', e.target.value);
+            setErrors({ ...errors, ages: e.target.value ? null : intl.formatMessage({ id: 'DetailsStory.Agerangeisrequired' }) });
+          }}
+        >
+          <option value="">{intl.formatMessage({ id: 'DetailsStory.SelectAgeRange' })}</option>
+          <option value="2-5">2-5</option>
+          <option value="6-9">6-9</option>
+          <option value="10-12">10-12</option>
+          <option value="13-17">13-17</option>
+        </select>
+        {errors.ages && <div className="invalid-feedback">{errors.ages}</div>}
       </div>
 
       {/* Εικόνες */}

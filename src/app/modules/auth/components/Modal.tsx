@@ -20,18 +20,21 @@ interface ModalProps {
   onClose: () => void;
   onDelete?: () => void; // Νέο prop για διαγραφή
   onRate?: (rating: number) => void; // Νέο prop για rating
+  onShareableChange?: (newShareableStatus: boolean) => void; // Νέο prop για την αλλαγή δημόσιου καθεστώτος
   currentUser?: UserModel;
   // selectedStory: Image | null;
   storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, currentUser, storyDetails }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, onShareableChange, currentUser, storyDetails }) => {
   const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
   const [userRating, setUserRating] = useState(storyDetails.rate);
+  const [isShareable, setIsShareable] = useState(storyDetails.shareable);
 
   useEffect(() => {
     setUserRating(storyDetails.rate);
+    setIsShareable(storyDetails.shareable); // Αρχικοποίηση της κατάστασης για το shareable/ιδιωτικό
   }, [storyDetails]);
   
   if (!isOpen || !storyDetails) return null;
@@ -67,6 +70,13 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
         printWindow.document.close();
         printWindow.print();
       }
+    }
+  };
+
+  const handleShareableChange = () => {
+    if (onShareableChange) {
+      // Καλούμε την onShareableChange συνάρτηση που περνάει ως prop
+      onShareableChange(!isShareable); // Εναλλάσσουμε το δημόσιο καθεστώς
     }
   };
 
@@ -170,7 +180,23 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
           <h2 style={headerStyle}>{storyDetails.title}</h2>
           <p><strong>{intl.formatMessage({ id: 'Author' })}:</strong> {storyDetails.authorName}</p>
           <p><strong>{intl.formatMessage({ id: 'Synopsis' })}:</strong> {storyDetails.synopsis}</p>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Προσθήκη του Shareable Checkbox αν ο χρήστης είναι ο συγγραφέας */}
+            {currentUser?.name !== storyDetails.authorName && (
+            <div className="form-check">
+              <input
+                id="shareable"
+                type="checkbox"
+                className="form-check-input"
+                checked={isShareable}
+                onChange={handleShareableChange} // Χρησιμοποιούμε την νέα συνάρτηση
+              />
+              <label htmlFor="shareable" className="form-check-label">
+                {intl.formatMessage({ id: 'MakePublic' })}
+              </label>
+            </div>
+            )}
             <strong>{intl.formatMessage({ id: 'Rate' })}:</strong>
             <StarRatings
               rating={userRating}

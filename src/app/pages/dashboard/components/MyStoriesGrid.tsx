@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { getStoriesByOwner, getStoryDetails } from '../../../modules/auth/core/_requests';
+import { getStoriesByOwner, getStoryDetails, shareableStoryById } from '../../../modules/auth/core/_requests';
 import { StoryDetails } from '../../../modules/auth/core/_models';
 import { Modal } from '../../../modules/auth/components/Modal';
 import { useIntl } from 'react-intl'
@@ -78,6 +78,35 @@ const MyStoriesGrid: React.FC = () => {
     setSelectedStory(null);
     setIsModalOpen(false);
   };
+
+  const handleShareableStory = async (storyId: number, shareable: boolean) => {
+    if (!storyId) return; // Αν δεν υπάρχει ID, δεν προχωράμε
+    
+    try {
+      const auth = getAuth(); // Λήψη token
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      
+      await shareableStoryById(storyId, auth.token); // Κλήση στο API
+      
+      // Ενημέρωση της τοπικής κατάστασης με όλες τις απαραίτητες ιδιότητες
+      setSelectedStory((prevDetails) => {
+        if (prevDetails) {
+          return {
+            ...prevDetails,
+            shareable, // Ενημέρωση μόνο του πεδίου shareable
+          };
+        }
+        return prevDetails; // Αν δεν υπάρχει προηγούμενη ιστορία, επιστρέφουμε την υπάρχουσα τιμή (null)
+      });
+  
+    } catch (error) {
+      console.error('Failed to save shareable', error);
+      alert('Failed to save the shareable. Please try again.');
+    }
+  }; 
 
   // Inline styles για το grid
   const containerStyle: React.CSSProperties = {
@@ -224,6 +253,7 @@ const MyStoriesGrid: React.FC = () => {
           isOpen={isModalOpen}
           showPrintButton={false}
           onClose={closeModal}
+          onShareableChange={(shareable) => handleShareableStory(selectedStory.id, shareable)} // Νέο prop
           storyDetails={selectedStory}
         />
       )}
