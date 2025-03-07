@@ -86,7 +86,7 @@ export function deleteStoryById(storyId: number, token: string) {
 }
 
 export function rateStoryById(storyId: number, rating: number, token: string) {
-  return axios.put(
+  return axios.post(
     `${STORIES_URL}/${storyId}/rate`, // Προσαρμογή της διαδρομής αν χρειάζεται
     { rating }, // Στέλνουμε το rating στο request body
     {
@@ -134,4 +134,20 @@ export function shareableStoryById(storyId: number, token: string) {
       },
     }
   );
+}
+
+export function getUserRatingForStory(storyId: number, token: string) {
+  return axios.get<number>(`${STORIES_URL}/${storyId}/rating`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function getStoriesImages(token: string) {
+  return axios.get(`${STORIES_URL}/images`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

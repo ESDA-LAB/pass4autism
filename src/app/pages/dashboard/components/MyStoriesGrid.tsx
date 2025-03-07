@@ -252,6 +252,7 @@ const MyStoriesGrid: React.FC = () => {
         <Modal
           isOpen={isModalOpen}
           showPrintButton={false}
+          allowRating={false}
           onClose={closeModal}
           onShareableChange={(shareable) => handleShareableStory(selectedStory.id, shareable)} // Νέο prop
           storyDetails={selectedStory}
