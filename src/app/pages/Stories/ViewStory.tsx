@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { PageTitle } from '../../../_metronic/layout/core';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
-import { getStories, getStoryDetails, deleteStoryById, rateStoryById, shareableStoryById } from '../../modules/auth/core/_requests';
+import { getStories, getStoryDetails, deleteStoryById, rateStoryById, shareableStoryById, getUserRatingForStory } from '../../modules/auth/core/_requests';
 import { Modal } from '../../modules/auth/components/Modal';
 import { StoryDetails, PaginatedStory } from '../../modules/auth/core/_models'
 import { StatisticsWidget5 } from '../../../_metronic/partials/widgets';
@@ -284,6 +284,7 @@ const ViewStoryPage = () => {
     image6: null,
     image7: null,
   }); // Προσθήκη Κατάστασης για τα Additional Images
+  const [allowRating, setAllowRating] = useState(0);   // Σύνολο σελίδων
 
   //Μετατροπή Δεδομένων JSON σε Τύπο Image
   const mapBackendDataToImages = (data: any[]): Image[] => {
@@ -382,12 +383,17 @@ const ViewStoryPage = () => {
           return;
         }
   
-        //const response = await getStoryDetails(id, auth.token);
-        const response = await getStoryDetails(id, '538684');
+        const response = await getStoryDetails(id, auth.token);
         const data = response.data;
   
         // Αποθηκεύουμε τα δεδομένα απευθείας στο state
         setStoryDetails(data as StoryDetails);
+  
+        const userRating = await getUserRatingForStory(id, auth.token);
+        const userRatingData = userRating.data;
+  
+        // Αποθηκεύουμε τα δεδομένα απευθείας στο state
+        setAllowRating(userRatingData);
       } catch (error) {
         console.error('Error fetching story details:', error);
       }
@@ -426,9 +432,7 @@ const ViewStoryPage = () => {
         return;
       }
       
-      const authToken = 'mock-auth-token'; // Εδώ βάλε το πραγματικό token
-      //await rateStoryById(storyId, auth.token); // Κλήση στο API
-      await rateStoryById(storyId, rating, authToken); // Κλήση στο API
+      await rateStoryById(storyId, rating, auth.token); // Κλήση στο API
       
       // Ενημέρωση της τοπικής κατάστασης αν χρειάζεται
       setStoryDetails((prevDetails) => ({
@@ -600,6 +604,7 @@ const ViewStoryPage = () => {
           onClose={closeModal}
           onDelete={() => handleDeleteStory(storyDetails.id)} // Ενεργοποίηση του κουμπιού διαγραφής
           onRate={(rating) => handleRatingStory(storyDetails.id, rating)} // Νέο prop
+          allowRating={allowRating == 0}
           onShareableChange={(shareable) => handleShareableStory(storyDetails.id, shareable)} // Νέο prop
           currentUser ={currentUser}
           /*selectedStory={selectedStory} */

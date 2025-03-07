@@ -20,13 +20,14 @@ interface ModalProps {
   onClose: () => void;
   onDelete?: () => void; // Νέο prop για διαγραφή
   onRate?: (rating: number) => void; // Νέο prop για rating
+  allowRating: boolean; // Allow rating
   onShareableChange?: (newShareableStatus: boolean) => void; // Νέο prop για την αλλαγή δημόσιου καθεστώτος
   currentUser?: UserModel;
   // selectedStory: Image | null;
   storyDetails: StoryDetails;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, onShareableChange, currentUser, storyDetails }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, onDelete, onRate, allowRating, onShareableChange, currentUser, storyDetails }) => {
   const intl = useIntl();
   const printRef = useRef<HTMLDivElement>(null); // Χρησιμοποιούμε ref για επιλεκτική εκτύπωση
   const [userRating, setUserRating] = useState(storyDetails.rate);
@@ -205,7 +206,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
               name="rating"
               starDimension="20px"
               starSpacing="2px"
-              changeRating={onRate ? (currentUser?.roles?.includes('therapist') ? handleRatingChange : undefined) : undefined}
+              changeRating={onRate ? ((currentUser?.roles?.includes('therapist') && allowRating) ? handleRatingChange : undefined) : undefined}
             />
           </div>
           <div style={gridStyle}>
