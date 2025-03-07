@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PageTitle } from '../../../_metronic/layout/core';
 import { StoryDetails } from '../../modules/auth/core/_models';
-import { getStoryDetails, createStoryDetails } from '../../modules/auth/core/_requests';
+import { getStoryDetails, createStoryDetails, getStoriesImages } from '../../modules/auth/core/_requests';
 import { ImageSelectionModal } from '../../modules/auth/components/ImageSelectionModal';
 import {getAuth} from '../../modules/auth/core/AuthHelpers';
 import StarRatings from 'react-star-ratings';
@@ -13,6 +13,7 @@ const DetailsStoryPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Παίρνουμε το ID της ιστορίας από το URL
   const navigate = useNavigate();
   const [story, setStory] = useState<StoryDetails | null>(null);
+  const [imageUrls, setImageUrls] = useState([]);
   const [originalStory, setOriginalStory] = useState<StoryDetails | null>(null); // Αρχική κατάσταση
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -53,6 +54,14 @@ const DetailsStoryPage: React.FC = () => {
         setStory(response.data);
         setOriginalStory(response.data); // Αποθήκευση της αρχικής κατάστασης
         setIsPublic(response.data.shareable);
+        const responseStoriesImages = await getStoriesImages(auth.token);
+        const transformedImages = responseStoriesImages.data.map((url: String, index: number) => ({
+          id: index + 1,    // Το id θα είναι το index + 1 (για να ξεκινά από το 1)
+          src: url,        // Το URL της εικόνας
+          alt: url.split('/').pop(),   // Το όνομα του αρχείου (τελευταίο μέρος του URL)
+          title: url.split('/').pop()  // Το όνομα του αρχείου (το ίδιο με το alt)
+        }));
+        setImageUrls(transformedImages); // Αποθήκευση των μετασχηματισμένων εικόνων
       } catch (err) {
         console.error('Error fetching story details:', err);
         setError('Failed to load story details.');
@@ -362,21 +371,7 @@ const DetailsStoryPage: React.FC = () => {
       <ImageSelectionModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        availableImages={[
-          { id: 1, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_24.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=2baeecf00ea4987fd7a6cd0e70d6e7d46a46da9d3b842757c435cb459959d6d3', alt: 'Image 1', title: 'Placeholder 1' },
-          { id: 2, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_25.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=6c2b21ec18939eb23b18b2379324c6a44061cabe5f72c1e17018660c6cfd5602', alt: 'Image 2', title: 'Placeholder 2' },
-          { id: 3, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 4, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 5, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 6, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 7, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 8, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 9, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 10, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 22, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 12, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-          { id: 14, src: 'http://storage.atlas.esdalab.ece.uop.gr/pass4autism/ab_26.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=pass4autism%2F20241214%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T175500Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cb711c8443f34438033333714500cfe4f00ca21146ddcfb9674032e17b708f76', alt: 'Image 3', title: 'Placeholder 3' },
-        ]}
+        availableImages={imageUrls}
         onSelectImage={(image) => {
           if (currentImageField) {
             setStory({

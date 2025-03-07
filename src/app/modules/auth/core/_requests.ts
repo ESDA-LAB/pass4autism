@@ -143,3 +143,11 @@ export function getUserRatingForStory(storyId: number, token: string) {
     },
   });
 }
+
+export function getStoriesImages(token: string) {
+  return axios.get(`${STORIES_URL}/images`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
