@@ -295,7 +295,7 @@ const ViewStoryPage = () => {
       title: item.title,
       language: item.language || 'en', // Υποθέτουμε προεπιλογή για τη γλώσσα
       level: `level${item.functional || 1}`, // Προσαρμογή του functional ως level
-      age: '2-5', // Χρησιμοποίησε προεπιλογή αν δεν παρέχεται
+      age: item.ages || '2-5', // Χρησιμοποίησε προεπιλογή αν δεν παρέχεται
     }));
   };
 
