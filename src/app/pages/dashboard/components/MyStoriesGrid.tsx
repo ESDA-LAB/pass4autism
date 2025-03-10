@@ -4,6 +4,7 @@ import { StoryDetails } from '../../../modules/auth/core/_models';
 import { Modal } from '../../../modules/auth/components/Modal';
 import { useIntl } from 'react-intl'
 import {getAuth} from '../../../modules/auth/core/AuthHelpers';
+import {useAuth} from '../../../../app/modules/auth'; // Πρόσβαση στο Auth Context
 
 const MyStoriesGrid: React.FC = () => {
   const intl = useIntl();
@@ -14,6 +15,8 @@ const MyStoriesGrid: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Διαχείριση του modal
   const [selectedStory, setSelectedStory] = useState<StoryDetails | null>(null); // Επιλεγμένη ιστορία
+
+  const {currentUser} = useAuth(); // Πρόσβαση στον τρέχοντα χρήστη και τους ρόλους του
 
   // Λήψη ιστοριών χρήστη
   // Wrap loadMyStories with useCallback
@@ -256,6 +259,7 @@ const MyStoriesGrid: React.FC = () => {
           onClose={closeModal}
           onShareableChange={(shareable) => handleShareableStory(selectedStory.id, shareable)} // Νέο prop
           storyDetails={selectedStory}
+          currentUser ={currentUser}
         />
       )}
     </div>

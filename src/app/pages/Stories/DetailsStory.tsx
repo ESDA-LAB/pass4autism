@@ -383,20 +383,6 @@ const DetailsStoryPage: React.FC = () => {
         }}
       />
 
-      {/* Public Checkbox */}
-      <div className="form-check">
-        <input
-          id="public"
-          type="checkbox"
-          className="form-check-input"
-          checked={isPublic}
-          onChange={() => setIsPublic(!isPublic)}
-        />
-        <label htmlFor="public" className="form-check-label">
-        {intl.formatMessage({ id: 'MakePublic' })}
-        </label>
-      </div>
-
       {/* Κείμενα */}
       {[...Array(7)].map((_, index) => {
         const textField = `text${index + 1}` as keyof StoryDetails;
@@ -413,6 +399,20 @@ const DetailsStoryPage: React.FC = () => {
           </div>
         );
       })}
+
+      {/* Public Checkbox */}
+      <div className="form-check mt-6 mb-6 fs-2">
+        <input
+          id="public"
+          type="checkbox"
+          className="form-check-input"
+          checked={isPublic}
+          onChange={() => setIsPublic(!isPublic)}
+        />
+        <label htmlFor="public" className="form-check-label">
+        {intl.formatMessage({ id: 'MakePublic' })}
+        </label>
+      </div>
 
       {/* Buttons */}
       <div className="mt-4">
