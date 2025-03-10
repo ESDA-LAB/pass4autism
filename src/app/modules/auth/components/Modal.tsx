@@ -185,7 +185,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {/* Προσθήκη του Shareable Checkbox αν ο χρήστης είναι ο συγγραφέας */}
             {currentUser?.name === storyDetails.authorName && (
-            <div className="form-check">
+            <div className="form-check mt-6 mb-6 fs-2">
               <input
                 id="shareable"
                 type="checkbox"
@@ -198,6 +198,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
               </label>
             </div>
             )}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <strong>{intl.formatMessage({ id: 'Rate' })}:</strong>
             <StarRatings
               rating={userRating}
