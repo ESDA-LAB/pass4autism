@@ -75,6 +75,7 @@ const AuthProvider: FC<WithChildren> = ({children}) => {
       setCurrentUser({
         id: parsedToken.sub,
         username: parsedToken.preferred_username,
+        name: parsedToken.given_name + ' ' + parsedToken.family_name,
         first_name: parsedToken.given_name, // Το πεδίο "first_name" από το token
         last_name: parsedToken.family_name, // Το πεδίο "last_name" από το token
         email: parsedToken.email, // Το email από το token
