@@ -22,7 +22,7 @@ const UsersTable = () => {
     try {
       await kcAdminClient.auth({
         username: 'admin',
-        password: 'admin',
+        password: '0rQGLD8d34eAG68N',
         grantType: 'password',
         clientId: 'admin-cli',
       });
