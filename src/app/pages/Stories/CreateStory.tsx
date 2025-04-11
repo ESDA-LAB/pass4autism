@@ -35,7 +35,7 @@ const CreateStoryPage: React.FC = () => {
         console.error('No auth token found');
         return;
       }
-      const response = await getStories(auth.token, page, 9, { searchKeywords: searchQuery });
+      const response = await getStories(auth.token, page, 15, { searchKeywords: searchQuery });
       const { content, totalPages: pages } = response.data;
 
       // Map API response to the Story format
@@ -179,7 +179,7 @@ const CreateStoryPage: React.FC = () => {
             color='primary'
             iconColor='white'
             title={intl.formatMessage({ id: 'CreateStory.CreateVisualStory' })}
-            description={intl.formatMessage({ id: 'CreateStory.<ul><li>Search through existing stories using keywords</li><li>Select and edit the one you like</li><li>Modify the text and images</li><li>Click Save.</li></ul>' })}
+            description={intl.formatMessage({ id: 'CreateStory.DisplaimerText' })}
             titleColor='white'
             descriptionColor='white'
           />

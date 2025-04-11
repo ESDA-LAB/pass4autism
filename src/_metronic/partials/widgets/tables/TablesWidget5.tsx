@@ -35,8 +35,7 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                     <th className='p-0 w-50px'></th>
                     <th className='p-0 min-w-150px'></th>
                     <th className='p-0 min-w-140px'></th>
-                    <th className='p-0 min-w-110px'></th>
-                    <th className='p-0 min-w-50px'></th>
+                    <th className='p-0 min-w-160px'></th>
                   </tr>
                 </thead>
                 {/* end::Table head */}
@@ -55,24 +54,15 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                       </div>
                     </td>
                     <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
+                      <a
+                        href='https://pass4autism.thinkific.com/' target='{_blank}'
+                        rel='noopener noreferrer' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
                         Improving the social skills of ASD people using visual stories
                       </a>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
                       <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='https://pass4autism.thinkific.com/' target='{_blank}'
-                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
                     </td>
                   </tr>
                   <tr>
@@ -88,24 +78,15 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                       </div>
                     </td>
                     <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
+                      <a
+                        href='https://pass4autism-es.thinkific.com/' target='{_blank}'
+                        rel='noopener noreferrer' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
                         Mejora de habilidades sociales de personas con TEA mediante historias visuales
                       </a>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
                       <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='https://pass4autism-es.thinkific.com/' target='{_blank}'
-                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
                     </td>
                   </tr>
                   <tr>
@@ -121,24 +102,15 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                       </div>
                     </td>
                     <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
+                      <a
+                        href='https://pass4autism-gr.thinkific.com/' target='{_blank}'
+                        rel='noopener noreferrer' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
                         Βελτιώνοντας τις κοινωνικές δεξιότητες των ατόμων με ΔΑΦ με τη χρήση οπτικών ιστοριών
                       </a>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
                       <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='https://pass4autism-gr.thinkific.com/' target='{_blank}'
-                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
                     </td>
                   </tr>
                   <tr>
@@ -154,24 +126,15 @@ const TablesWidget5: React.FC<Props> = ({className}) => {
                       </div>
                     </td>
                     <td>
-                      <a href='#' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
+                      <a
+                        href='https://pass4autism-it.thinkific.com/' target='{_blank}'
+                        rel='noopener noreferrer' className='text-dark fw-bold text-hover-primary mb-1 fs-6'>
                         Migliorare le abilità sociali delle persone con ASD utilizzando storie visive
                       </a>
                     </td>
                     <td className='text-end text-muted fw-semibold'></td>
                     <td className='text-end'>
                       <span className='badge badge-light-success'>{intl.formatMessage({ id: 'Available' })}</span>
-                    </td>
-                    <td className='text-end'>
-                      <a
-                        href='https://pass4autism-it.thinkific.com/' target='{_blank}'
-                        rel='noopener noreferrer' className='btn btn-sm btn-icon btn-bg-light btn-active-color-primary'
-                      >
-                        <KTSVG
-                          path='/media/icons/duotune/arrows/arr064.svg'
-                          className='svg-icon-2'
-                        />
-                      </a>
                     </td>
                   </tr>
                 </tbody>

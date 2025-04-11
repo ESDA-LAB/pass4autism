@@ -53,7 +53,7 @@ const DetailsStoryPage: React.FC = () => {
         const response = await getStoryDetails(Number(id), auth.token);
         setStory(response.data);
         setOriginalStory(response.data); // Αποθήκευση της αρχικής κατάστασης
-        setIsPublic(response.data.shareable);
+        //setIsPublic(response.data.shareable);
         const responseStoriesImages = await getStoriesImages(auth.token);
         const transformedImages = responseStoriesImages.data.map((url: String, index: number) => ({
           id: index + 1,    // Το id θα είναι το index + 1 (για να ξεκινά από το 1)
@@ -176,14 +176,14 @@ const DetailsStoryPage: React.FC = () => {
 
   return (
     <div className="container">
-      <h1>{intl.formatMessage({ id: 'DetailsStory.EditStoryandSaveitasnew' })}</h1>
+      <h1>{intl.formatMessage({ id: 'Title' })}: {originalStory?.title} - {intl.formatMessage({ id: 'DetailsStory.EditStoryandSaveitasnew' })}</h1>
       {/* Τίτλος */}
       <div className="form-group">
-        <label htmlFor="title">{intl.formatMessage({ id: 'Title' })}</label>
+        <label htmlFor="title">{intl.formatMessage({ id: 'NewTitle' })}</label>
         <input
           id="title"
           className={`form-control ${errors.title ? 'is-invalid' : ''}`}
-          value={story.title}
+          //value={story.title}
           onChange={(e) => {
             handleChange('title', e.target.value);
             setErrors({ ...errors, title: e.target.value.trim() ? null : errors.title });
@@ -401,7 +401,7 @@ const DetailsStoryPage: React.FC = () => {
       })}
 
       {/* Public Checkbox */}
-      <div className="form-check mt-6 mb-6 fs-2">
+      {/* <div className="form-check mt-6 mb-6 fs-2">
         <input
           id="public"
           type="checkbox"
@@ -412,7 +412,7 @@ const DetailsStoryPage: React.FC = () => {
         <label htmlFor="public" className="form-check-label">
         {intl.formatMessage({ id: 'MakePublic' })}
         </label>
-      </div>
+      </div> */}
 
       {/* Buttons */}
       <div className="mt-4">

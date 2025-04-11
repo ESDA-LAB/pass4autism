@@ -107,7 +107,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
 
   const gridStyle: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)', // 3 στήλες
+    gridTemplateColumns: 'repeat(1, 1fr)', // 1 στήλες
     gap: '20px',
     marginTop: '20px',
   };
@@ -183,21 +183,23 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
           <p><strong>{intl.formatMessage({ id: 'Synopsis' })}:</strong> {storyDetails.synopsis}</p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Προσθήκη του Shareable Checkbox αν ο χρήστης είναι ο συγγραφέας */}
-            {currentUser?.name === storyDetails.authorName && (
             <div className="form-check mt-6 mb-6 fs-2">
               <input
                 id="shareable"
                 type="checkbox"
                 className="form-check-input"
                 checked={isShareable}
-                onChange={handleShareableChange} // Χρησιμοποιούμε την νέα συνάρτηση
+                readOnly={!onShareableChange || !currentUser?.roles?.includes('therapist')}
+                onChange={
+                  onShareableChange && currentUser?.roles?.includes('therapist')
+                    ? handleShareableChange
+                    : undefined
+                }
               />
               <label htmlFor="shareable" className="form-check-label">
                 {intl.formatMessage({ id: 'MakePublic' })}
               </label>
             </div>
-            )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <strong>{intl.formatMessage({ id: 'Rate' })}:</strong>
@@ -228,7 +230,10 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
                 {intl.formatMessage({ id: 'Print' })}
               </button>
             )}
-            {currentUser?.roles?.includes('admin') && onDelete && (
+            {/* Προσθήκη του Delete αν ο χρήστης είναι ο συγγραφέας χωρίς να είναι δημόσια η ιστορία του ή εάν είναι διαχειριστής*/}
+            {(currentUser?.roles?.includes('admin') || 
+              (currentUser?.name === storyDetails.authorName && !isShareable)) && 
+              onDelete && (
                 <button onClick={onDelete} style={deleteButtonStyle}>
                   {intl.formatMessage({ id: 'DeleteStory' })}
                 </button>

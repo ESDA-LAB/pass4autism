@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { getStoriesByOwner, getStoryDetails, shareableStoryById } from '../../../modules/auth/core/_requests';
+import { getStoriesByOwner, getStoryDetails, shareableStoryById, deleteStoryById } from '../../../modules/auth/core/_requests';
 import { StoryDetails } from '../../../modules/auth/core/_models';
 import { Modal } from '../../../modules/auth/components/Modal';
 import { useIntl } from 'react-intl'
@@ -109,7 +109,29 @@ const MyStoriesGrid: React.FC = () => {
       console.error('Failed to save shareable', error);
       alert('Failed to save the shareable. Please try again.');
     }
-  }; 
+  };
+  
+  const handleDeleteStory = async (storyId: number) => {
+    if (!storyId) return; // Αν δεν υπάρχει ID, δεν προχωράμε
+  
+    const confirmDelete = window.confirm("Are you sure you want to delete this story?");
+    if (!confirmDelete) return; // Αν ο χρήστης ακυρώσει, δεν κάνουμε τίποτα
+  
+    try {
+      const auth = getAuth(); // Λήψη token
+      if (!auth) {
+        console.error('No auth token found');
+        return;
+      }
+      await deleteStoryById(storyId, auth.token); // Κλήση στο API
+      // Αφαίρεση της ιστορίας από το state
+      setMyStories((myStories) => myStories.filter((myStory) => myStory.id !== storyId));
+      closeModal(); // Κλείσιμο του modal
+    } catch (error) {
+      console.error("Error deleting story:", error);
+      alert("Failed to delete the story. Please try again.");
+    }
+  };
 
   // Inline styles για το grid
   const containerStyle: React.CSSProperties = {
@@ -260,6 +282,7 @@ const MyStoriesGrid: React.FC = () => {
           onShareableChange={(shareable) => handleShareableStory(selectedStory.id, shareable)} // Νέο prop
           storyDetails={selectedStory}
           currentUser ={currentUser}
+          onDelete={() => handleDeleteStory(selectedStory.id)} // Ενεργοποίηση του κουμπιού διαγραφής
         />
       )}
     </div>
