@@ -82,35 +82,43 @@ const LevelsDropdown: React.FC<{
   selectedLevel: string | undefined 
 }> = ({ onLevelChange, selectedLevel }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const intl = useIntl();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleLevelSelect = (level: string) => {
-    onLevelChange(level || undefined); // Χρησιμοποιούμε το level για backend
+    onLevelChange(level || undefined);
     setIsOpen(false);
   };
-  const intl = useIntl();
 
-  // Levels dropdown options
-  const levelOptions: string[] = ['', 'level1', 'level2', 'level3'];
+  // Levels dropdown options with translation IDs
+  const levelOptions = [
+    { value: '', labelId: 'AllLevels' },
+    { value: 'level1', labelId: 'Level1' },
+    { value: 'level2', labelId: 'Level2' },
+    { value: 'level3', labelId: 'Level3' },
+  ];
+
+  // Get the label for the currently selected value
+  const selectedLabelId = levelOptions.find(opt => opt.value === selectedLevel)?.labelId || 'AllLevels';
 
   return (
     <div style={dropdownStyle.container}>
       <div style={dropdownStyle.dropdown} onClick={toggleDropdown}>
-        {selectedLevel || intl.formatMessage({ id: 'AllLevels' })}
+        {intl.formatMessage({ id: selectedLabelId })}
         <span style={dropdownStyle.arrow}>▼</span>
       </div>
       {isOpen && (
         <div style={dropdownStyle.menu}>
           {levelOptions.map((option) => (
             <div
-              key={option}
+              key={option.value}
               style={dropdownStyle.item}
-              onClick={() => handleLevelSelect(option)}
+              onClick={() => handleLevelSelect(option.value)}
             >
-              {option.replace('level', intl.formatMessage({ id: 'Level' })) || intl.formatMessage({ id: 'AllLevels' })}
+              {intl.formatMessage({ id: option.labelId })}
             </div>
           ))}
         </div>
@@ -284,7 +292,7 @@ const ViewStoryPage = () => {
     image6: null,
     image7: null,
   }); // Προσθήκη Κατάστασης για τα Additional Images
-  const [allowRating, setAllowRating] = useState(0);   // Σύνολο σελίδων
+  const [allowRating, setAllowRating] = useState(0);
 
   //Μετατροπή Δεδομένων JSON σε Τύπο Image
   const mapBackendDataToImages = (data: any[]): Image[] => {
@@ -310,7 +318,7 @@ const ViewStoryPage = () => {
           return;
         }
 
-        const response = await getStories(auth.token, currentPage, 9, filters);
+        const response = await getStories(auth.token, currentPage, 15, filters);
         const data: PaginatedStory = response.data;
 
         setImages(mapBackendDataToImages(data.content));
@@ -582,7 +590,7 @@ const ViewStoryPage = () => {
       <div style={containerStyle}>
         {/* Filters Panel */}
         <div style={filtersPanelStyle}>
-          <h2 style={headerStyle}>Filters</h2>
+          <h2 style={headerStyle}>{intl.formatMessage({ id: 'ViewStory.Filters' })}</h2>
           <LanguageDropdown 
             onLanguageChange={handleLanguageChange} 
             selectedLanguage={filteredLanguage} // Pass the selectedLanguage prop

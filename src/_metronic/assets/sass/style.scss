@@ -11,3 +11,8 @@
 
 // Layout
 @import 'layout/layout';
+
+.svg-icon-bigger svg {
+    height: 2.15rem !important;
+    width: 2.15rem !important;
+}

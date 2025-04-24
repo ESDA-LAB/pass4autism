@@ -108,6 +108,7 @@ const DashboardPage: React.FC = () => {
         <div className="col-xl-12">  
           <div style={containerStyle}>
             <h2 style={titleStyle}>{intl.formatMessage({ id: 'DASHBOARD.WelcomeMessage' })}</h2>
+            <div dangerouslySetInnerHTML={{__html: intl.formatMessage({ id: 'DASHBOARD.WelcomeMessageText' }),}}/>
           </div>
         </div>
       </div>

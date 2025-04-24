@@ -22,7 +22,7 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({
   onSelectImage,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const imagesPerPage = 6;
+  const imagesPerPage = 15;
   const intl = useIntl();
 
   // Reset του pagination όταν ανοίγει το modal

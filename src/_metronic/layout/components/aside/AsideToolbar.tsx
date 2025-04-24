@@ -30,18 +30,18 @@ const AsideToolbar = () => {
             {/*end::Info*/}
 
             {/*begin::User menu*/}
-            <div className='me-n2'>
+            <div>
               {/*begin::Action*/}
               <a
                 href='#'
-                className='btn btn-icon btn-sm btn-active-color-primary mt-n2'
+                className='btn btn-icon btn-sm btn-active-color-primary'
                 data-kt-menu-trigger='click'
                 data-kt-menu-placement='bottom-start'
                 data-kt-menu-overflow='false'
               >
                 <KTSVG
                   path='/media/icons/duotune/coding/cod001.svg'
-                  className='svg-icon-muted svg-icon-12'
+                  className='svg-icon-muted svg-icon-12 svg-icon-bigger'
                 />
               </a>
 
