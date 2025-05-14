@@ -117,7 +117,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
   };
 
   const imageStyle: React.CSSProperties = {
-    width: '100%',
+    width: '50%',
     height: 'auto',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
@@ -125,7 +125,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
   };
 
   const textStyle: React.CSSProperties = {
-    fontSize: '14px',
+    fontSize: '18px',
     color: '#555',
   };
 
