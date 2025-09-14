@@ -174,73 +174,89 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
     { id: 7, src: storyDetails.image7, text: storyDetails.text7 },
   ].filter((item) => item.src); // Φιλτράρουμε τις εικόνες που είναι null
 
+  const overlayStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // ημιδιαφανές μαύρο
+    backdropFilter: 'blur(5px)', // το blur
+    zIndex: 999, // κάτω από το modal
+  };
+
   return (
     <>
-      <div style={modalStyle}>
-        <div ref={printRef}>
-          <h2 style={headerStyle}>{storyDetails.title}</h2>
-          <p><strong>{intl.formatMessage({ id: 'Author' })}:</strong> {storyDetails.authorName}</p>
-          <p><strong>{intl.formatMessage({ id: 'Synopsis' })}:</strong> {storyDetails.synopsis}</p>
+      {isOpen && (
+        <div style={overlayStyle} onClick={onClose}></div>
+      )}
+      {isOpen && (
+        <div style={modalStyle}>
+          <div ref={printRef}>
+            <h2 style={headerStyle}>{storyDetails.title}</h2>
+            <p><strong>{intl.formatMessage({ id: 'Author' })}:</strong> {storyDetails.authorName}</p>
+            <p><strong>{intl.formatMessage({ id: 'Synopsis' })}:</strong> {storyDetails.synopsis}</p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div className="form-check mt-6 mb-6 fs-2">
-              <input
-                id="shareable"
-                type="checkbox"
-                className="form-check-input"
-                checked={isShareable}
-                readOnly={!onShareableChange || !currentUser?.roles?.includes('therapist')}
-                onChange={
-                  onShareableChange && currentUser?.roles?.includes('therapist')
-                    ? handleShareableChange
-                    : undefined
-                }
-              />
-              <label htmlFor="shareable" className="form-check-label">
-                {intl.formatMessage({ id: 'MakePublic' })}
-              </label>
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <strong>{intl.formatMessage({ id: 'Rate' })}:</strong>
-            <StarRatings
-              rating={userRating}
-              starRatedColor="gold"
-              numberOfStars={5}
-              name="rating"
-              starDimension="20px"
-              starSpacing="2px"
-              changeRating={onRate ? ((currentUser?.roles?.includes('therapist') && allowRating) ? handleRatingChange : undefined) : undefined}
-            />
-          </div>
-          <div style={gridStyle}>
-            {imagesWithTexts.map((item) => (
-              <div key={item.id} style={itemStyle}>
-                <img src={item.src || ''} alt={`Story ${item.id}`} style={imageStyle} />
-                {item.text && <p style={textStyle}>{item.text}</p>}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div className="form-check mt-6 mb-6 fs-2">
+                <input
+                  id="shareable"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={isShareable}
+                  readOnly={!onShareableChange || !currentUser?.roles?.includes('therapist')}
+                  onChange={
+                    onShareableChange && currentUser?.roles?.includes('therapist')
+                      ? handleShareableChange
+                      : undefined
+                  }
+                />
+                <label htmlFor="shareable" className="form-check-label">
+                  {intl.formatMessage({ id: 'MakePublic' })}
+                </label>
               </div>
-            ))}
-          </div>
-          <div style={footerStyle}>
-            <button onClick={onClose} style={closeButtonStyle}>
-              {intl.formatMessage({ id: 'Close' })}
-            </button>
-            {showPrintButton && (
-              <button onClick={handlePrint} style={printButtonStyle}>
-                {intl.formatMessage({ id: 'Print' })}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <strong>{intl.formatMessage({ id: 'Rate' })}:</strong>
+              <StarRatings
+                rating={userRating}
+                starRatedColor="gold"
+                numberOfStars={5}
+                name="rating"
+                starDimension="20px"
+                starSpacing="2px"
+                changeRating={onRate ? ((currentUser?.roles?.includes('therapist') && allowRating) ? handleRatingChange : undefined) : undefined}
+              />
+            </div>
+            <div style={gridStyle}>
+              {imagesWithTexts.map((item) => (
+                <div key={item.id} style={itemStyle}>
+                  <img src={item.src || ''} alt={`Story ${item.id}`} style={imageStyle} />
+                  {item.text && <p style={textStyle}>{item.text}</p>}
+                </div>
+              ))}
+            </div>
+            <div style={footerStyle}>
+              <button onClick={onClose} style={closeButtonStyle}>
+                {intl.formatMessage({ id: 'Close' })}
               </button>
-            )}
-            {/* Προσθήκη του Delete αν ο χρήστης είναι ο συγγραφέας χωρίς να είναι δημόσια η ιστορία του ή εάν είναι διαχειριστής*/}
-            {(currentUser?.roles?.includes('admin') || 
-              (currentUser?.name === storyDetails.authorName && !isShareable)) && 
-              onDelete && (
-                <button onClick={onDelete} style={deleteButtonStyle}>
-                  {intl.formatMessage({ id: 'DeleteStory' })}
+              {showPrintButton && (
+                <button onClick={handlePrint} style={printButtonStyle}>
+                  {intl.formatMessage({ id: 'Print' })}
                 </button>
               )}
+              {/* Προσθήκη του Delete αν ο χρήστης είναι ο συγγραφέας χωρίς να είναι δημόσια η ιστορία του ή εάν είναι διαχειριστής*/}
+              {(currentUser?.roles?.includes('admin') || 
+                (currentUser?.name === storyDetails.authorName && !isShareable)) && 
+                onDelete && (
+                  <button onClick={onDelete} style={deleteButtonStyle}>
+                    {intl.formatMessage({ id: 'DeleteStory' })}
+                  </button>
+                )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
