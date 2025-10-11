@@ -102,7 +102,7 @@ const AuthInit: FC<WithChildren> = ({children}) => {
 
       // Αν υπάρχει token, θεωρούμε ότι ο χρήστης είναι συνδεδεμένος
       if (token) {
-        console.log('Auth Token Found:', token);
+        // console.log('Auth Token Found:', token);
         setShowSplashScreen(false);
         return;
       }

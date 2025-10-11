@@ -325,7 +325,7 @@ const ViewStoryPage = () => {
         setTotalPages(data.totalPages);
 
         if (data.filters?.length && data.filters.length > 0) {
-          console.log('Filters from backend:', data.filters);
+          // console.log('Filters from backend:', data.filters);
           const languageFilter = data.filters.find((filter) => filter.key === 'language')?.value;
           const levelFilter = data.filters.find((filter) => filter.key === 'level')?.value;
           const ageFilter = data.filters.find((filter) => filter.key === 'age')?.value;
