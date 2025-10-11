@@ -130,37 +130,26 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
   };
 
   const footerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between', // Τοποθέτηση Close και Print
-    alignItems: 'center',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr', // Τρεις ίσες στήλες
+    gap: '10px',
     marginTop: '20px',
+    alignItems: 'center',
   };
 
-  const buttonStyle: React.CSSProperties = {
-    padding: '10px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    border: 'none',
-    color: '#fff',
+  const leftColumnStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-start',
   };
 
-  const closeButtonStyle: React.CSSProperties = {
-    ...buttonStyle,
-    backgroundColor: '#ff5c5c',
+  const centerColumnStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'center',
   };
 
-  const printButtonStyle: React.CSSProperties = {
-    ...buttonStyle,
-    backgroundColor: '#4CAF50',
-  };
-
-  const deleteButtonStyle: React.CSSProperties = {
-    padding: '10px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    border: 'none',
-    backgroundColor: '#d9534f', // Κόκκινο για διαγραφή
-    color: '#fff',
+  const rightColumnStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-end',
   };
 
   // Δημιουργούμε έναν πίνακα με εικόνες και τα αντίστοιχα κείμενα
@@ -237,22 +226,33 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, showPrintButton, onClose, 
               ))}
             </div>
             <div style={footerStyle}>
-              <button onClick={onClose} style={closeButtonStyle}>
-                {intl.formatMessage({ id: 'Close' })}
-              </button>
-              {showPrintButton && (
-                <button onClick={handlePrint} style={printButtonStyle}>
-                  {intl.formatMessage({ id: 'Print' })}
+              {/* Αριστερή στήλη - Close Button */}
+              <div style={leftColumnStyle}>
+                <button onClick={onClose} className="btn btn-secondary">
+                  {intl.formatMessage({ id: 'Close' })}
                 </button>
-              )}
-              {/* Προσθήκη του Delete αν ο χρήστης είναι ο συγγραφέας χωρίς να είναι δημόσια η ιστορία του ή εάν είναι διαχειριστής*/}
-              {(currentUser?.roles?.includes('admin') || 
-                (currentUser?.name === storyDetails.authorName && !isShareable)) && 
-                onDelete && (
-                  <button onClick={onDelete} style={deleteButtonStyle}>
-                    {intl.formatMessage({ id: 'DeleteStory' })}
+              </div>
+              
+              {/* Κεντρική στήλη - Print Button */}
+              <div style={centerColumnStyle}>
+                {showPrintButton && (
+                  <button onClick={handlePrint} className="btn btn-success">
+                    {intl.formatMessage({ id: 'Print' })}
                   </button>
                 )}
+              </div>
+              
+              {/* Δεξιά στήλη - Delete Button */}
+              <div style={rightColumnStyle}>
+                {/* Προσθήκη του Delete αν ο χρήστης είναι ο συγγραφέας χωρίς να είναι δημόσια η ιστορία του ή εάν είναι διαχειριστής*/}
+                {(currentUser?.roles?.includes('admin') || 
+                  (currentUser?.name === storyDetails.authorName && !isShareable)) && 
+                  onDelete && (
+                    <button onClick={onDelete} className="btn btn-danger">
+                      {intl.formatMessage({ id: 'DeleteStory' })}
+                    </button>
+                  )}
+              </div>
             </div>
           </div>
         </div>

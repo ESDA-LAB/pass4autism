@@ -51,8 +51,19 @@ const DetailsStoryPage: React.FC = () => {
         }
         setLoading(true);
         const response = await getStoryDetails(Number(id), auth.token);
-        setStory(response.data);
+        // Καθαρίζουμε τα πεδία που θέλουμε να είναι κενά
+        const storyData = {
+          ...response.data,
+          title: '', // Κενό title για να μπορεί ο χρήστης να εισάγει νέο
+          language: '', // Κενή γλώσσα για επιλογή
+          ages: '', // Κενές ηλικίες για επιλογή
+        };
+        setStory(storyData);
         setOriginalStory(response.data); // Αποθήκευση της αρχικής κατάστασης
+        
+        // Ελέγχουμε τα υποχρεωτικά πεδία μετά τη φόρτωση
+        validateRequiredFields(storyData);
+        
         //setIsPublic(response.data.shareable);
         const responseStoriesImages = await getStoriesImages(auth.token);
         const transformedImages = responseStoriesImages.data.map((url: String, index: number) => ({
@@ -73,6 +84,19 @@ const DetailsStoryPage: React.FC = () => {
     fetchStoryDetails();
   }, [id]);
 
+  // Συνάρτηση για έλεγχο των υποχρεωτικών πεδίων
+  const validateRequiredFields = (storyData: StoryDetails) => {
+    const newErrors = {
+      title: !storyData.title?.trim() ? intl.formatMessage({ id: 'DetailsStory.Titleisrequired' }) : null,
+      synopsis: null,
+      cover: null,
+      keywords: null,
+      language: !storyData.language ? intl.formatMessage({ id: 'DetailsStory.Languageisrequired' }) : null,
+      ages: !storyData.ages ? intl.formatMessage({ id: 'DetailsStory.Agerangeisrequired' }) : null,
+    };
+    setErrors(newErrors);
+  };
+
   // Αλλαγή τιμών στα στοιχεία της ιστορίας
   const handleChange = (field: keyof StoryDetails, value: string | boolean | null) => {
     if (story) {
@@ -84,7 +108,36 @@ const DetailsStoryPage: React.FC = () => {
   };
 
   const hasChanges = (): boolean => {
-    return JSON.stringify(story) !== JSON.stringify(originalStory);
+    if (!story || !originalStory) return false;
+    
+    // Ελέγχουμε αν έχουν γίνει αλλαγές σε οποιοδήποτε πεδίο
+    // Επίσης ελέγχουμε αν τα υποχρεωτικά πεδία έχουν συμπληρωθεί
+    const titleChanged = story.title.trim() !== '';
+    const languageChanged = story.language !== '';
+    const agesChanged = story.ages !== '';
+    
+    // Ελέγχουμε αν άλλα πεδία έχουν αλλάξει
+    const otherFieldsChanged = 
+      story.synopsis !== originalStory.synopsis ||
+      story.cover !== originalStory.cover ||
+      story.functional !== originalStory.functional ||
+      story.keywords !== originalStory.keywords ||
+      story.image1 !== originalStory.image1 ||
+      story.image2 !== originalStory.image2 ||
+      story.image3 !== originalStory.image3 ||
+      story.image4 !== originalStory.image4 ||
+      story.image5 !== originalStory.image5 ||
+      story.image6 !== originalStory.image6 ||
+      story.image7 !== originalStory.image7 ||
+      story.text1 !== originalStory.text1 ||
+      story.text2 !== originalStory.text2 ||
+      story.text3 !== originalStory.text3 ||
+      story.text4 !== originalStory.text4 ||
+      story.text5 !== originalStory.text5 ||
+      story.text6 !== originalStory.text6 ||
+      story.text7 !== originalStory.text7;
+    
+    return titleChanged || languageChanged || agesChanged || otherFieldsChanged;
   };
 
   // Αποθήκευση αλλαγών
@@ -183,10 +236,11 @@ const DetailsStoryPage: React.FC = () => {
         <input
           id="title"
           className={`form-control ${errors.title ? 'is-invalid' : ''}`}
-          //value={story.title}
+          value={story.title || ''}
+          placeholder={intl.formatMessage({ id: 'NewTitle' })}
           onChange={(e) => {
             handleChange('title', e.target.value);
-            setErrors({ ...errors, title: e.target.value.trim() ? null : errors.title });
+            setErrors({ ...errors, title: e.target.value.trim() ? null : intl.formatMessage({ id: 'DetailsStory.Titleisrequired' }) });
           }}
         />
         {errors.title && <div className="invalid-feedback">{errors.title}</div>}
@@ -415,15 +469,22 @@ const DetailsStoryPage: React.FC = () => {
       </div> */}
 
       {/* Buttons */}
-      <div className="mt-4">
-        <button className="btn btn-success me-2" onClick={handleSave}
-          disabled={!hasChanges()} // Ανενεργό αν δεν έχουν γίνει αλλαγές
-        >
-          {intl.formatMessage({ id: 'Save' })}
-        </button>
-        <button className="btn btn-danger" onClick={handleCancel}>
-          {intl.formatMessage({ id: 'Cancel' })}
-        </button>
+      <div className="mt-4" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', alignItems: 'center' }}>
+        {/* Αριστερή στήλη - Save Button */}
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <button className="btn btn-success" onClick={handleSave}
+            disabled={!hasChanges() || Object.values(errors).some((error) => error !== null)} // Ανενεργό αν δεν έχουν γίνει αλλαγές ή υπάρχουν errors
+          >
+            {intl.formatMessage({ id: 'Save' })}
+          </button>
+        </div>
+        
+        {/* Δεξιά στήλη - Cancel Button */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button className="btn btn-danger" onClick={handleCancel}>
+            {intl.formatMessage({ id: 'Cancel' })}
+          </button>
+        </div>
       </div>
     </div>
   );

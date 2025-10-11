@@ -38,11 +38,11 @@ const queryClient = new QueryClient()
 const container = document.getElementById('root')
 
 const eventLogger = (event: any, error: any) => {
-  console.log('Keycloak event:', event, error);
+  // console.log('Keycloak event:', event, error);
 };
 
 const tokenLogger = (tokens: any) => {
-  console.log('Keycloak tokens:', tokens);
+  // console.log('Keycloak tokens:', tokens);
   if (tokens.token) {
     localStorage.setItem('kcToken', tokens.token); // Αποθηκεύουμε το access token
     localStorage.setItem('kcRefreshToken', tokens.refreshToken); // Αποθηκεύουμε το refresh token
