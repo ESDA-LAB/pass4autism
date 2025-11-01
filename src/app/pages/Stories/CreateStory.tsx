@@ -194,8 +194,8 @@ const CreateStoryPage: React.FC = () => {
             svgIcon='/media/icons/duotune/arrows/arr013.svg'
             color='primary'
             iconColor='white'
-            title={intl.formatMessage({ id: 'CreateStory.NewImageInRepositoryInfo' })}
-            description=''
+            title=''
+            description={intl.formatMessage({ id: 'CreateStory.NewImageInRepositoryInfo' })}
             titleColor='white'
             descriptionColor='white'
           />
