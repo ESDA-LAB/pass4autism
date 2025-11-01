@@ -186,6 +186,22 @@ const CreateStoryPage: React.FC = () => {
         </div>
       </div>
 
+      {/* New image in repository Section */}
+      <div className='row g-5 g-xl-8'>
+        <div className='col-xl-12'>
+          <StatisticsWidget5
+            className='card-xl-stretch mb-xl-5'
+            svgIcon='/media/icons/duotune/arrows/arr013.svg'
+            color='primary'
+            iconColor='white'
+            title={intl.formatMessage({ id: 'CreateStory.NewImageInRepositoryInfo' })}
+            description=''
+            titleColor='white'
+            descriptionColor='white'
+          />
+        </div>
+      </div>
+
       {/* Search Bar */}
       <div className='col-xl-12 d-flex align-items-center justify-content-center'>
         <div className='input-group'>
