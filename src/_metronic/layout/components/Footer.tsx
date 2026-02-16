@@ -54,6 +54,24 @@ const Footer: FC = () => {
             <strong>Project No.</strong> 2023-1-ES01-KA220-ADU-000154910
         </div>
         {/* end::Copyright */}
+        {/* begin::Creative */}
+        <div className='mt-3'>
+          <a
+            href='https://creativecommons.org/licenses/by-nc-sa/4.0/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <img
+              src={toAbsoluteUrl('/media/footer/cc-by-nc-sa-4.0.png')}
+              alt='Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License'
+              style={{ maxWidth: '220px' }}
+            />
+          </a>
+          <div className='text-muted small mt-2'>
+            This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
+          </div>
+        </div>
+        {/* end::Creative */}
       </div>
       {/* end::Container */}
     </div>
